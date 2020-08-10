@@ -5,7 +5,7 @@ import Codec8E.AvlDatapacket.IO.IOData;
 
 import java.sql.Timestamp;
 
-import static Codec8E.Codec8.hexCode;
+import static Codec8E.Decoder.hexCode;
 
 public class AvlData {
 

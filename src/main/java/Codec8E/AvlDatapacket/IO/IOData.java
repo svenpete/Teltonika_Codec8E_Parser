@@ -3,7 +3,7 @@ package Codec8E.AvlDatapacket.IO;
 import java.util.ArrayList;
 import java.util.List;
 
-import static Codec8E.Codec8.hexCode;
+import static Codec8E.Decoder.hexCode;
 
 public class IOData {
 

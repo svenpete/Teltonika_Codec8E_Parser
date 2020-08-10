@@ -1,6 +1,6 @@
 package Codec8E.AvlDatapacket.IO;
 
-import static Codec8E.Codec8.hexCode;
+import static Codec8E.Decoder.hexCode;
 
 public class BeaconMetaData {
 

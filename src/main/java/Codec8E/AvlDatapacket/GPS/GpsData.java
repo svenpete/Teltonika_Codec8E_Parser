@@ -2,7 +2,7 @@ package Codec8E.AvlDatapacket.GPS;
 
 import Codec8E.AvlDatapacket.IO.FieldEncoding;
 
-import static Codec8E.Codec8.hexCode;
+import static Codec8E.Decoder.hexCode;
 
 public class GpsData {
 

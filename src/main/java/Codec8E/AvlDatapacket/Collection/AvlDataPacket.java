@@ -3,7 +3,7 @@ package Codec8E.AvlDatapacket.Collection;
 import Codec8E.AvlDatapacket.AVL.AvlData;
 import Codec8E.AvlDatapacket.IO.FieldEncoding;
 
-import static Codec8E.Codec8.hexCode;
+import static Codec8E.Decoder.hexCode;
 
 
 
@@ -29,15 +29,6 @@ public class AvlDataPacket {
         setNumberOfData1();
         setAvlData();
         setNumberOfData2();
-
-    }
-
-    public static void main(String [] args) {
-        AvlDataPacket avl = new AvlDataPacket();
-
-        System.out.println(avl.getNumberOfData2());
-        System.out.println(avl.getAvlData().getIoData().getBeaconMetaData().getBeaconLength());
-        System.out.println(avl.getAvlData().getIoData().getBeaconData().get(0).getUuid());
 
     }
 

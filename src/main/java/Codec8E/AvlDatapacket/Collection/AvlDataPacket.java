@@ -1,13 +1,13 @@
 package Codec8E.AvlDatapacket.Collection;
 
 import Codec8E.AvlDatapacket.AVL.AvlData;
-import Codec8E.AvlDatapacket.IO.FieldEncoding;
-
-import static Codec8E.Decoder.hexCode;
+import Codec8E.AvlDatapacket.FieldEncoding;
 
 
 
 public class AvlDataPacket {
+
+    public static String hexCode = "00000000000000708E0100000173BAF73D01000000000000000000000000000000000181000100000000000000000001018100431121FDA50693A4E24FB1AFCFC6EB07647825271B271BAC21DA95206921ED84C1ED97EA92306C5A7F00020C38AB21DA95203921ED84C1ED97EA92306C5A7F00016643C10100003799";
 
     private int preAmble;
     private int dataFieldLength;
@@ -38,6 +38,8 @@ public class AvlDataPacket {
         internalPosition = actualPosition + FieldEncoding.byte2.getElement();
         this.numberOfData2 = getElementValue(internalPosition);
     }
+
+
 
 
     // preamble length is a fix value normaly start at 8 because of zero we start with

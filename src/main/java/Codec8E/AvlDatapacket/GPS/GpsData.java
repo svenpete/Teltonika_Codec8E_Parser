@@ -1,6 +1,6 @@
 package Codec8E.AvlDatapacket.GPS;
 
-import Codec8E.AvlDatapacket.IO.FieldEncoding;
+import Codec8E.AvlDatapacket.FieldEncoding;
 
 import static Codec8E.Decoder.hexCode;
 

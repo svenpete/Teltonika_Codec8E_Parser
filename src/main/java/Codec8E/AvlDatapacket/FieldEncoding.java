@@ -1,4 +1,4 @@
-package Codec8E.AvlDatapacket.IO;
+package Codec8E.AvlDatapacket;
 
 public enum FieldEncoding {
     byte1(1),

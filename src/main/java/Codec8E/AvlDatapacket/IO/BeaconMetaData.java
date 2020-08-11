@@ -1,5 +1,7 @@
 package Codec8E.AvlDatapacket.IO;
 
+import Codec8E.AvlDatapacket.FieldEncoding;
+
 import static Codec8E.Decoder.hexCode;
 
 public class BeaconMetaData {
@@ -7,7 +9,7 @@ public class BeaconMetaData {
     private int recordCount;
     private int totalRecord;
     private String beaconDataPart;
-    private int beaconLength;
+    private int beaconDataLength;
 
 
     private int actualPosition;
@@ -50,7 +52,7 @@ public class BeaconMetaData {
 
     private void setBeaconLength(){
         internalPosition = actualPosition + FieldEncoding.byte4.getElement();
-        this.beaconLength = getElementValue(internalPosition);
+        this.beaconDataLength = getElementValue(internalPosition);
     }
 
     public int getRecordCount() {
@@ -73,7 +75,7 @@ public class BeaconMetaData {
         return internalPosition;
     }
 
-    public int getBeaconLength() {
-        return beaconLength;
+    public int getBeaconDataLength() {
+        return beaconDataLength;
     }
 }

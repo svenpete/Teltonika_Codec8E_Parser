@@ -1,5 +1,7 @@
 package Codec8E.AvlDatapacket.IO;
 
+import Codec8E.AvlDatapacket.FieldEncoding;
+
 import static Codec8E.Decoder.hexCode;
 
 public class Beacon {
@@ -16,6 +18,8 @@ public class Beacon {
     private boolean signalStrengthAvaible;
     private int rssi;
 
+    private int beaconDataLength;
+
 
     Beacon(int actualPosition){
             this.actualPosition = actualPosition;
@@ -26,6 +30,7 @@ public class Beacon {
             setMajor();
             setMinor();
             setRssi();
+
     }
 
     private void setSignalStrengthAvaible(){
@@ -137,6 +142,22 @@ public class Beacon {
 
         // return the modified string
         return str.toString();
+    }
+
+    public int getInternalPosition() {
+        return internalPosition;
+    }
+
+    public String getBleBeaconFlag() {
+        return bleBeaconFlag;
+    }
+
+    public String getBeaconType() {
+        return BeaconType;
+    }
+
+    public boolean isSignalStrengthAvaible() {
+        return signalStrengthAvaible;
     }
 
     private String getElement(Integer internalPosition){

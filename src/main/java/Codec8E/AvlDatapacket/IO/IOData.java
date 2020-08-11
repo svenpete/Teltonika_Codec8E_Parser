@@ -1,5 +1,7 @@
 package Codec8E.AvlDatapacket.IO;
 
+import Codec8E.AvlDatapacket.FieldEncoding;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -139,19 +141,37 @@ public class IOData {
 
     private void addBeaconsToList(int counter){
         this.beaconData = new ArrayList<>();
+        int valueToPass = 0;
+        int internalCount = 0;
 
+        // iterate over nx element
         for (int i = 0; i < counter; i++) {
             int toCheck = getElementValue(internalPosition + FieldEncoding.byte4.getElement());
             this.beaconMetaData = new BeaconMetaData(actualPosition);
+
+            // value to determine size of beacon data stored in
+            if (i == 0)
+                valueToPass = beaconMetaData.getBeaconDataLength() - 1;
+
             actualPosition = beaconMetaData.getActualPosition();
+
             if (toCheck == 385){
+
                 if (i > 0)
                     this.actualPosition = beaconData.get(i).getActualPosition();
-                    Beacon beacon = new Beacon(actualPosition);
-                    beaconData.add(beacon);
+
+                    while (valueToPass - 22 >= 0){
+
+                        if (internalCount >= 1)
+                            this.actualPosition = beaconData.get(beaconData.size() - 1).getActualPosition();
+
+                        beaconData.add(new Beacon(this.actualPosition));
+
+                        valueToPass = valueToPass - 22;
+                        internalCount++;
+                    }
             }
         }
-
     }
 
     private int getElementId(){

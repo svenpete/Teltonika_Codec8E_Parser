@@ -1,6 +1,6 @@
 package Codec8E.AvlDatapacket.AVL;
 import Codec8E.AvlDatapacket.GPS.GpsData;
-import Codec8E.AvlDatapacket.IO.FieldEncoding;
+import Codec8E.AvlDatapacket.FieldEncoding;
 import Codec8E.AvlDatapacket.IO.IOData;
 
 import java.sql.Timestamp;

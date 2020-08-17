@@ -1,16 +1,27 @@
 package Codec8E;
 
-import Codec8E.AvlDatapacket.Collection.AvlDataCollection;
+import Codec8E.Collection.AvlDataCollection;
+import Logger.ReadLogs;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Decoder {
 
-    public static String hexCode = "00000000000000588E0200000173E8132A89000000000000000000000000000000000181000100000000000000000001018100011100000173E8134DB0000000000000000000000000000000000000000100000000000000000001014B00000200007DA7";
+    public static String hexCode = "000000000000002D8E0100000173E81CEAA0000000000000000000000000000000000000000100000000000000000001014B0000010000DFAC";
 
+    private List<AvlDataCollection> avlDataCollections;
 
     public static void main (String [] args){
-        AvlDataCollection avlDataPacket = new AvlDataCollection();
-        System.out.println();
+        Decoder decoder = new Decoder();
+        decoder.avlDataCollections = new ArrayList<>();
 
+        List<String> byteStrings = ReadLogs.getByteList();
+        for (int i = 0; i < byteStrings.size(); i++) {
+            setHexCode(byteStrings.get(i));
+            decoder.avlDataCollections.add(new AvlDataCollection());
+        }
+        System.out.println();
         /*
         System.out.println(avlDataPacket.getAvlData().getIoData().getBeaconData().get(0).getUuid());
         System.out.println(avlDataPacket.getAvlData().getIoData().getBeaconData().get(0).getMajor());
@@ -20,8 +31,12 @@ public class Decoder {
         System.out.println(avlDataPacket.getAvlData().getIoData().getBeaconData().get(1).getMinor());
 
          */
-        System.out.println(avlDataPacket.getNumberOfData2());
 
+
+    }
+
+    public static List<AvlDataCollection> getAvlCollectionList(){
+        return null;
     }
 
     public static void setHexCode(String hexCode) {

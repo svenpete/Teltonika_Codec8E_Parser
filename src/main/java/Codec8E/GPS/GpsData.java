@@ -5,9 +5,9 @@
  * Änderungsdatum 17.08.2020
  */
 
-package Codec8E.AvlDatapacket.GPS;
+package Codec8E.GPS;
 
-import Codec8E.AvlDatapacket.FieldEncoding;
+import Codec8E.FieldEncoding;
 
 import static Codec8E.Decoder.hexCode;
 

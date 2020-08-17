@@ -10,44 +10,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-
-
 public class ReadLogs
 {
     // gets the working directory
-    public static String currentDirectory = System.getProperty("user.dir");
+    private static String currentDirectory = System.getProperty("user.dir");
 
-    public static final String path = currentDirectory + "/logs/log.log";
-
-    public static void main (String [] args){
-
-        try{
-        List<String> logList = getLogData();
-
-        for (int i = 0; i < logList.size(); i++)
-        {
-           boolean valid = getDateBetween("2019-07-26 11:25:19", "2019-07-26 11:25:21",logList.get(i));
-            if (valid && checkStatus(logList.get(i)))
-            {
-
-                System.out.println(logList.get(i));
-                System.out.println(getBytes(logList.get(i)));
-
-            }
-        }
-        } catch (ParseException e){
-            e.printStackTrace();
-        } catch (FileNotFoundException e){
-            e.printStackTrace();
-        }
-
-    }
-
-    private static void List<String> getByteList(){
-
-
-    }
-
+    private static final String path = currentDirectory + "/logs/log.log";
 
 
     private static boolean checkStatus(String checkType)
@@ -119,6 +87,36 @@ public class ReadLogs
         Timestamp timeStamp = new Timestamp(parsedDate.getTime());
 
        return timeStamp;
+    }
+
+    /**
+     * This method returns a list with byte strings to decode.
+     * @return
+     */
+    public static List<String> getByteList() {
+
+        try{
+            // stored all log data
+            List<String> logList = getLogData();
+
+            List<String> byteList = new ArrayList<>();
+
+            for (int i = 0; i < logList.size(); i++)
+            {
+                boolean valid = getDateBetween("2020-08-13 15:57:27", "2020-08-13 16:00:00",logList.get(i));
+                if (valid && checkStatus(logList.get(i)))
+                {
+                    byteList.add(getBytes(logList.get(i)));
+                }
+            }
+            return byteList;
+        } catch (ParseException e){
+            e.printStackTrace();
+        } catch (FileNotFoundException e){
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 }

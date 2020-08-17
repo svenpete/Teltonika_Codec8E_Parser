@@ -6,10 +6,10 @@
  * Änderungsdatum 12.08.2020
  */
 
-package Codec8E.AvlDatapacket.AVL;
-import Codec8E.AvlDatapacket.GPS.GpsData;
-import Codec8E.AvlDatapacket.FieldEncoding;
-import Codec8E.AvlDatapacket.IO.IOData;
+package Codec8E.AVL;
+import Codec8E.GPS.GpsData;
+import Codec8E.FieldEncoding;
+import Codec8E.IO.IOData;
 
 import java.sql.Timestamp;
 

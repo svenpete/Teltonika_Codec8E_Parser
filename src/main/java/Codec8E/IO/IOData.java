@@ -8,9 +8,9 @@
 
 
 
-package Codec8E.AvlDatapacket.IO;
+package Codec8E.IO;
 
-import Codec8E.AvlDatapacket.FieldEncoding;
+import Codec8E.FieldEncoding;
 
 import java.util.ArrayList;
 import java.util.List;

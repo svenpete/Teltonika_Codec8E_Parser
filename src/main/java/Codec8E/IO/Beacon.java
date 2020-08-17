@@ -5,9 +5,9 @@
  * Autor: Sven Petersen
  * Änderungsdatum 12.08.2020
  */
-package Codec8E.AvlDatapacket.IO;
+package Codec8E.IO;
 
-import Codec8E.AvlDatapacket.FieldEncoding;
+import Codec8E.FieldEncoding;
 
 import static Codec8E.Decoder.hexCode;
 

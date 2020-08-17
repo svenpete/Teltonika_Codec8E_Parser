@@ -7,10 +7,10 @@
  */
 
 
-package Codec8E.AvlDatapacket.Collection;
+package Codec8E.Collection;
 
-import Codec8E.AvlDatapacket.AVL.AvlData;
-import Codec8E.AvlDatapacket.FieldEncoding;
+import Codec8E.AVL.AvlData;
+import Codec8E.FieldEncoding;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,3 +1,11 @@
+/** AvlData
+ * <p>
+ *     Version 1
+ * </p>
+ * Autor: Sven Petersen
+ * Änderungsdatum 12.08.2020
+ */
+
 package Codec8E.AvlDatapacket.AVL;
 import Codec8E.AvlDatapacket.GPS.GpsData;
 import Codec8E.AvlDatapacket.FieldEncoding;

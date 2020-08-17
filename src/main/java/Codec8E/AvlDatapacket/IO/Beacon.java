@@ -1,3 +1,10 @@
+/** Beacon
+ * <p>
+ *     Version 1
+ * </p>
+ * Autor: Sven Petersen
+ * Änderungsdatum 12.08.2020
+ */
 package Codec8E.AvlDatapacket.IO;
 
 import Codec8E.AvlDatapacket.FieldEncoding;
@@ -5,6 +12,11 @@ import Codec8E.AvlDatapacket.FieldEncoding;
 import static Codec8E.Decoder.hexCode;
 
 public class Beacon {
+
+
+
+
+
     private String uuid;
     private String major;
     private String minor;
@@ -23,6 +35,8 @@ public class Beacon {
 
     Beacon(int actualPosition){
             this.actualPosition = actualPosition;
+
+
             setBleBeaconFlag();
             setSignalStrengthAvaible();
             setBeaconType();
@@ -33,6 +47,12 @@ public class Beacon {
 
     }
 
+    /**
+     *  This method parses the received beacon-flag to binary and checks afterwards the first character of the received
+     *  binary string.
+     *  1 = signal strength available
+     *  0 = signal strength not available
+     */
     private void setSignalStrengthAvaible(){
         String beaconFlagBinary = Integer.toBinaryString(Integer.parseInt(bleBeaconFlag));
         if(beaconFlagBinary.indexOf(0) == 1) {
@@ -44,15 +64,20 @@ public class Beacon {
 
 
 
-
+    /** This method determines of which type the beacon is.
+     *  If fifth index from binary string is 1 the beacon type will be iBeacon otherwise it is Eddystone.
+     */
     private void setBeaconType(){
-        String beaconTypeBinary = Integer.toBinaryString(Integer.parseInt(bleBeaconFlag));
-        if (beaconTypeBinary.indexOf(5) == 1) {
+        String beaconTypeBinary = Integer.toBinaryString(Integer.parseInt(bleBeaconFlag,16));
+        char toCheck = beaconTypeBinary.charAt(5);
+        if ( toCheck == '1') {
             this.BeaconType = "iBeacon";
         } else {
             this.BeaconType = "Eddystone";
         }
     }
+
+
 
     private void setUUID(){
         internalPosition = actualPosition + FieldEncoding.byte32.getElement();
@@ -69,6 +94,10 @@ public class Beacon {
         this.minor = getElement(internalPosition);
     }
 
+    /**
+     *  This method sets the received signal strength indication (=rssi).
+     *  The received value from the hex code needs to be parsed in binary 2 complement and then be parsed to decimal.
+     */
     private void setRssi(){
         internalPosition = actualPosition + FieldEncoding.byte2.getElement();
         String binary = convertToBinary(Integer.parseInt(getElement(internalPosition),16));
@@ -77,11 +106,17 @@ public class Beacon {
         this.rssi = -1 * Integer.parseInt(findTwoscomplement(stringBuffer),2); // temp solution
     }
 
+    /**
+     *  This method sets the received beacon-flag from the hex code.
+     *  The beacon-flag owns information about the beacon-type is
+     */
     private void setBleBeaconFlag(){
         internalPosition = actualPosition + FieldEncoding.byte2.getElement();
         this.bleBeaconFlag = hexCode.substring(actualPosition, internalPosition);
         actualPosition = internalPosition;
     }
+
+
 
 
 
@@ -165,5 +200,14 @@ public class Beacon {
         actualPosition = internalPosition;
         return elementHexCode;
     }
+
+    private Integer getElementValue(Integer internalPosition){
+        String elementHexCode = hexCode.substring(actualPosition, internalPosition);
+        Integer value = Integer.parseInt(elementHexCode,16);
+
+        actualPosition = internalPosition;
+        return value;
+    }
+
 
 }

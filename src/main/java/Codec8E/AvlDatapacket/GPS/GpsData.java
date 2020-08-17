@@ -1,3 +1,10 @@
+/** GpsData
+ * <p>
+ *     Version 1
+ * </p>
+ * Änderungsdatum 17.08.2020
+ */
+
 package Codec8E.AvlDatapacket.GPS;
 
 import Codec8E.AvlDatapacket.FieldEncoding;

@@ -1,3 +1,11 @@
+/** BeaconMetaData
+ * <p>
+ *     Version 1
+ * </p>
+ * Autor: Sven Petersen
+ * Änderungsdatum 12.08.2020
+ */
+
 package Codec8E.AvlDatapacket.IO;
 
 import Codec8E.AvlDatapacket.FieldEncoding;
@@ -9,21 +17,17 @@ public class BeaconMetaData {
     private int recordCount;
     private int totalRecord;
     private String beaconDataPart;
-    private int beaconDataLength;
-
 
     private int actualPosition;
     private int internalPosition;
 
     BeaconMetaData(int actualPosition){
         this.actualPosition = actualPosition;
-        setBeaconLength();
+
         setRecordCount();
         setTotalRecord();
         setBeaconDataPart();
     }
-
-
 
     private void setBeaconDataPart(){
         String s = String.valueOf(recordCount);
@@ -41,7 +45,6 @@ public class BeaconMetaData {
         this.totalRecord = getElementValue(internalPosition);
     }
 
-
     private Integer getElementValue(Integer internalPosition){
         String elementHexCode = hexCode.substring(actualPosition, internalPosition);
         Integer value = Integer.parseInt(elementHexCode,16);
@@ -50,32 +53,11 @@ public class BeaconMetaData {
         return value;
     }
 
-    private void setBeaconLength(){
-        internalPosition = actualPosition + FieldEncoding.byte4.getElement();
-        this.beaconDataLength = getElementValue(internalPosition);
-    }
-
-    public int getRecordCount() {
-        return recordCount;
-    }
-
-    public int getTotalRecord() {
-        return totalRecord;
-    }
-
-    public String getBeaconDataPart() {
-        return beaconDataPart;
-    }
-
     public int getActualPosition() {
         return actualPosition;
     }
 
     public int getInternalPosition() {
         return internalPosition;
-    }
-
-    public int getBeaconDataLength() {
-        return beaconDataLength;
     }
 }

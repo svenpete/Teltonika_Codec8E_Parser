@@ -1,3 +1,11 @@
+/** IOElement
+ * <p>
+ *     Version 1
+ * </p>
+ * Autor: Sven Petersen
+ * Änderungsdatum 12.08.2020
+ */
+
 package Codec8E.AvlDatapacket.IO;
 
 public class IOElement {

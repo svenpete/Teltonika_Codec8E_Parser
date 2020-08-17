@@ -43,7 +43,14 @@ public class ReadLogs
 
     }
 
-    public static boolean checkStatus(String checkType)
+    private static void List<String> getByteList(){
+
+
+    }
+
+
+
+    private static boolean checkStatus(String checkType)
     {
         if (checkType.contains("received"))
         {
@@ -53,7 +60,7 @@ public class ReadLogs
 
     }
 
-    public static String getBytes(String stringToSearch){
+    private static String getBytes(String stringToSearch){
 
         int firstBracket = stringToSearch.indexOf('[');
         String contentOfBrackets = stringToSearch.substring(firstBracket + 1, stringToSearch.indexOf(']', firstBracket));
@@ -65,7 +72,7 @@ public class ReadLogs
      * @return a list with given strings from log file
      * @throws FileNotFoundException
      */
-    public static List<String> getLogData() throws FileNotFoundException {
+    private static List<String> getLogData() throws FileNotFoundException {
         String line = "";
 
         ArrayList<String> logList = new ArrayList<>();
@@ -87,7 +94,7 @@ public class ReadLogs
      * @return true if given input lays between otherwise false.
      * @throws ParseException
      */
-    public static boolean getDateBetween(String timeStampFrom, String timeStampTo, String timeStampInBetween) throws ParseException {
+    private static boolean getDateBetween(String timeStampFrom, String timeStampTo, String timeStampInBetween) throws ParseException {
         Timestamp lowerBound = getTimeStamp(timeStampFrom);
         Timestamp upperBound = getTimeStamp(timeStampTo);
         Timestamp toCheck = getTimeStamp(timeStampInBetween);
@@ -104,7 +111,7 @@ public class ReadLogs
      * @param toConvert = the log entry to be get the date from.
      * @return the given timestamp for this specific log entry.
      */
-    public static Timestamp getTimeStamp(String toConvert) throws ParseException
+    private static Timestamp getTimeStamp(String toConvert) throws ParseException
     {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");

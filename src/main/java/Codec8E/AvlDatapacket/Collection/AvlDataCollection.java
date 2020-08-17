@@ -1,13 +1,26 @@
+/** AvlDataCollection
+ * <p>
+ *     Version 1
+ * </p>
+ * Autor: Sven Petersen
+ * Änderungsdatum 12.08.2020
+ */
+
+
 package Codec8E.AvlDatapacket.Collection;
 
 import Codec8E.AvlDatapacket.AVL.AvlData;
 import Codec8E.AvlDatapacket.FieldEncoding;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static Codec8E.Decoder.hexCode;
 
 
-public class AvlDataPacket {
+public class AvlDataCollection {
 
-    public static String hexCode = "00000000000000708E0100000173BAF73D01000000000000000000000000000000000181000100000000000000000001018100431121FDA50693A4E24FB1AFCFC6EB07647825271B271BAC21DA95206921ED84C1ED97EA92306C5A7F00020C38AB21DA95203921ED84C1ED97EA92306C5A7F00016643C10100003799";
+
 
     private int preAmble;
     private int dataFieldLength;
@@ -16,44 +29,46 @@ public class AvlDataPacket {
     private int numberOfData1;
     private int numberOfData2;
 
+    private List<AvlData> avlDataList;
+
     private int actualPosition;
     private int internalPosition;
 
-    public AvlData avlData;
 
-   public AvlDataPacket(){
+
+   public AvlDataCollection(){
         actualPosition = 0;
         setPreAmble();
         setDataFieldLength();
         setCodecID();
         setNumberOfData1();
-        setAvlData();
+        setAvlDataList();
         setNumberOfData2();
 
     }
 
+    private void setAvlDataList(){
+       avlDataList = new ArrayList<>();
+        for (int i = 0; i < numberOfData1; i++) {
+
+            if (i > 0)
+              this.actualPosition = avlDataList.get(avlDataList.size() - 1).getIoData().getActualPosition();
+
+        avlDataList.add(new AvlData(actualPosition));
+        }
+   }
+
     private void setNumberOfData2(){
-        int length = avlData.getIoData().getBeaconData().size() - 1;
-        this.actualPosition = avlData.getIoData().getBeaconData().get(length).getActualPosition();
+        actualPosition = avlDataList.get(avlDataList.size() - 1).getIoData().getActualPosition();
         internalPosition = actualPosition + FieldEncoding.byte2.getElement();
         this.numberOfData2 = getElementValue(internalPosition);
     }
-
-
-
 
     // preamble length is a fix value normaly start at 8 because of zero we start with
     private void setPreAmble(){
         internalPosition = actualPosition + FieldEncoding.byte8.getElement();
         this.preAmble = getElementValue(internalPosition);
     }
-
-
-    private void setAvlData(){
-       this.avlData = new AvlData(actualPosition);
-    }
-
-
 
     private void setDataFieldLength(){
         internalPosition = actualPosition + FieldEncoding.byte8.getElement();
@@ -77,9 +92,6 @@ public class AvlDataPacket {
         actualPosition = internalPosition;
         return value;
     }
-
-
-
 
     public int getPreAmble() {
         return preAmble;
@@ -109,7 +121,4 @@ public class AvlDataPacket {
         return internalPosition;
     }
 
-    public AvlData getAvlData() {
-        return avlData;
-    }
 }

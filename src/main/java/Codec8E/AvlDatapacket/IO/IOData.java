@@ -1,3 +1,13 @@
+/** IOData
+ * <p>
+ *     Version 1
+ * </p>
+ * Autor: Sven Petersen
+ * Änderungsdatum 11.08.2020
+ */
+
+
+
 package Codec8E.AvlDatapacket.IO;
 
 import Codec8E.AvlDatapacket.FieldEncoding;
@@ -30,7 +40,6 @@ public class IOData {
         setN2ElementValues();
         setN4ElementValues();
         setN8ElementValues();
-
         setBeaconElement();
     }
 
@@ -39,11 +48,20 @@ public class IOData {
         this.eventId = getElementValue(internalPosition);
     }
 
+    /**
+     * This method sets the total elementCount of all received a
+     */
     private void setTotalElementCount(){
         internalPosition = actualPosition + FieldEncoding.byte4.getElement();
         this.totalElementCount = getElementValue(internalPosition);
     }
 
+    /**
+     * This method gets the counter for n1 elements from the hex-code and adds elements data to the n1 list.
+     *  n1 elements have a id and a value.
+     *  The id is always 4 bit long.
+     *  The value of n2 elements is always 2 bit long.
+     */
     private void setN1ElementValues(){
         internalPosition = actualPosition + FieldEncoding.byte4.getElement();
         int n1ElementCount = getElementValue(internalPosition);
@@ -53,6 +71,10 @@ public class IOData {
         }
     }
 
+    /**
+     * This method adds all n1 elements in the io-data to a list
+     * @param counter to iterate over the received elements received by hex-code
+     */
     private void addN1ElementsToList(int counter){
         n1Elements = new ArrayList<>();
 
@@ -65,6 +87,12 @@ public class IOData {
         }
     }
 
+    /**
+     * This method gets the counter for n2 elements from the hex-code and adds elements data to the n2 list.
+     *  n2 elements have a id and a value.
+     *  The id is always 4 bit long.
+     *  The value of n2 elements is always 4 bit long.
+     */
     private void setN2ElementValues(){
         internalPosition = actualPosition + FieldEncoding.byte4.getElement();
         int n1ElementCount = getElementValue(internalPosition);
@@ -74,6 +102,10 @@ public class IOData {
         }
     }
 
+    /**
+     * This method adds all n2 elements in the io-data to a list.
+     * @param counter to iterate over the received elements received by hex-code
+     */
     private void addN2ElementsToList(int counter){
         n2Elements = new ArrayList<>();
 
@@ -86,6 +118,12 @@ public class IOData {
         }
     }
 
+    /**
+     * This method gets the counter for n4 elements from the hex-code and adds elements data to the n4 list.
+     *  n4 elements have a id and a value.
+     *  The id is always 4 bit long.
+     *  The value of n4 elements is always 8 bit long.
+     */
     private void setN4ElementValues(){
         internalPosition = actualPosition + FieldEncoding.byte4.getElement();
         int n1ElementCount = getElementValue(internalPosition);
@@ -95,6 +133,10 @@ public class IOData {
         }
     }
 
+    /**
+     * This method adds all n1 elements in the io-data to a list
+     * @param counter to iterate over the received elements received by hex-code
+     */
     private void addN4ElementsToList(int counter){
         n4Elements = new ArrayList<>();
 
@@ -108,6 +150,12 @@ public class IOData {
         }
     }
 
+    /**
+     * This method gets the counter for n8 elements from the hex-code and adds elements data to the n8 list.
+     *  n1 elements have a id and a value.
+     *  The id is always 4 bit long.
+     *  The value of n8 elements is always 16 bit long.
+     */
     private void setN8ElementValues(){
         internalPosition = actualPosition + FieldEncoding.byte4.getElement();
         int n1ElementCount = getElementValue(internalPosition);
@@ -117,6 +165,10 @@ public class IOData {
         }
     }
 
+    /**
+     * This method adds all n8 elements in the io-data to a list
+     * @param counter to iterate over the received elements received by hex-code
+     */
     private void addN8ElementsToList(int counter){
         n8Elements = new ArrayList<>();
 
@@ -130,6 +182,13 @@ public class IOData {
         }
     }
 
+    /**
+     * This method gets the counter for beacon elements from the hex-code and adds elements data to the beacon list.
+     * Beacon elements have beacon-flag, uuid, minor, major and rssi value.
+     * The id is always 4 bit long.
+     * The value of n8 elements is always variable.
+     * A 4 bit value between the id and ble-flag determines the size of the received beacon-data.
+     */
     private void setBeaconElement(){
         internalPosition = actualPosition + FieldEncoding.byte4.getElement();
         int beaconCount = getElementValue(internalPosition);
@@ -139,40 +198,54 @@ public class IOData {
         }
     }
 
+    /**
+     * This method adds all beacon elements in the io-data to a list.
+     * @param counter to iterate over the received elements received by hex-code
+     */
     private void addBeaconsToList(int counter){
         this.beaconData = new ArrayList<>();
         int valueToPass = 0;
-        int internalCount = 0;
+
 
         // iterate over nx element
         for (int i = 0; i < counter; i++) {
-            int toCheck = getElementValue(internalPosition + FieldEncoding.byte4.getElement());
-            this.beaconMetaData = new BeaconMetaData(actualPosition);
 
-            // value to determine size of beacon data stored in
-            if (i == 0)
-                valueToPass = beaconMetaData.getBeaconDataLength() - 1;
+            //gets element id to determine type of xn elements
+            internalPosition = internalPosition + FieldEncoding.byte4.getElement();
+            int elementIdToCheck = getElementValue(internalPosition);
 
-            actualPosition = beaconMetaData.getActualPosition();
 
-            if (toCheck == 385){
+            //get length of received xn element
+            internalPosition = internalPosition + FieldEncoding.byte4.getElement();
+            int beaconDataLength = getElementValue(internalPosition); // -1 to fix
 
+            if (elementIdToCheck == 385){
+
+
+                this.beaconMetaData = new BeaconMetaData(actualPosition); // get beaconmeta data
+                actualPosition = beaconMetaData.getActualPosition();  // get latest position after one itreation it wil be overwritten
+
+                // reposition latest position from created beacon object
                 if (i > 0)
                     this.actualPosition = beaconData.get(i).getActualPosition();
 
-                    while (valueToPass - 22 >= 0){
 
-                        if (internalCount >= 1)
-                            this.actualPosition = beaconData.get(beaconData.size() - 1).getActualPosition();
+
+                    while (beaconDataLength - 1  > 0){
+
+
+
 
                         beaconData.add(new Beacon(this.actualPosition));
+                        this.actualPosition = beaconData.get(beaconData.size() - 1).getActualPosition();
 
-                        valueToPass = valueToPass - 22;
-                        internalCount++;
+                        beaconDataLength = beaconDataLength - 22;
                     }
+                }
+
             }
         }
-    }
+
 
     private int getElementId(){
         internalPosition = actualPosition + FieldEncoding.byte4.getElement();

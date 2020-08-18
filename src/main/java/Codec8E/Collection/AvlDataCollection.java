@@ -121,4 +121,7 @@ public class AvlDataCollection {
         return internalPosition;
     }
 
+    public List<AvlData> getAvlDataList() {
+        return avlDataList;
+    }
 }

@@ -1,43 +1,68 @@
 package Codec8E;
-
 import Codec8E.Collection.AvlDataCollection;
 import Logger.ReadLogs;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class Decoder {
 
-    public static String hexCode = "000000000000002D8E0100000173E81CEAA0000000000000000000000000000000000000000100000000000000000001014B0000010000DFAC";
+    public static String hexCode = "";
 
-    private List<AvlDataCollection> avlDataCollections;
+    private List<AvlDataCollection> decodedData;
+
+    Decoder(){
+        setAvlCollectionList();
+    }
 
     public static void main (String [] args){
-        Decoder decoder = new Decoder();
-        decoder.avlDataCollections = new ArrayList<>();
 
+        Decoder decoder = new Decoder();
+
+
+        System.out.println();
+
+    }
+
+    public void setAvlCollectionList(){
+        decodedData = new ArrayList<>();
         List<String> byteStrings = ReadLogs.getByteList();
         for (int i = 0; i < byteStrings.size(); i++) {
             setHexCode(byteStrings.get(i));
-            decoder.avlDataCollections.add(new AvlDataCollection());
+            decodedData.add(new AvlDataCollection());
         }
-        System.out.println();
-        /*
-        System.out.println(avlDataPacket.getAvlData().getIoData().getBeaconData().get(0).getUuid());
-        System.out.println(avlDataPacket.getAvlData().getIoData().getBeaconData().get(0).getMajor());
-        System.out.println(Integer.parseInt(avlDataPacket.getAvlData().getIoData().getBeaconData().get(0).getMinor(),16));
-        System.out.println(avlDataPacket.getAvlData().getIoData().getBeaconData().get(1).getUuid());
-        System.out.println(avlDataPacket.getAvlData().getIoData().getBeaconData().get(1).getMajor());
-        System.out.println(avlDataPacket.getAvlData().getIoData().getBeaconData().get(1).getMinor());
-
-         */
-
-
+        removeDeadBeaconEntries();
+        removeAvlCollection();
     }
 
-    public static List<AvlDataCollection> getAvlCollectionList(){
-        return null;
+    private void removeDeadBeaconEntries(){
+        for (int i = 0; i < decodedData.size(); i++) {
+            int avlDataSize = decodedData.get(i).getAvlDataList().size();
+
+            for (int j = 0; j < avlDataSize; j++) {
+
+                int receivedBeaconSize = decodedData.get(i).getAvlDataList().get(j).getIoData().getBeaconData().size();
+
+                if (receivedBeaconSize == 0)
+                    decodedData.get(i).getAvlDataList().remove(j);
+            }
+
+        }
     }
+    
+    private void removeAvlCollection(){
+        Iterator<AvlDataCollection> it = decodedData.iterator();
+
+        while(it.hasNext()){
+            AvlDataCollection toCheck = it.next();
+            if (toCheck.getAvlDataList().size() == 0 )
+                it.remove();
+        }
+    }
+
+
+    public static void checkBeaconData(){}
 
     public static void setHexCode(String hexCode) {
         Decoder.hexCode = hexCode;

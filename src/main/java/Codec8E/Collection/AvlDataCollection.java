@@ -10,6 +10,9 @@
 package Codec8E.Collection;
 
 import Codec8E.AVL.AvlData;
+import Codec8E.Exceptions.CodecProtocolException;
+import Codec8E.Exceptions.PreAmbleLengthException;
+import Codec8E.Exceptions.ReceivedDataException;
 import Codec8E.FieldEncoding;
 
 import java.util.ArrayList;
@@ -26,8 +29,8 @@ public class AvlDataCollection {
     private int dataFieldLength;
     private int codecId;
 
-    private int numberOfData1;
-    private int numberOfData2;
+    private int receivedAmountOfData;
+    private int receivedAmountOfDataCheck;
 
     private List<AvlData> avlDataList;
 
@@ -36,7 +39,7 @@ public class AvlDataCollection {
 
 
 
-   public AvlDataCollection(){
+   public AvlDataCollection() throws PreAmbleLengthException {
         actualPosition = 0;
         setPreAmble();
         setDataFieldLength();
@@ -47,9 +50,11 @@ public class AvlDataCollection {
 
     }
 
+
+
     private void setAvlDataList(){
        avlDataList = new ArrayList<>();
-        for (int i = 0; i < numberOfData1; i++) {
+        for (int i = 0; i < receivedAmountOfData; i++) {
 
             if (i > 0)
               this.actualPosition = avlDataList.get(avlDataList.size() - 1).getIoData().getActualPosition();
@@ -58,16 +63,21 @@ public class AvlDataCollection {
         }
    }
 
+
     private void setNumberOfData2(){
         actualPosition = avlDataList.get(avlDataList.size() - 1).getIoData().getActualPosition();
         internalPosition = actualPosition + FieldEncoding.byte2.getElement();
-        this.numberOfData2 = getElementValue(internalPosition);
+
+        this.receivedAmountOfDataCheck = getElementValue(internalPosition);
     }
 
-    // preamble length is a fix value normaly start at 8 because of zero we start with
-    private void setPreAmble(){
+    // preamble length is a 8 bit long value which contains just zeros 
+    private void setPreAmble() throws PreAmbleLengthException {
         internalPosition = actualPosition + FieldEncoding.byte8.getElement();
-        this.preAmble = getElementValue(internalPosition);
+        int preAmble = getElementValue(internalPosition);
+        checkPreAmble(preAmble);
+        this.preAmble = preAmble;
+
     }
 
     private void setDataFieldLength(){
@@ -82,7 +92,7 @@ public class AvlDataCollection {
 
     private void setNumberOfData1(){
         internalPosition = actualPosition + FieldEncoding.byte2.getElement();
-        this.numberOfData1 = getElementValue(internalPosition);
+        this.receivedAmountOfData = getElementValue(internalPosition);
     }
 
     private Integer getElementValue(Integer internalPosition){
@@ -92,6 +102,28 @@ public class AvlDataCollection {
         actualPosition = internalPosition;
         return value;
     }
+
+    /**
+     *  This method check if the received preamble has the correct value.
+     *  If the received preamble is incorrect an exception will be thrown and the parse process will be interrupted
+     * @param preAmble
+     * @throws PreAmbleLengthException incorrect format exception
+     */
+    private void checkPreAmble(int preAmble) throws PreAmbleLengthException {
+        if (preAmble != 0)
+            throw new PreAmbleLengthException(preAmble);
+    }
+
+    private void compareReceivedNumberOfData() throws ReceivedDataException {
+        if (receivedAmountOfData != receivedAmountOfDataCheck)
+            throw new ReceivedDataException(receivedAmountOfData, receivedAmountOfDataCheck);
+    }
+
+    private void checkCodecProtocol() throws CodecProtocolException {
+        if (codecId != 147)
+            throw new CodecProtocolException(codecId);
+    }
+
 
     public int getPreAmble() {
         return preAmble;
@@ -105,12 +137,12 @@ public class AvlDataCollection {
         return codecId;
     }
 
-    public int getNumberOfData1() {
-        return numberOfData1;
+    public int getReceivedAmountOfData() {
+        return receivedAmountOfData;
     }
 
-    public int getNumberOfData2() {
-        return numberOfData2;
+    public int getReceivedAmountOfDataCheck() {
+        return receivedAmountOfDataCheck;
     }
 
     public int getActualPosition() {

@@ -1,5 +1,6 @@
 package Codec8E;
 import Codec8E.Collection.AvlDataCollection;
+import Codec8E.Exceptions.PreAmbleLengthException;
 import Logger.ReadLogs;
 
 import java.util.ArrayList;
@@ -12,20 +13,25 @@ public class Decoder {
 
     private List<AvlDataCollection> decodedData;
 
-    Decoder(){
+    Decoder() throws PreAmbleLengthException {
         setAvlCollectionList();
     }
 
-    public static void main (String [] args){
+    public static void main (String [] args) {
+        try {
+            Decoder decoder = new Decoder();
+            System.out.println();
+        } catch (PreAmbleLengthException e){
+            System.out.println(e);
+        }
 
-        Decoder decoder = new Decoder();
 
 
-        System.out.println();
+
 
     }
 
-    public void setAvlCollectionList(){
+    public void setAvlCollectionList() throws PreAmbleLengthException {
         decodedData = new ArrayList<>();
         List<String> byteStrings = ReadLogs.getByteList();
         for (int i = 0; i < byteStrings.size(); i++) {

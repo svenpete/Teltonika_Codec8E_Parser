@@ -106,7 +106,7 @@ public class AvlDataCollection {
     /**
      *  This method check if the received preamble has the correct value.
      *  If the received preamble is incorrect an exception will be thrown and the parse process will be interrupted
-     * @param preAmble
+     * @param preAmble 
      * @throws PreAmbleLengthException incorrect format exception
      */
     private void checkPreAmble(int preAmble) throws PreAmbleLengthException {

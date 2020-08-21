@@ -13,11 +13,20 @@ import java.util.Scanner;
 public class ReadLogs
 {
     // gets the working directory
-    private static String currentDirectory = System.getProperty("user.dir");
+    private static String currentSystemDirectory = System.getProperty("user.dir");
+    private static final String projectPath = currentSystemDirectory + "/logs/log.log";
+    public List<String> hexCodes;
 
-    private static final String path = currentDirectory + "/logs/log.log";
+    public ReadLogs() throws FileNotFoundException, ParseException {
+    setHexCode();
+    }
 
-
+    /**
+     * This method checks the status of a received byte string. If the type is received the method returns true.
+     * Purpose is to examine the important byte strings from log data.
+     * @param checkType
+     * @return true or false based and s
+     */
     private static boolean checkStatus(String checkType)
     {
         if (checkType.contains("received"))
@@ -28,7 +37,12 @@ public class ReadLogs
 
     }
 
-    private static String getBytes(String stringToSearch){
+    /**
+     * This method extracts the log hex code from a specific log entry out of the log file.
+     * @param stringToSearch a single log entry with timestamp, log info and hexcode.
+     * @return the received hexcode from fmb devices.
+     */
+    private static String getHexStrings(String stringToSearch){
 
         int firstBracket = stringToSearch.indexOf('[');
         String contentOfBrackets = stringToSearch.substring(firstBracket + 1, stringToSearch.indexOf(']', firstBracket));
@@ -40,12 +54,12 @@ public class ReadLogs
      * @return a list with given strings from log file
      * @throws FileNotFoundException
      */
-    private static List<String> getLogData() throws FileNotFoundException {
+    private List<String> getLogData() throws FileNotFoundException {
         String line = "";
 
         ArrayList<String> logList = new ArrayList<>();
 
-        Scanner logScanner = new Scanner(new File(path));
+        Scanner logScanner = new Scanner(new File(projectPath));
 
         while (logScanner.hasNextLine())
         {
@@ -62,7 +76,7 @@ public class ReadLogs
      * @return true if given input lays between otherwise false.
      * @throws ParseException
      */
-    private static boolean getDateBetween(String timeStampFrom, String timeStampTo, String timeStampInBetween) throws ParseException {
+    private boolean getDateBetween(String timeStampFrom, String timeStampTo, String timeStampInBetween) throws ParseException {
         Timestamp lowerBound = getTimeStamp(timeStampFrom);
         Timestamp upperBound = getTimeStamp(timeStampTo);
         Timestamp toCheck = getTimeStamp(timeStampInBetween);
@@ -79,7 +93,7 @@ public class ReadLogs
      * @param toConvert = the log entry to be get the date from.
      * @return the given timestamp for this specific log entry.
      */
-    private static Timestamp getTimeStamp(String toConvert) throws ParseException
+    private Timestamp getTimeStamp(String toConvert) throws ParseException
     {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
@@ -93,30 +107,21 @@ public class ReadLogs
      * This method returns a list with byte strings to decode.
      * @return
      */
-    public static List<String> getByteList() {
-
-        try{
+    public List<String> setHexCode() throws FileNotFoundException, ParseException {
             // stored all log data
-            List<String> logList = getLogData();
+            List<String> logData = getLogData();
+            hexCodes = new ArrayList<>();
 
-            List<String> byteList = new ArrayList<>();
-
-            for (int i = 0; i < logList.size(); i++)
+            for (int i = 0; i < logData.size(); i++)
             {
-                boolean valid = getDateBetween("2020-08-13 15:57:27", "2020-08-13 16:00:00",logList.get(i));
-                if (valid && checkStatus(logList.get(i)))
+                boolean valid = getDateBetween("2020-08-13 15:57:27", "2020-08-13 16:00:00",logData.get(i));
+
+                if (valid && checkStatus(logData.get(i)))
                 {
-                    byteList.add(getBytes(logList.get(i)));
+                    hexCodes.add(getHexStrings(logData.get(i)));
                 }
             }
-            return byteList;
-        } catch (ParseException e){
-            e.printStackTrace();
-        } catch (FileNotFoundException e){
-            e.printStackTrace();
-        }
-
-        return null;
+            return hexCodes;
     }
 
 }

@@ -60,6 +60,27 @@ public class Table {
         return sqlStatement;
     }
 
+    public String create(String CompositePrimaryKey) {
+        String sqlStatement = "CREATE TABLE IF NOT EXISTS " + name + "(";
+        String sqlStatementPrimaryKey = "";
+
+        for (int i = 0; i < attributes.size(); i++) {
+            sqlStatement += attributes.get(i).create();
+
+            if (i < attributes.size() - 1)
+            {
+                sqlStatement += ", ";
+            } else {
+                sqlStatementPrimaryKey = attributes.get(0).createPrimaryKey(sqlStatementPrimaryKey);
+
+                sqlStatement += ", PRIMARY KEY (" + sqlStatementPrimaryKey + ", " + CompositePrimaryKey + "));";
+
+            }
+
+        }
+        return sqlStatement;
+    }
+
     public String getSqlstatement() {
         return sqlStatement;
     }

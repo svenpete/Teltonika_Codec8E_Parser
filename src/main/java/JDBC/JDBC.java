@@ -205,23 +205,16 @@ public class JDBC {
         stmt.addBatch(Category.create());
 
         Table Beacon = new Table("Beacon")
-                .addPrimaryKey("id", Type.VARCHAR)
-                .addAttr("uuid",Type.VARCHAR)
+                .addPrimaryKey("uuid",Type.VARCHAR)
                 .addAttr("minor", Type.VARCHAR)
+                .addForeignKey("major", Type.VARCHAR, Category, Category.attributes.get(0),
+                true, Constraint.DELETE_RESTRICT,Constraint.UPDATE_CASCADE)
                 .addAttr("rssi", Type.INTEGER)
                 .addForeignKey("location_id",Type.INTEGER, Location, Location.attributes.get(0),
-                        true, Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE)
-                .addForeignKey("major", Type.VARCHAR, Category, Category.attributes.get(0),
-                        true, Constraint.DELETE_RESTRICT,Constraint.UPDATE_CASCADE);
-        stmt.addBatch(Beacon.create());
+                        true, Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE);
+        stmt.addBatch(Beacon.create("minor"));
 
-        System.out.println(Beacon.create());
-
-
-
-
-
-
+        System.out.println(Beacon.create("minor"));
         Table Device = new Table("Device")
                 .addPrimaryKey("inventory_number", Type.INTEGER)
                 .addAttr("designation", Type.VARCHAR)
@@ -230,7 +223,9 @@ public class JDBC {
                 .addAttr("note", Type.VARCHAR)
                 .addAttr("reservation_status", Type.BOOLEAN)
                 .addForeignKey("beacon_major", Type.VARCHAR,Beacon,Beacon.attributes.get(0),
-                        true, Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE);
+                        true, Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE)
+                .addForeignKey("beacon_minor", Type.VARCHAR,Beacon,Beacon.attributes.get(0),
+                        true,Constraint.DELETE_RESTRICT,Constraint.UPDATE_CASCADE);
         stmt.addBatch(Device.create());
 
 

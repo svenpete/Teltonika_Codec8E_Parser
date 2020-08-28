@@ -39,14 +39,14 @@ public class AvlDataCollection {
 
 
 
-   public AvlDataCollection() throws PreAmbleLengthException {
+   public AvlDataCollection() throws PreAmbleLengthException, CodecProtocolException, ReceivedDataException {
         actualPosition = 0;
         setPreAmble();
         setDataFieldLength();
         setCodecID();
-        setNumberOfData1();
+        setReceivedAmountOfData();
         setAvlDataList();
-        setNumberOfData2();
+        setReceivedAmountOfDataCheck();
 
     }
 
@@ -64,12 +64,14 @@ public class AvlDataCollection {
    }
 
 
-    private void setNumberOfData2(){
+    private void setReceivedAmountOfDataCheck() throws ReceivedDataException {
         actualPosition = avlDataList.get(avlDataList.size() - 1).getIoData().getActualPosition();
         internalPosition = actualPosition + FieldEncoding.byte2.getElement();
 
-        this.receivedAmountOfDataCheck = getElementValue(internalPosition);
-    }
+        int receivedAmountOfDataCheck = getElementValue(internalPosition);
+        checkReceivedNumberOfData(receivedAmountOfData,receivedAmountOfDataCheck);
+        this.receivedAmountOfDataCheck = receivedAmountOfDataCheck;
+   }
 
     // preamble length is a 8 bit long value which contains just zeros 
     private void setPreAmble() throws PreAmbleLengthException {
@@ -85,12 +87,14 @@ public class AvlDataCollection {
         this.dataFieldLength = getElementValue(internalPosition);
     }
 
-    private void setCodecID(){
+    private void setCodecID() throws CodecProtocolException {
         internalPosition = actualPosition + FieldEncoding.byte2.getElement();
-        this.codecId = getElementValue(internalPosition);
-    }
+        int codecId = getElementValue(internalPosition);
+        checkCodecProtocol(codecId);
+        this.codecId = codecId;
+   }
 
-    private void setNumberOfData1(){
+    private void setReceivedAmountOfData(){
         internalPosition = actualPosition + FieldEncoding.byte2.getElement();
         this.receivedAmountOfData = getElementValue(internalPosition);
     }
@@ -114,13 +118,21 @@ public class AvlDataCollection {
             throw new PreAmbleLengthException(preAmble);
     }
 
-    private void compareReceivedNumberOfData() throws ReceivedDataException {
+    /**
+     *  This method checks if the received amount of data is equal to it's check value by the hexcode.
+     * @throws ReceivedDataException
+     */
+    private void checkReceivedNumberOfData(int receivedAmountOfData, int receivedAmountOfDataCheck) throws ReceivedDataException {
         if (receivedAmountOfData != receivedAmountOfDataCheck)
             throw new ReceivedDataException(receivedAmountOfData, receivedAmountOfDataCheck);
     }
 
-    private void checkCodecProtocol() throws CodecProtocolException {
-        if (codecId != 147)
+    /**
+     * This method checks if the received protocol has the right format. The right format is Code 8 Extended.
+     * @throws CodecProtocolException
+     */
+    private void checkCodecProtocol(int codecId) throws CodecProtocolException {
+        if (codecId != 142)  // decoded value for codec 8 extended protocol
             throw new CodecProtocolException(codecId);
     }
 

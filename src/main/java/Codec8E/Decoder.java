@@ -1,6 +1,11 @@
 package Codec8E;
+import Codec8E.AVL.AvlData;
 import Codec8E.Collection.AvlDataCollection;
+import Codec8E.Exceptions.CodecProtocolException;
 import Codec8E.Exceptions.PreAmbleLengthException;
+import Codec8E.Exceptions.ReceivedDataException;
+import Codec8E.GPS.GpsData;
+import Codec8E.IO.IOData;
 import Logger.ReadLogs;
 
 import java.io.FileNotFoundException;
@@ -15,25 +20,25 @@ public class Decoder {
 
     private List<AvlDataCollection> decodedData;
 
-    Decoder() throws PreAmbleLengthException {
+    Decoder() throws CodecProtocolException, ReceivedDataException, PreAmbleLengthException, FileNotFoundException, ParseException {
         setAvlCollectionList();
     }
 
     public static void main (String [] args) {
-        /*
         try {
             Decoder decoder = new Decoder();
             System.out.println();
-        } catch (PreAmbleLengthException e){
-            System.out.println(e);
-        }
-
-         */
-        try {
-            Decoder decoder = new Decoder();
-            System.out.println();
-        } catch (PreAmbleLengthException e){
-            System.out.println(e);
+        } catch (PreAmbleLengthException preAmbleLengthException){
+            System.out.println(preAmbleLengthException);
+        } catch (FileNotFoundException fileNotFoundException){
+            System.out.println(fileNotFoundException);
+        } catch (ParseException parseException){
+            System.out.println(parseException);
+        } catch (CodecProtocolException codecProtocolException)
+        {
+            System.out.println(codecProtocolException);
+        } catch (ReceivedDataException receivedDataException){
+            System.out.println(receivedDataException);
         }
 
 
@@ -42,7 +47,29 @@ public class Decoder {
 
     }
 
-    public void setAvlCollectionList() throws PreAmbleLengthException, FileNotFoundException, ParseException {
+    public void objectForJDBCInsert(){
+        for (int i = 0; i < decodedData.size(); i++) {
+            for (int j = 0; j < decodedData.get(i).getAvlDataList().size(); j++) {
+                AvlData avlData = decodedData.get(i).getAvlDataList().get(j);
+                System.out.println(avlData.getTimeStamp());
+                GpsData gpsData = decodedData.get(i).getAvlDataList().get(j).getGpsData();
+                System.out.println(gpsData.getLongitude());
+                System.out.println(gpsData.getLatitude());
+                System.out.println(gpsData.getAltitude());
+                System.out.println(gpsData.getAngle());
+
+                IOData ioData = decodedData.get(i).getAvlDataList().get(j).getIoData();
+                for (int k = 0; k < ioData.getBeaconData().size(); k++) {
+
+                }
+            }
+        }
+
+    }
+
+
+    public void setAvlCollectionList() throws PreAmbleLengthException, FileNotFoundException, ParseException,
+            ReceivedDataException, CodecProtocolException {
         decodedData = new ArrayList<>();
         ReadLogs logreader = new ReadLogs();
         List<String> byteStrings = logreader.hexCodes;
@@ -54,6 +81,9 @@ public class Decoder {
         removeAvlCollection();
     }
 
+    /**
+     *  This mehthod deletes avl-data entries which doenst have stored any beacon informations.
+     */
     private void removeDeadBeaconEntries(){
         for (int i = 0; i < decodedData.size(); i++) {
             int avlDataSize = decodedData.get(i).getAvlDataList().size();
@@ -68,7 +98,10 @@ public class Decoder {
 
         }
     }
-    
+
+    /**
+     * Removes an avl collection which doesn't contain any entry
+     */
     private void removeAvlCollection(){
         Iterator<AvlDataCollection> it = decodedData.iterator();
 
@@ -78,9 +111,6 @@ public class Decoder {
                 it.remove();
         }
     }
-
-
-    public static void checkBeaconData(){}
 
     public static void setHexCode(String hexCode) {
         Decoder.hexCode = hexCode;

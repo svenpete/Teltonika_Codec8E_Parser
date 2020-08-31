@@ -100,11 +100,13 @@ public class JDBC {
         return tuplesUpdate;
     }
 
+
+
     public static void main(String[] args) {
         try {
 
             Connection connection = getConnection();
-            createBeaconTables(connection);
+            Select.getAllWorkers(connection);
             /*
             getPrimaryKey(connection,"Worker","dallmann_am2020");
             Delete.deleteData(connection,"Worker","dallmann_am2020");

@@ -15,32 +15,27 @@ public class Decoder {
 
     private List<AvlDataCollection> decodedData;
 
-    Decoder() throws PreAmbleLengthException {
+    Decoder() throws PreAmbleLengthException, FileNotFoundException, ParseException {
         setAvlCollectionList();
     }
 
     public static void main (String [] args) {
-        /*
+
+
         try {
             Decoder decoder = new Decoder();
             System.out.println();
         } catch (PreAmbleLengthException e){
             System.out.println(e);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-
-         */
-        try {
-            Decoder decoder = new Decoder();
-            System.out.println();
-        } catch (PreAmbleLengthException e){
-            System.out.println(e);
-        }
-
-
-
 
 
     }
+
 
     public void setAvlCollectionList() throws PreAmbleLengthException, FileNotFoundException, ParseException {
         decodedData = new ArrayList<>();
@@ -86,4 +81,5 @@ public class Decoder {
         Decoder.hexCode = hexCode;
     }
 }
+
 

@@ -66,7 +66,7 @@ public class JDBC {
     public static void loadDatabaseConfiguration() throws IOException {
 
         Properties props = new Properties();
-        FileInputStream fileInputStream = new FileInputStream("src/main/java/Resources/database_config.properties");
+        FileInputStream fileInputStream = new FileInputStream("src/main/Resources/database_config.properties");
         props.load(fileInputStream);
         fileInputStream.close();
 
@@ -105,48 +105,7 @@ public class JDBC {
 
             Connection connection = getConnection();
             createBeaconTables(connection);
-            /*
-            getPrimaryKey(connection,"Worker","dallmann_am2020");
-            Delete.deleteData(connection,"Worker","dallmann_am2020");
 
-            createTables(connection);
-
-            // Testing
-            List<Object> sampleDataRight = createInsertData(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
-            Inserts.insertData(sampleDataRight, connection, "Rights", "dallmann_am2020");
-
-            List<Object> sampleDataWorker = createInsertData(1, "Kralle", "test@dallmann.de", "WasDas",
-                    "Detlef","Tomsen", 1);
-            Inserts.insertData(sampleDataWorker, connection, "Worker", "dallmann_am2020");
-
-            List<Object> sampleDataProject = createInsertData(1, "AssetManagement", "Untergang", "66666",
-                    "Lingen");
-            Inserts.insertData(sampleDataProject, connection, "Project", "dallmann_am2020");
-
-            List<Object> sampleDataDevice = createInsertData(1, false, "Makita", "00000001", "2020-04-01",
-                    "Motorflex", "Das hier ist ein Test", true);
-            Inserts.insertData(sampleDataDevice, connection, "Device", "dallmann_am2020");
-
-            List<Object> sampleDataBorrow = createInsertData("2020-04-24", "2020-04-28", "1999-11-27", 1, 1, 1);
-            Inserts.insertData(sampleDataBorrow, connection, "Borrows", "dallmann_am2020");
-
-            List<Object> sampleDataDeviceDocumentation = createInsertData(1, 1);
-            Inserts.insertData(sampleDataDeviceDocumentation, connection, "Device_documentation",
-                    "dallmann_am2020");
-
-            List<Object> sampleDataTuev = createInsertData("15:32:00", "2020-01-10", true, 1);
-            Inserts.insertData(sampleDataTuev, connection, "Tuev", "dallmann_am2020");
-
-            List<Object> sampleDataUVV = createInsertData("14:24:00", "2020-01-01", true, 1);
-            Inserts.insertData(sampleDataUVV, connection, "Uvv", "dallmann_am2020");
-
-            List<Object> sampleDataRepair = createInsertData("12:20:00", "2020-04-05", "This is a test", 1);
-            Inserts.insertData(sampleDataRepair, connection, "Repair", "dallmann_am2020");
-
-            List<Object> sampleDataLocation = createInsertData("12:20:20", "2019-01-01", "691610 5334765", 1);
-            Inserts.insertData(sampleDataLocation, connection, "Location", "dallmann_am2020");
-
-             */
             connection.close();
 
         } catch (SQLException e) {
@@ -239,8 +198,8 @@ public class JDBC {
     public static void createTables(Connection connection) throws SQLException {
         Statement stmt = connection.createStatement();
 
-        Table Rights = new Table("Rights")
-                .addPrimaryKey("role", Type.INTEGER_AUTO_INCREMENT)
+        Table Rights = new Table("RIGHTS")
+                .addPrimaryKey("role", Type.VARCHAR)
                 .addAttr("booking_device", Type.BOOLEAN)
                 .addAttr("edit_device", Type.BOOLEAN)
                 .addAttr("add_device", Type.BOOLEAN)
@@ -254,19 +213,18 @@ public class JDBC {
         stmt.addBatch(Rights.create());
 
 
-        Table Worker = new Table("Worker")
+        Table Worker = new Table("WORKER")
                 .addPrimaryKey("worker_id", Type.INTEGER_AUTO_INCREMENT)
                 .addAttr("password", Type.VARCHAR)
                 .addAttr("e_mail", Type.VARCHAR)
-                .addAttr("user_identification", Type.VARCHAR)
                 .addAttr("name", Type.VARCHAR)
                 .addAttr("surname", Type.VARCHAR)
-                .addForeignKey("role", Type.INTEGER, Rights, Rights.attributes.get(0),
+                .addForeignKey("role", Type.VARCHAR, Rights, Rights.attributes.get(0),
                         true, Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE);
         stmt.addBatch(Worker.create());
 
 
-        Table Project = new Table("Project")
+        Table Project = new Table("PROJECT")
                 .addPrimaryKey("project_id", Type.INTEGER_AUTO_INCREMENT)
                 .addAttr("name", Type.VARCHAR)
                 .addAttr("street", Type.VARCHAR)
@@ -353,8 +311,7 @@ public class JDBC {
     }
 
     /**
-     * Method will also work when schemaName is null
-     *
+     * This method gets the column count for a specific table.
      * @param connection
      * @param tableName  to obtain columnnames
      * @param schemaName to obtain qualifiedName
@@ -427,7 +384,6 @@ public class JDBC {
 
         return null;
     }
-
 
     public static List<Object> createInsertData(Object... objects) {
         List<Object> data = new ArrayList<>();

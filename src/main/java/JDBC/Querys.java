@@ -13,15 +13,6 @@ import java.util.List;
 
 public class Querys {
 
-    public static void select(Connection connection, String sql, ReseultSetHandler handler) throws SQLException {
-        PreparedStatement pstmt = connection.prepareStatement(sql);
-        try (ResultSet rs = pstmt.executeQuery()) {
-            while (rs.next()) {
-                handler.handle(rs);
-            }
-        }
-
-    }
 
     public static List<Object> select(Connection connection, String sql) throws SQLException {
         Statement stmt = connection.createStatement();

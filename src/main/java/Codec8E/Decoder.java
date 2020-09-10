@@ -4,15 +4,20 @@ import Codec8E.Collection.AvlDataCollection;
 import Codec8E.Exceptions.CodecProtocolException;
 import Codec8E.Exceptions.PreAmbleLengthException;
 import Codec8E.Exceptions.ReceivedDataException;
-import Codec8E.GPS.GpsData;
+import Codec8E.IO.Beacon;
 import Codec8E.IO.IOData;
+import JDBC.Inserts;
+import JDBC.JDBC;
 import Logger.ReadLogs;
-
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.*;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static JDBC.Inserts.insertBeaconPosition;
 
 public class Decoder {
 
@@ -28,45 +33,37 @@ public class Decoder {
         try {
             Decoder decoder = new Decoder();
             System.out.println();
-        } catch (PreAmbleLengthException preAmbleLengthException){
-            System.out.println(preAmbleLengthException);
-        } catch (FileNotFoundException fileNotFoundException){
-            System.out.println(fileNotFoundException);
-        } catch (ParseException parseException){
-            System.out.println(parseException);
-        } catch (CodecProtocolException codecProtocolException)
+        } catch (PreAmbleLengthException e){
+            System.out.println(e);
+        } catch (FileNotFoundException e){
+            System.out.println(e);
+        } catch (ParseException e){
+            System.out.println(e);
+        } catch (CodecProtocolException e)
         {
-            System.out.println(codecProtocolException);
-        } catch (ReceivedDataException receivedDataException){
-            System.out.println(receivedDataException);
-        }
-
-
-
-
-
-    }
-
-    public void objectForJDBCInsert(){
-        for (int i = 0; i < decodedData.size(); i++) {
-            for (int j = 0; j < decodedData.get(i).getAvlDataList().size(); j++) {
-                AvlData avlData = decodedData.get(i).getAvlDataList().get(j);
-                System.out.println(avlData.getTimeStamp());
-                GpsData gpsData = decodedData.get(i).getAvlDataList().get(j).getGpsData();
-                System.out.println(gpsData.getLongitude());
-                System.out.println(gpsData.getLatitude());
-                System.out.println(gpsData.getAltitude());
-                System.out.println(gpsData.getAngle());
-
-                IOData ioData = decodedData.get(i).getAvlDataList().get(j).getIoData();
-                for (int k = 0; k < ioData.getBeaconData().size(); k++) {
-
-                }
-            }
+            System.out.println(e);
+        } catch (ReceivedDataException e){
+            System.out.println(e);
+        } catch (IOException e) {
+            System.out.println(e);
         }
 
     }
 
+
+
+
+    /**
+     * This method returns a list with all necessary data for table position from GpsData class and AvlData class.
+     * in die klasse von gps verlagern und später nur noch diese liste ziehen und dann den timestamp dran hängen.
+     * @param avlData
+     * @return
+     */
+    public List<Object> getLocationAttributes(AvlData avlData){
+        List<Object> locationAttributes = avlData.getGpsData().getGPSAttributes();
+        locationAttributes.add(avlData.getTimeStamp());
+        return locationAttributes;
+    }
 
     public void setAvlCollectionList() throws PreAmbleLengthException, FileNotFoundException, ParseException,
             ReceivedDataException, CodecProtocolException {
@@ -82,7 +79,7 @@ public class Decoder {
     }
 
     /**
-     *  This mehthod deletes avl-data entries which doenst have stored any beacon informations.
+     *  This method deletes avl-data entries which doesn't have any beacon information stored.
      */
     private void removeDeadBeaconEntries(){
         for (int i = 0; i < decodedData.size(); i++) {
@@ -100,7 +97,7 @@ public class Decoder {
     }
 
     /**
-     * Removes an avl collection which doesn't contain any entry
+     * Removes an avl collection which doesn't contain any information about the.
      */
     private void removeAvlCollection(){
         Iterator<AvlDataCollection> it = decodedData.iterator();
@@ -114,6 +111,10 @@ public class Decoder {
 
     public static void setHexCode(String hexCode) {
         Decoder.hexCode = hexCode;
+    }
+
+    public List<AvlDataCollection> getDecodedData() {
+        return decodedData;
     }
 }
 

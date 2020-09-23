@@ -9,6 +9,7 @@ package JDBC;
 
 import Codec8E.Decoder;
 import Codec8E.Exceptions.CodecProtocolException;
+import Codec8E.Exceptions.CyclicRedundancyCheck;
 import Codec8E.Exceptions.PreAmbleLengthException;
 import Codec8E.Exceptions.ReceivedDataException;
 import org.apache.log4j.Logger;
@@ -119,7 +120,7 @@ public class JDBC {
     public static void main(String[] args) {
         try {
 
-            //System.setProperty("logPath",System.getProperty("user.dir"));
+
             Decoder decoder = new Decoder();
 
             Inserts.insertAvlData(getConnection(),decoder);
@@ -156,19 +157,22 @@ public class JDBC {
 
         } catch (PreAmbleLengthException e){
 
-            System.out.println("Error Message: " + e.getMessage());
+            System.out.println("Error message: " + e.getMessage());
             e.printStackTrace();
-            log.debug("Invalid PreAmble: " + e.getMessage());
+            log.debug("Invalid preAmble: " + e.getMessage());
 
         } catch (CodecProtocolException e){
 
-            log.fatal("Wrong Protocol: " + e.getMessage());
+            log.fatal("Wrong protocol: " + e.getMessage());
 
         } catch (ReceivedDataException e){
 
-            System.out.println("Invalid Checksum: " + e.getMessage());
-            log.fatal("Invalid Checksum: " + e.getMessage());
+            System.out.println("Invalid data checksum: " + e.getMessage());
+            log.fatal("Invalid checksum: " + e.getMessage());
 
+        }
+        catch (CyclicRedundancyCheck e){
+            System.out.println(e);
         }
     }
 

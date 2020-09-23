@@ -9,8 +9,10 @@
 
 package Codec8E.Collection;
 
+import Codec8E.CRC.Crc;
 import Codec8E.AVL.AvlData;
 import Codec8E.Exceptions.CodecProtocolException;
+import Codec8E.Exceptions.CyclicRedundancyCheck;
 import Codec8E.Exceptions.PreAmbleLengthException;
 import Codec8E.Exceptions.ReceivedDataException;
 import Codec8E.FieldEncoding;
@@ -31,6 +33,7 @@ public class AvlDataCollection {
 
     private int receivedAmountOfData;
     private int receivedAmountOfDataCheck;
+    private int crc;
 
     private List<AvlData> avlDataList;
 
@@ -39,7 +42,8 @@ public class AvlDataCollection {
 
 
 
-   public AvlDataCollection() throws PreAmbleLengthException, CodecProtocolException, ReceivedDataException {
+   public AvlDataCollection() throws PreAmbleLengthException, CodecProtocolException, ReceivedDataException,
+           CyclicRedundancyCheck {
         actualPosition = 0;
         setPreAmble();
         setDataFieldLength();
@@ -47,7 +51,13 @@ public class AvlDataCollection {
         setReceivedAmountOfData();
         setAvlDataList();
         setReceivedAmountOfDataCheck();
+        setCrc();
+        checkCrc();
+    }
 
+    private void setCrc() {
+     internalPosition = actualPosition + FieldEncoding.byte8.getElement();
+     this.crc = getElementValue(internalPosition);
     }
 
 
@@ -135,6 +145,19 @@ public class AvlDataCollection {
         if (codecId != 142)  // decoded value for codec 8 extended protocol
             throw new CodecProtocolException(codecId);
     }
+
+    private void checkCrc() throws CyclicRedundancyCheck {
+        Crc crc = new Crc(getHexForCrc());
+        int checkValue = crc.calculateCrc();
+        if( this.crc != checkValue) throw new CyclicRedundancyCheck(checkValue, this.crc);
+
+    }
+
+    private String getHexForCrc(){
+        String t =  hexCode.substring(FieldEncoding.byte16.getElement(), hexCode.length() - FieldEncoding.byte8.getElement());
+        return t;
+    }
+
 
 
     public int getPreAmble() {

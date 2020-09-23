@@ -2,6 +2,7 @@ package Codec8E;
 import Codec8E.AVL.AvlData;
 import Codec8E.Collection.AvlDataCollection;
 import Codec8E.Exceptions.CodecProtocolException;
+import Codec8E.Exceptions.CyclicRedundancyCheck;
 import Codec8E.Exceptions.PreAmbleLengthException;
 import Codec8E.Exceptions.ReceivedDataException;
 import Codec8E.IO.Beacon;
@@ -28,7 +29,7 @@ public class Decoder {
 
     private List<AvlDataCollection> decodedData;
 
-    public Decoder() throws CodecProtocolException, ReceivedDataException, PreAmbleLengthException, FileNotFoundException, ParseException {
+    public Decoder() throws CodecProtocolException, ReceivedDataException, PreAmbleLengthException, CyclicRedundancyCheck, FileNotFoundException, ParseException {
         setAvlCollectionList();
     }
 
@@ -45,7 +46,7 @@ public class Decoder {
     }
 
     public void setAvlCollectionList() throws PreAmbleLengthException, FileNotFoundException, ParseException,
-            ReceivedDataException, CodecProtocolException {
+            ReceivedDataException, CodecProtocolException, CyclicRedundancyCheck {
 
         decodedData = new ArrayList<>();
 

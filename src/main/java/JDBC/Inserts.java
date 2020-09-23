@@ -98,7 +98,7 @@ public class Inserts {
             for (int j = 0; j < decoder.getDecodedData().get(i).getAvlDataList().size(); j++) {
 
 
-                // get values for jdbc insert
+                // get values for database insert
                 List<Object> location = decoder.getLocationAttributes(decoder.getDecodedData().get(i).getAvlDataList().get(j));
 
                 // store generated id from inserted location for beacons
@@ -143,10 +143,6 @@ public class Inserts {
         int tupleAffected = pstmt.executeUpdate();
         return tupleAffected;
     }
-
-
-
-
 
 
     /** This method can be used for all tables to store informations.

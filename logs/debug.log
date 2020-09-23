@@ -388,3 +388,13 @@ Error Message: Cannot add or update a child row: a foreign key constraint fails 
 SQL State: 23000
 Server: Establish DB-Connection
 Server: Establish DB-Connection
+Server: Establish DB-Connection
+2020-09-23 --INFO -Codec8E.Decoder:Test
+2020-09-23 -INFO -Codec8E.Decoder:Test
+2020-09-23 INFO: Test
+2020-09-23 INFO: Server: Establish DB-Connection
+2020-09-23 INFO: Server: Establish DB-Connection
+2020-09-23 INFO: Server: Establish DB-Connection
+2020-09-23 INFO: Server: Establish DB-Connection
+2020-09-23 INFO: Server: Establish DB-Connection
+2020-09-23 INFO: Server: Establish DB-Connection

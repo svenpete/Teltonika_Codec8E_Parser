@@ -18,6 +18,6 @@ public class PreAmbleLengthException extends Exception {
     @Override
     public String toString() {
         return "Unable to decode. Missing or false package prefix. Preamble value is " +
-                preAmbleValue + " it should be 0.";
+                preAmbleValue + " it should be 00000000.";
     }
 }

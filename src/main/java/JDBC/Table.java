@@ -60,6 +60,11 @@ public class Table {
         return sqlStatement;
     }
 
+    /**
+     * This method creates a table with a composite primary key.
+     * @param CompositePrimaryKey
+     * @return
+     */
     public String create(String CompositePrimaryKey) {
         String sqlStatement = "CREATE TABLE IF NOT EXISTS " + name + "(";
         String sqlStatementPrimaryKey = "";

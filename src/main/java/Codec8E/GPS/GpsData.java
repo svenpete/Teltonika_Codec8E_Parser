@@ -9,6 +9,9 @@ package Codec8E.GPS;
 
 import Codec8E.FieldEncoding;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static Codec8E.Decoder.hexCode;
 
 public class GpsData {
@@ -73,6 +76,17 @@ public class GpsData {
 
         actualPosition = internalPosition;
         return value;
+    }
+
+    // this method returns a specific attributes need for location table.
+    public List<Object> getGPSAttributes(){
+        List<Object> attributes = new ArrayList<Object>();
+        attributes.add(this.speed);
+        attributes.add(this.angle);
+        attributes.add(this.longitude);
+        attributes.add(this.latitude);
+        attributes.add(this.altitude);
+        return attributes;
     }
 
     public Double getLongitude() {

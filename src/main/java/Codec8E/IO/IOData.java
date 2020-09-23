@@ -125,6 +125,7 @@ public class IOData {
      *  The value of n4 elements is always 8 bit long.
      */
     private void setN4ElementValues(){
+
         internalPosition = actualPosition + FieldEncoding.byte4.getElement();
         int n1ElementCount = getElementValue(internalPosition);
 
@@ -253,12 +254,25 @@ public class IOData {
         return value;
     }
 
+    /**
+     * This method returns the values of an specific element.
+     * @param internalPosition where the values is at inside the hex code
+     * @return decoded hex value
+     */
     private Integer getElementValue(Integer internalPosition){
         String elementHexCode = hexCode.substring(actualPosition, internalPosition);
-        Integer value = Integer.parseInt(elementHexCode,16);
 
-        actualPosition = internalPosition;
-        return value;
+        try {
+            Integer value = Integer.parseInt(elementHexCode, 16);
+            actualPosition = internalPosition;
+            return value;
+        } catch (NumberFormatException e ) {
+            Long value = Long.parseLong(elementHexCode,16);
+            actualPosition = internalPosition;
+            return 0;
+        }
+
+
     }
 
     public int getEventId() {

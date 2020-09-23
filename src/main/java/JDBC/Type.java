@@ -13,9 +13,11 @@ public enum Type {
     DECIMAL("DECIMAL(10,2)"),
     FLOAT("FLOAT"),
     VARCHAR("VARCHAR(255)"),
+    TINY_VARCHAR("VARCHAR(4)"),
     DATE("DATE"),
     TIME("TIME"),
     TEXT("TEXT"),
+    TIMESTAMP("TIMESTAMP"),
     INTEGER_AUTO_INCREMENT("INTEGER AUTO_INCREMENT"),
     ENUM_CATEGORY("ENUM ('Rüttelplatten','Stampfer','Motorflex','Rohrgreifer'," +
             " 'Kettensägen', 'Motorhammer','Leiter','Exoten')");

@@ -11,6 +11,7 @@
 package Codec8E.IO;
 
 import Codec8E.FieldEncoding;
+import Codec8E.Reader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +30,10 @@ public class IOData {
     private List<Beacon> beaconData;
     private BeaconMetaData beaconMetaData;
 
-    private int actualPosition;
-    private int internalPosition;
+    private Reader reader;
 
-    public IOData(int actualPosition){
-        this.actualPosition = actualPosition;
+    public IOData(Reader reader){
+        this.reader = reader;
         setEventId();
         setTotalElementCount();
         setN1ElementValues();
@@ -44,16 +44,14 @@ public class IOData {
     }
 
     private void setEventId(){
-        internalPosition = actualPosition + FieldEncoding.byte4.getElement();
-        this.eventId = getElementValue(internalPosition);
+        this.eventId = reader.readInt4();
     }
 
     /**
      * This method sets the total elementCount of all received a
      */
     private void setTotalElementCount(){
-        internalPosition = actualPosition + FieldEncoding.byte4.getElement();
-        this.totalElementCount = getElementValue(internalPosition);
+        this.totalElementCount = reader.readInt4();
     }
 
     /**
@@ -63,8 +61,7 @@ public class IOData {
      *  The value of n2 elements is always 2 bit long.
      */
     private void setN1ElementValues(){
-        internalPosition = actualPosition + FieldEncoding.byte4.getElement();
-        int n1ElementCount = getElementValue(internalPosition);
+        int n1ElementCount = reader.readInt4();
 
         if (n1ElementCount > 0){
             addN1ElementsToList(n1ElementCount);
@@ -79,10 +76,9 @@ public class IOData {
         n1Elements = new ArrayList<>();
 
         for (int i = 0; i < counter; i++) {
-            internalPosition = actualPosition + FieldEncoding.byte2.getElement();
-            int value = getElementValue(internalPosition);
+            int value = reader.readInt2();
 
-            IOElement ioElement = new IOElement(getElementId(),value);
+            IOElement ioElement = new IOElement(reader.readInt4(),value);
             n1Elements.add(ioElement);
         }
     }
@@ -94,8 +90,8 @@ public class IOData {
      *  The value of n2 elements is always 4 bit long.
      */
     private void setN2ElementValues(){
-        internalPosition = actualPosition + FieldEncoding.byte4.getElement();
-        int n1ElementCount = getElementValue(internalPosition);
+
+        int n1ElementCount = reader.readInt4();
 
         if (n1ElementCount > 0){
             addN2ElementsToList(n1ElementCount);
@@ -110,10 +106,9 @@ public class IOData {
         n2Elements = new ArrayList<>();
 
         for (int i = 0; i < counter; i++) {
-            internalPosition = actualPosition + FieldEncoding.byte4.getElement();
-            int value = getElementValue(internalPosition);
+            int value = reader.readInt4();
 
-            IOElement ioElement = new IOElement(getElementId(),value);
+            IOElement ioElement = new IOElement(reader.readInt4(),value);
             n2Elements.add(ioElement);
         }
     }
@@ -126,8 +121,7 @@ public class IOData {
      */
     private void setN4ElementValues(){
 
-        internalPosition = actualPosition + FieldEncoding.byte4.getElement();
-        int n1ElementCount = getElementValue(internalPosition);
+        int n1ElementCount = reader.readInt4();
 
         if (n1ElementCount > 0){
             addN4ElementsToList(n1ElementCount);
@@ -142,10 +136,9 @@ public class IOData {
         n4Elements = new ArrayList<>();
 
         for (int i = 0; i < counter; i++) {
-            internalPosition = actualPosition + FieldEncoding.byte8.getElement();
-            int value = getElementValue(internalPosition);
+            int value = reader.readInt8();
 
-            IOElement ioElement = new IOElement(getElementId(), value);
+            IOElement ioElement = new IOElement(reader.readInt4(), value);
             n4Elements.add(ioElement);
 
         }
@@ -158,8 +151,7 @@ public class IOData {
      *  The value of n8 elements is always 16 bit long.
      */
     private void setN8ElementValues(){
-        internalPosition = actualPosition + FieldEncoding.byte4.getElement();
-        int n1ElementCount = getElementValue(internalPosition);
+        int n1ElementCount = reader.readInt4();
 
         if (n1ElementCount > 0){
             addN8ElementsToList(n1ElementCount);
@@ -174,10 +166,10 @@ public class IOData {
         n8Elements = new ArrayList<>();
 
         for (int i = 0; i < counter; i++) {
-            internalPosition = actualPosition + FieldEncoding.byte16.getElement();
-            int value = getElementValue(internalPosition);
+            // gonna rework
+            Long value = reader.readLong16();
 
-            IOElement ioElement = new IOElement(getElementId(), value);
+            IOElement ioElement = new IOElement(reader.readInt4(), value.intValue());
             n8Elements.add(ioElement);
 
         }
@@ -191,8 +183,7 @@ public class IOData {
      * A 4 bit value between the id and ble-flag determines the size of the received beacon-data.
      */
     private void setBeaconElement(){
-        internalPosition = actualPosition + FieldEncoding.byte4.getElement();
-        int beaconCount = getElementValue(internalPosition);
+        int beaconCount = reader.readInt4();
 
         if (beaconCount > 0) {
             addBeaconsToList(beaconCount);
@@ -212,23 +203,17 @@ public class IOData {
         for (int i = 0; i < counter; i++) {
 
             //gets element id to determine type of xn elements
-            internalPosition = internalPosition + FieldEncoding.byte4.getElement();
-            int elementIdToCheck = getElementValue(internalPosition);
+            int elementIdToCheck = reader.readInt4();
 
 
             //get length of received xn element
-            internalPosition = internalPosition + FieldEncoding.byte4.getElement();
-            int beaconDataLength = getElementValue(internalPosition); // -1 to fix
+
+            int beaconDataLength = reader.readInt4(); // -1 to fix
 
             if (elementIdToCheck == 385){
 
 
-                this.beaconMetaData = new BeaconMetaData(actualPosition); // get beaconmeta data
-                actualPosition = beaconMetaData.getActualPosition();  // get latest position after one itreation it wil be overwritten
-
-                // reposition latest position from created beacon object
-                if (i > 0)
-                    this.actualPosition = beaconData.get(i).getActualPosition();
+                this.beaconMetaData = new BeaconMetaData(reader); // get beaconmeta data
 
 
 
@@ -237,8 +222,7 @@ public class IOData {
 
 
 
-                        beaconData.add(new Beacon(this.actualPosition));
-                        this.actualPosition = beaconData.get(beaconData.size() - 1).getActualPosition();
+                        beaconData.add(new Beacon(reader));
 
                         beaconDataLength = beaconDataLength - 22;
                     }
@@ -248,32 +232,9 @@ public class IOData {
         }
 
 
-    private int getElementId(){
-        internalPosition = actualPosition + FieldEncoding.byte4.getElement();
-        int value = getElementValue(internalPosition);
-        return value;
-    }
-
-    /**
-     * This method returns the values of an specific element.
-     * @param internalPosition where the values is at inside the hex code
-     * @return decoded hex value
-     */
-    private Integer getElementValue(Integer internalPosition){
-        String elementHexCode = hexCode.substring(actualPosition, internalPosition);
-
-        try {
-            Integer value = Integer.parseInt(elementHexCode, 16);
-            actualPosition = internalPosition;
-            return value;
-        } catch (NumberFormatException e ) {
-            Long value = Long.parseLong(elementHexCode,16);
-            actualPosition = internalPosition;
-            return 0;
-        }
 
 
-    }
+
 
     public int getEventId() {
         return eventId;
@@ -307,11 +268,5 @@ public class IOData {
         return beaconMetaData;
     }
 
-    public int getActualPosition() {
-        return actualPosition;
-    }
 
-    public int getInternalPosition() {
-        return internalPosition;
-    }
 }

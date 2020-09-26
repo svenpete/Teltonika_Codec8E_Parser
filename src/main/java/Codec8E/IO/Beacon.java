@@ -8,6 +8,7 @@
 package Codec8E.IO;
 
 import Codec8E.FieldEncoding;
+import Codec8E.Reader;
 
 import static Codec8E.Decoder.hexCode;
 
@@ -20,21 +21,20 @@ public class Beacon {
     private String uuid;
     private String major;
     private String minor;
-    private String signalStrength;
+    private int rssi;
 
-    private int internalPosition;
-    private int actualPosition;
+    private Reader reader;
 
     private String bleBeaconFlag;
     private String BeaconType;
     private boolean signalStrengthAvaible;
-    private int rssi;
+
 
     private int beaconDataLength;
 
 
-    Beacon(int actualPosition){
-            this.actualPosition = actualPosition;
+    Beacon(Reader reader){
+            this.reader = reader;
 
 
             setBleBeaconFlag();
@@ -79,19 +79,18 @@ public class Beacon {
 
 
 
-    private void setUUID(){
-        internalPosition = actualPosition + FieldEncoding.byte32.getElement();
-        this.uuid = getElement(internalPosition);
+    private void setUUID() {
+
+        this.uuid = reader.readString32();
     }
 
     private void setMajor(){
-        internalPosition = actualPosition + FieldEncoding.byte4.getElement();
-        this.major = getElement(internalPosition);
+        this.major = reader.readString4();
     }
 
     private void setMinor(){
-        internalPosition = actualPosition + FieldEncoding.byte4.getElement();
-        this.minor = getElement(internalPosition);
+
+        this.minor = reader.readString4();
     }
 
     /**
@@ -99,8 +98,8 @@ public class Beacon {
      *  The received value from the hex code needs to be parsed in binary 2 complement and then be parsed to decimal.
      */
     private void setRssi(){
-        internalPosition = actualPosition + FieldEncoding.byte2.getElement();
-        String binary = convertToBinary(Integer.parseInt(getElement(internalPosition),16));
+
+        String binary = convertToBinary(reader.readInt2());
 
         StringBuffer stringBuffer = new StringBuffer(binary);
         this.rssi = -1 * Integer.parseInt(findTwoscomplement(stringBuffer),2); // temp solution
@@ -111,13 +110,8 @@ public class Beacon {
      *  The beacon-flag owns information about the beacon-type is
      */
     private void setBleBeaconFlag(){
-        internalPosition = actualPosition + FieldEncoding.byte2.getElement();
-        this.bleBeaconFlag = hexCode.substring(actualPosition, internalPosition);
-        actualPosition = internalPosition;
+        this.bleBeaconFlag = reader.readString(2);  //fix this
     }
-
-
-
 
 
     private String convertToBinary(int toConvert){
@@ -136,13 +130,7 @@ public class Beacon {
         return this.minor;
     }
 
-    public String getSignalStrength(){
-        return this.signalStrength;
-    }
 
-    public int getActualPosition() {
-        return actualPosition;
-    }
 
     public int getRssi() {
         return rssi;
@@ -179,9 +167,7 @@ public class Beacon {
         return str.toString();
     }
 
-    public int getInternalPosition() {
-        return internalPosition;
-    }
+
 
     public String getBleBeaconFlag() {
         return bleBeaconFlag;
@@ -193,20 +179,6 @@ public class Beacon {
 
     public boolean isSignalStrengthAvaible() {
         return signalStrengthAvaible;
-    }
-
-    private String getElement(Integer internalPosition){
-        String elementHexCode = hexCode.substring(actualPosition, internalPosition);
-        actualPosition = internalPosition;
-        return elementHexCode;
-    }
-
-    private Integer getElementValue(Integer internalPosition){
-        String elementHexCode = hexCode.substring(actualPosition, internalPosition);
-        Integer value = Integer.parseInt(elementHexCode,16);
-
-        actualPosition = internalPosition;
-        return value;
     }
 
 

@@ -8,6 +8,7 @@
 package Codec8E.GPS;
 
 import Codec8E.FieldEncoding;
+import Codec8E.Reader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +25,10 @@ public class GpsData {
     private int satellite;
     private int speed;
 
-    private int actualPosition;
-    private int internalPosition;
+   private Reader reader;
 
-    public GpsData(int actualPosition){
-    this.actualPosition = actualPosition;
+    public GpsData(Reader reader){
+    this.reader = reader;
     setLongitude();
     setLatitude();
     setAltitude();
@@ -38,44 +38,30 @@ public class GpsData {
     }
 
     private void setLongitude(){
-        internalPosition = actualPosition + FieldEncoding.byte8.getElement();
-        int value = getElementValue(internalPosition);
+        int value = reader.readInt8();
         this.longitude = value * 0.0000001;
     }
 
     private void setLatitude(){
-        internalPosition = actualPosition + FieldEncoding.byte8.getElement();
-        int value = getElementValue(internalPosition);
+        int value = reader.readInt8();
         this.latitude = value * 0.0000001;
 
     }
 
     private void setAltitude(){
-        internalPosition = actualPosition + FieldEncoding.byte4.getElement();
-        this.altitude = getElementValue(internalPosition);
+        this.altitude = reader.readInt4();
     }
 
     private void setAngle(){
-        internalPosition = actualPosition + FieldEncoding.byte4.getElement();
-        this.angle = getElementValue(internalPosition);
+        this.angle = reader.readInt4();
     }
 
     private void setSatellites(){
-        internalPosition = actualPosition + FieldEncoding.byte2.getElement();
-        this.satellite = getElementValue(internalPosition);
+        this.satellite = reader.readInt2();
     }
 
     private void setSpeed(){
-        internalPosition = actualPosition + FieldEncoding.byte4.getElement();
-        this.speed = getElementValue(internalPosition);
-    }
-
-    private Integer getElementValue(Integer internalPosition){
-        String elementHexCode = hexCode.substring(actualPosition, internalPosition);
-        Integer value = Integer.parseInt(elementHexCode,16);
-
-        actualPosition = internalPosition;
-        return value;
+        this.speed = reader.readInt4();
     }
 
     // this method returns a specific attributes need for location table.
@@ -113,7 +99,4 @@ public class GpsData {
         return speed;
     }
 
-    public int getActualPosition() {
-        return actualPosition;
-    }
 }

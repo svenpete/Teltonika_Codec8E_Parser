@@ -16,6 +16,7 @@ import Codec8E.Exceptions.CyclicRedundancyCheck;
 import Codec8E.Exceptions.PreAmbleLengthException;
 import Codec8E.Exceptions.ReceivedDataException;
 import Codec8E.FieldEncoding;
+import Codec8E.Reader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,14 +38,15 @@ public class AvlDataCollection {
 
     private List<AvlData> avlDataList;
 
-    private int actualPosition;
-    private int internalPosition;
+    private Reader reader;
 
 
 
-   public AvlDataCollection() throws PreAmbleLengthException, CodecProtocolException, ReceivedDataException,
+   public AvlDataCollection(Reader reader) throws PreAmbleLengthException, CodecProtocolException, ReceivedDataException,
            CyclicRedundancyCheck {
-        actualPosition = 0;
+
+       this.reader = reader;
+
         setPreAmble();
         setDataFieldLength();
         setCodecID();
@@ -56,8 +58,7 @@ public class AvlDataCollection {
     }
 
     private void setCrc() {
-     internalPosition = actualPosition + FieldEncoding.byte8.getElement();
-     this.crc = getElementValue(internalPosition);
+     this.crc = reader.readInt8();
     }
 
 
@@ -66,56 +67,40 @@ public class AvlDataCollection {
        avlDataList = new ArrayList<>();
         for (int i = 0; i < receivedAmountOfData; i++) {
 
-            if (i > 0)
-              this.actualPosition = avlDataList.get(avlDataList.size() - 1).getIoData().getActualPosition();
-
-        avlDataList.add(new AvlData(actualPosition));
+        avlDataList.add(new AvlData(reader));
         }
    }
 
 
     private void setReceivedAmountOfDataCheck() throws ReceivedDataException {
-        actualPosition = avlDataList.get(avlDataList.size() - 1).getIoData().getActualPosition();
-        internalPosition = actualPosition + FieldEncoding.byte2.getElement();
 
-        int receivedAmountOfDataCheck = getElementValue(internalPosition);
+        int receivedAmountOfDataCheck = reader.readInt2();
         checkReceivedNumberOfData(receivedAmountOfData,receivedAmountOfDataCheck);
         this.receivedAmountOfDataCheck = receivedAmountOfDataCheck;
    }
 
     // preamble length is a 8 bit long value which contains just zeros 
     private void setPreAmble() throws PreAmbleLengthException {
-        internalPosition = actualPosition + FieldEncoding.byte8.getElement();
-        int preAmble = getElementValue(internalPosition);
+        int preAmble = reader.readInt8();
         checkPreAmble(preAmble);
         this.preAmble = preAmble;
 
     }
 
     private void setDataFieldLength(){
-        internalPosition = actualPosition + FieldEncoding.byte8.getElement();
-        this.dataFieldLength = getElementValue(internalPosition);
+       this.dataFieldLength = reader.readInt8();
     }
 
     private void setCodecID() throws CodecProtocolException {
-        internalPosition = actualPosition + FieldEncoding.byte2.getElement();
-        int codecId = getElementValue(internalPosition);
+        int codecId = reader.readInt2();
         checkCodecProtocol(codecId);
         this.codecId = codecId;
    }
 
     private void setReceivedAmountOfData(){
-        internalPosition = actualPosition + FieldEncoding.byte2.getElement();
-        this.receivedAmountOfData = getElementValue(internalPosition);
+        this.receivedAmountOfData = reader.readInt2();
     }
 
-    private Integer getElementValue(Integer internalPosition){
-        String elementHexCode = hexCode.substring(actualPosition, internalPosition);
-        Integer value = Integer.parseInt(elementHexCode,16);
-
-        actualPosition = internalPosition;
-        return value;
-    }
 
     /**
      *  This method check if the received preamble has the correct value.
@@ -180,13 +165,6 @@ public class AvlDataCollection {
         return receivedAmountOfDataCheck;
     }
 
-    public int getActualPosition() {
-        return actualPosition;
-    }
-
-    public int getInternalPosition() {
-        return internalPosition;
-    }
 
     public List<AvlData> getAvlDataList() {
         return avlDataList;

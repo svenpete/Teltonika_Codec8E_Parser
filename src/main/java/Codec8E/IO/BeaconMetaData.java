@@ -9,6 +9,7 @@
 package Codec8E.IO;
 
 import Codec8E.FieldEncoding;
+import Codec8E.Reader;
 
 import static Codec8E.Decoder.hexCode;
 
@@ -18,11 +19,10 @@ public class BeaconMetaData {
     private int totalRecord;
     private String beaconDataPart;
 
-    private int actualPosition;
-    private int internalPosition;
+    private Reader reader;
 
-    BeaconMetaData(int actualPosition){
-        this.actualPosition = actualPosition;
+    BeaconMetaData(Reader reader){
+        this.reader = reader;
 
         setRecordCount();
         setTotalRecord();
@@ -36,28 +36,12 @@ public class BeaconMetaData {
     }
 
     private void setRecordCount(){
-        internalPosition = actualPosition + FieldEncoding.byte1.getElement();
-        this.recordCount = getElementValue(internalPosition);
+        this.recordCount = reader.readInt1();
     }
 
     private void setTotalRecord(){
-        internalPosition = actualPosition + FieldEncoding.byte1.getElement();
-        this.totalRecord = getElementValue(internalPosition);
+        this.totalRecord = reader.readInt1();
     }
 
-    private Integer getElementValue(Integer internalPosition){
-        String elementHexCode = hexCode.substring(actualPosition, internalPosition);
-        Integer value = Integer.parseInt(elementHexCode,16);
 
-        actualPosition = internalPosition;
-        return value;
-    }
-
-    public int getActualPosition() {
-        return actualPosition;
-    }
-
-    public int getInternalPosition() {
-        return internalPosition;
-    }
 }

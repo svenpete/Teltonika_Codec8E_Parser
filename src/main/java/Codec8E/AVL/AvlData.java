@@ -8,12 +8,9 @@
 
 package Codec8E.AVL;
 import Codec8E.GPS.GpsData;
-import Codec8E.FieldEncoding;
 import Codec8E.IO.IOData;
-
+import Codec8E.Reader;
 import java.sql.Timestamp;
-
-import static Codec8E.Decoder.hexCode;
 
 public class AvlData {
 
@@ -22,11 +19,10 @@ public class AvlData {
     private GpsData gpsData;
     private IOData ioData;
 
-    private int actualPosition;
-    private int internalPosition;
+    private Reader reader;
 
-    public AvlData(int actualPosition){
-        this.actualPosition = actualPosition;
+    public AvlData(Reader reader){
+        this.reader = reader;
         setTimeStamp();
         setPriority();
         setGpsData();
@@ -35,17 +31,15 @@ public class AvlData {
     }
 
     private void setGpsData(){
-        gpsData = new GpsData(actualPosition);
+        gpsData = new GpsData(reader);
     }
 
     private void setIoData(){
-        ioData = new IOData(gpsData.getActualPosition());
+        ioData = new IOData(reader);
     }
 
     private void setTimeStamp(){
-        internalPosition = actualPosition + FieldEncoding.byte16.getElement();
-        Long milliSeconds = getTimeStampValue(internalPosition);
-
+        Long milliSeconds = reader.readLong16();
         this.timeStamp = calculateTimeStamp( milliSeconds);
     }
 
@@ -63,26 +57,8 @@ public class AvlData {
         return  timestamp;
     }
 
-    private void setPriority(){
-        internalPosition = actualPosition + FieldEncoding.byte2.getElement();
-
-        this.priority = getPriorityValue(internalPosition);
-    }
-
-    private Integer getPriorityValue(int internalPosition ){
-        String getElementHex = hexCode.substring(actualPosition, internalPosition);
-        Integer elementValue  = Integer.parseInt(getElementHex,16);
-
-        actualPosition = internalPosition;
-        return elementValue;
-    }
-
-    private Long getTimeStampValue(int internalPosition ){
-        String getElementHex = hexCode.substring(actualPosition, internalPosition);
-        Long elementValue  = Long.parseLong(getElementHex,16);
-
-        actualPosition = internalPosition;
-        return elementValue;
+    private void setPriority() {
+        this.priority = reader.readInt2();
     }
 
     public Timestamp getTimeStamp() {
@@ -95,14 +71,6 @@ public class AvlData {
 
     public GpsData getGpsData() {
         return gpsData;
-    }
-
-    public int getActualPosition() {
-        return actualPosition;
-    }
-
-    public int getInternalPosition() {
-        return internalPosition;
     }
 
     public IOData getIoData() {

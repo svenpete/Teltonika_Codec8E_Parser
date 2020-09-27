@@ -6,7 +6,7 @@
  */
 
 
-package Codec8E.Exceptions;
+package DataParser.Exceptions;
 
 public class CyclicRedundancyCheck extends Exception{
     private int checkPolynom, calculatedPolynom;

@@ -1,14 +1,15 @@
-package Codec8E;
+package DataParser;
 
-import static Codec8E.Decoder.hexCode;
 
-public class Reader {
+import DataParser.Model.FieldEncoding;
+
+public class HexReader {
     private int actualPosition;
-    private int internalPosition;
+    private String hexCode;
 
-    public Reader(){
+    public HexReader(String hexCode){
+        this.hexCode = hexCode;
         this.actualPosition = 0;
-        this.internalPosition = 0;
     }
 
     public int readInt1(){
@@ -46,10 +47,6 @@ public class Reader {
 
     public String readString(int steps){ return  getElement(steps);}
 
-    public void setInternalPosition(int internalPosition) {
-        this.internalPosition = internalPosition;
-    }
-
     private Integer getIntegerValue(int steps){
         return Integer.parseInt(getElement(steps),16);
     }
@@ -57,7 +54,7 @@ public class Reader {
     //decode
     private String getElement(int steps){
 
-        internalPosition = actualPosition + steps;
+        int internalPosition = actualPosition + steps;
         String elementHexCode = hexCode.substring(actualPosition, internalPosition );
         actualPosition = internalPosition;
         return elementHexCode;

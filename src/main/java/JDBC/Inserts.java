@@ -1,16 +1,18 @@
 /** Inserts
  * <p>
- *     Version 1
+ *     Version 3
  * </p>
- * Modification Date: 09.09.2020
+ * Autor: Sven Petersen
+ * Modification Date: 27.09.2020
  */
 
 package JDBC;
 
-import Codec8E.Decoder;
-import Codec8E.IO.Beacon;
-import Codec8E.IO.IOData;
 
+import DataParser.Model.AVL.AvlData;
+import DataParser.Model.GPS.GpsData;
+import DataParser.Model.IO.Beacon;
+import DataParser.Model.TcpDataPacket;
 import java.io.IOException;
 import java.sql.*;
 import java.util.List;
@@ -23,23 +25,25 @@ public class Inserts {
     /**
      * This method inserts decoded location data from fmb device into the database and returns the generated id for
      * the inserted position
-     * @param valuesToInsert values need to be in the right order otherwise values in the database are mixed up.
+     * @param avlData values need to be in the right order otherwise values in the database are mixed up.
      * @throws SQLException
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public static Integer insertLocation(List<Object> valuesToInsert, Connection conn) throws SQLException, IOException, ClassNotFoundException {
+    public static Integer insertLocation(Connection conn, AvlData avlData) throws SQLException, IOException, ClassNotFoundException {
 
         String sql = "INSERT INTO LOCATION (speed, angle, longitude, latitude, altitude, timesstamp) VALUES (?,?,?,?,?,?);";
         PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-        // get count to iterate over
-        ParameterMetaData metaData = pstmt.getParameterMetaData();
-        int parameterCount = metaData.getParameterCount();
+        Timestamp gpsTimeStamp = avlData.getTimeStamp();
+        GpsData gpsData = avlData.getGpsData();
 
-        for (int i = 1; i <= parameterCount; i++) {
-            pstmt.setObject(i,valuesToInsert.get(i - 1));
-        }
+        pstmt.setObject(1 , gpsData.getSpeed());
+        pstmt.setObject(2 , gpsData.getAngle());
+        pstmt.setObject(3 , gpsData.getLongitude());
+        pstmt.setObject(4 , gpsData.getLatitude());
+        pstmt.setObject(5 , gpsData.getAltitude() );
+        pstmt.setObject(6 , gpsTimeStamp);
 
         // to check if  value was added successfully
         int rowAffected = pstmt.executeUpdate();
@@ -70,8 +74,6 @@ public class Inserts {
         String sql ="INSERT INTO BEACON_POSITION (major, minor, location_id, rssi) VALUES (?,?,?,?);";
         PreparedStatement pstmt = connection.prepareStatement(sql);
 
-
-
         pstmt.setObject(1,beacon.getMajor());
         pstmt.setObject(2,beacon.getMinor());
         pstmt.setObject(3,location_id);
@@ -84,31 +86,32 @@ public class Inserts {
 
     /**
      * This method initializes the insert of location and beacon data for all decoded information.
-     * @param decoder
+     * @param
      * @throws SQLException
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public static void insertAvlData(Connection conn,Decoder decoder) throws SQLException, IOException, ClassNotFoundException {
+
+    public static void insertTcpData(Connection conn, List<TcpDataPacket> tcpDataPacket) throws SQLException, IOException, ClassNotFoundException {
 
         // iterate over all decoded hex data in avl collection
-        for (int i = 0; i < decoder.getDecodedData().size(); i++) {
+        for (int i = 0; i < tcpDataPacket.size(); i++) {
 
             // iterate over all received avl data in avl collection
-            for (int j = 0; j < decoder.getDecodedData().get(i).getAvlDataList().size(); j++) {
+            for (int j = 0; j < tcpDataPacket.get(i).getAvlDataCollection().getData().size(); j++) {
 
 
                 // get values for database insert
-                List<Object> location = decoder.getLocationAttributes(decoder.getDecodedData().get(i).getAvlDataList().get(j));
+                AvlData AvlData = tcpDataPacket.get(i).getAvlDataCollection().getData().get(j);
 
                 // store generated id from inserted location for beacons
-                int insertedLocationID = Inserts.insertLocation(location,conn);
+                int insertedLocationID = Inserts.insertLocation(conn,AvlData);
 
                 // get io-element it has the most variables in it
-                IOData ioData = decoder.getDecodedData().get(i).getAvlDataList().get(j).getIoData();
-                for (int k = 0; k < ioData.getBeaconData().size(); k++) {
+                int beaconCount = AvlData.getIoElement().getBeacons().size();
+                for (int k = 0; k < beaconCount; k++) {
 
-                    Beacon beaconToInsert = ioData.getBeaconData().get(k);
+                    Beacon beaconToInsert = AvlData.getIoElement().getBeacons().get(k);
 
                     Integer rowsAffected = insertBeaconPosition(conn,beaconToInsert, insertedLocationID);
                     System.out.println(rowsAffected); // logger einbinden
@@ -118,9 +121,10 @@ public class Inserts {
                         int deviceAffected = updateDeviceLatestPosition(conn,insertedLocationID,
                                 beaconToInsert.getMajor(),beaconToInsert.getMinor());
                         if (deviceAffected == 1){
-                            System.out.println("UPDATE SUCCESSFULL");
+                            JDBC.log.info("UPDATED " + deviceAffected + " DEVICE SUCCESSFUL");
                         } else {
-                            System.out.println("UPDATE FAILED");
+                            JDBC.log.warn("UPDATED FAILED FOR BEACON WITH MAJOR: " + beaconToInsert.getMajor() + "AND MINOR: "
+                                + beaconToInsert.getMinor());
                         }
                     }
 
@@ -129,6 +133,7 @@ public class Inserts {
         }
 
     }
+
 
     // gonna use after beacon information is stored inside the beacon_position table for histroy reasons.
     public static int updateDeviceLatestPosition(Connection conn, int position, String major, String minor) throws SQLException {

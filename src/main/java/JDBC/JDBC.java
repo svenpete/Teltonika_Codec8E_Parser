@@ -7,15 +7,15 @@
 
 package JDBC;
 
-import Codec8E.Decoder;
-import Codec8E.Exceptions.CodecProtocolException;
-import Codec8E.Exceptions.CyclicRedundancyCheck;
-import Codec8E.Exceptions.PreAmbleLengthException;
-import Codec8E.Exceptions.ReceivedDataException;
+
+import DataParser.DataDecoder;
+import DataParser.LogReader;
+import DataParser.HexReader;
+import DataParser.Model.TcpDataPacket;
 import org.apache.log4j.Logger;
 
+
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.*;
 import java.text.ParseException;
@@ -47,7 +47,7 @@ public class JDBC {
         System.setProperty("logPath",System.getProperty("user.dir"));
     }
 
-    static Logger log = Logger.getLogger(Decoder.class.getName());
+    static Logger log = Logger.getLogger(JDBC.class.getName());
 
 
 
@@ -119,13 +119,35 @@ public class JDBC {
 
     public static void main(String[] args) {
         try {
+            Connection conn = getConnection();
+            LogReader logReader = new LogReader();
+            List<String> hex = logReader.getHexCodes();
+
+            HexReader hexReader = new HexReader(null);
+            DataDecoder decoder = new DataDecoder(hexReader);
+
+            List<TcpDataPacket> decodedData = decoder.decodeHex(hex);
+
+            Inserts.insertTcpData(conn,decodedData);
 
 
-            Decoder decoder = new Decoder();
 
-            Inserts.insertAvlData(getConnection(),decoder);
+
             System.out.println("test");
 
+
+        } catch (IOException e) {
+
+            System.out.println("Error Message: " + e.getMessage());
+            e.printStackTrace();
+
+            // use sacktrace to determine where the struggle is
+            log.debug("Invalid Input: ", e);
+
+        } catch (ParseException e){
+
+            System.out.println("Error Message: Unable to decode. Missing or false package prefix. ");
+            log.debug("Error Message: ", e);
 
         } catch (SQLException e) {
             System.out.println("Error Message: " + e.getMessage());
@@ -135,27 +157,13 @@ public class JDBC {
             log.debug("Error Message: " + e.getMessage());
             log.info("SQL State: " + e.getSQLState());
 
-        }
-         catch (IOException e) {
-
-            System.out.println("Error Message: " + e.getMessage());
-            e.printStackTrace();
-
-            // use sacktrace to determine where the struggle is
-            log.debug("Invalid Input: ", e);
-
         } catch (ClassNotFoundException e) {
 
             System.out.println("Error Message: " + e.getMessage());
             e.printStackTrace();
             log.debug(e.getMessage());
 
-        }  catch (ParseException e){
-
-            System.out.println("Error Message: Unable to decode. Missing or false package prefix. ");
-            log.debug("Error Message: ", e);
-
-        } catch (PreAmbleLengthException e){
+        }   /*catch (PreAmbleLengthException e){
 
             System.out.println("Error message: " + e.getMessage());
             e.printStackTrace();
@@ -174,6 +182,7 @@ public class JDBC {
         catch (CyclicRedundancyCheck e){
             System.out.println(e);
         }
+        */
     }
 
     public static void createSchema(Connection connection, String schemaName) throws SQLException {

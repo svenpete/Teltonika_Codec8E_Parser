@@ -6,7 +6,7 @@
  */
 
 
-package Codec8E.CRC;
+package DataParser;
 
 import java.math.BigInteger;
 
@@ -31,7 +31,7 @@ public class Crc {
 
     /**
      * This method calculates a checksum based on CRC-16/IBM. With this you can check if hex code are sent without data lose.
-     * Codec8E.CRC-16
+     * DataParser.CRC-16
      * CRC-Polynomial x16+x15+x2+1 (0x8005), initial value 0x0000, low bit first, high bit after, result is XOR0
      * 0xA001 is the result of 0x8005 bitwise reversal
      *

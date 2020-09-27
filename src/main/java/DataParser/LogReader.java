@@ -1,9 +1,7 @@
-package Logger;
+package DataParser;
 
-import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-public class ReadLogs
+public class LogReader
 {
 
     // gets the working directory
@@ -20,7 +18,7 @@ public class ReadLogs
     private static final String projectPath = currentSystemDirectory + "/logs/beacon.log";
     private List<String> hexCodes;
 
-    public ReadLogs() throws FileNotFoundException, ParseException {
+    public LogReader() throws FileNotFoundException, ParseException {
     setHexCode();
     }
 

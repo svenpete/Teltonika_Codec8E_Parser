@@ -6,7 +6,7 @@
  * Änderungsdatum 12.08.2020
  */
 
-package Codec8E;
+package DataParser.Model;
 
 public enum FieldEncoding {
     byte1(1),

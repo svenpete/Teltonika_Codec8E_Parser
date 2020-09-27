@@ -5,7 +5,7 @@
  * Change of date: 28.05.2020
  */
 
-package Codec8E.Exceptions;
+package DataParser.Exceptions;
 
 public class CodecProtocolException extends Exception {
 

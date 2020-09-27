@@ -8,12 +8,12 @@
 
 package DataParser;
 
+import DataParser.Exceptions.PreAmbleException;
 import DataParser.Model.AVL.AvlData;
 import DataParser.Codec.Codec8E;
 import DataParser.Model.AVL.AvlDataCollection;
 import DataParser.Exceptions.CodecProtocolException;
 import DataParser.Exceptions.CyclicRedundancyCheck;
-import DataParser.Exceptions.PreAmbleLengthException;
 import DataParser.Model.IO.IOElement;
 import DataParser.Model.TcpDataPacket;
 
@@ -30,7 +30,7 @@ public class DataDecoder {
         this.hexReader = hexReader;
     }
 
-    public List<TcpDataPacket> decodeHex(List<String> hex){
+    public List<TcpDataPacket> decodeHex(List<String> hex) throws CyclicRedundancyCheck, PreAmbleException, CodecProtocolException {
 
         List<TcpDataPacket> decodedData = new ArrayList<>();
         for (int i = 0; i < hex.size(); i++) {
@@ -85,60 +85,73 @@ public class DataDecoder {
 
     }
 
+    public boolean checkHexLength(){
+        if ( hexReader.getHexCode() == null )
+            return false;
+
+        int length = hexReader.getHexCode().length();
+        boolean valid = length > 62 ? true : false;
+        return valid;
+    }
 
     /**
-     * This method decodes the received tcp data and is the entry point for hex decoding .
+     * This method decodes the received tcp Resources and is the entry point for hex decoding .
      * @return
      */
-    public TcpDataPacket decodeTcpData() {
+    public TcpDataPacket decodeTcpData() throws PreAmbleException, CyclicRedundancyCheck, CodecProtocolException {
 
-        try {
-
-            int preAmble = hexReader.readInt8();
-            int length = hexReader.readInt8() * 2;
-            int codecId = hexReader.readInt2();
-
-            hexReader.setActualPosition(16);
+        //try {
+            if ( checkHexLength() && hexReader.isValidHexaCode(hexReader.getHexCode())) {
 
 
-            String data = hexReader.readString(length);
-            Integer crc = hexReader.readInt8();
+                int preAmble = hexReader.readInt8();
+                int length = hexReader.readInt8() * 2;
+                int codecId = hexReader.readInt2();
 
-            hexReader.setActualPosition(16);
-
-            // is the prefix of each hex code sent over tcp ip
-            if ( preAmble != 0 ){
-
-                throw new PreAmbleLengthException(preAmble);
-
-            }
-
-            Crc test = new Crc(data);
-            //check if data was manipulated
-            if ( crc != test.calculateCrc()) throw new CyclicRedundancyCheck(crc,test.calculateCrc());
+                hexReader.setActualPosition(16);
 
 
-            AvlDataCollection avlDataCollection;
+                String data = hexReader.readString(length);
+                Integer crc = hexReader.readInt8();
 
-            //checking for right teltonika protocol encoding
-            if ( codecId == 142 )
-            {
-                avlDataCollection = new Codec8E(hexReader).decodeAvlDataCollection();
+                hexReader.setActualPosition(16);
 
+                // is the prefix of each hex code sent over tcp ip
+                if ( preAmble != 0 ) {
+
+                    throw new PreAmbleException(preAmble);
+
+                }
+
+                Crc test = new Crc(data);
+                //check if Resources was manipulated
+                if ( crc != test.calculateCrc() ) throw new CyclicRedundancyCheck(crc, test.calculateCrc());
+
+
+                AvlDataCollection avlDataCollection;
+
+                //checking for right teltonika protocol encoding
+                if ( codecId == 142 ) {
+                    avlDataCollection = new Codec8E(hexReader).decodeAvlDataCollection();
+
+                } else {
+                    throw new CodecProtocolException(codecId);
+                }
+
+
+                return new TcpDataPacket(preAmble, length, crc, avlDataCollection);
             } else {
-                throw new CodecProtocolException(codecId);
+                return null;
             }
 
-
-            return new TcpDataPacket(preAmble,length,crc,avlDataCollection);
-
-        } catch (PreAmbleLengthException e) {
+       /* } catch (PreAmbleException e) {
             e.printStackTrace();
         } catch (CodecProtocolException e) {
             e.printStackTrace();
         } catch (CyclicRedundancyCheck cyclicRedundancyCheck) {
             cyclicRedundancyCheck.printStackTrace();
         }
-        return null;
+        */
+    //   return null;
     }
 }

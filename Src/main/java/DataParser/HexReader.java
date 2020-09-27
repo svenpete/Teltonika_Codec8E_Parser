@@ -3,6 +3,10 @@ package DataParser;
 
 import DataParser.Model.FieldEncoding;
 
+import java.math.BigInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class HexReader {
     private int actualPosition;
     private String hexCode;
@@ -75,6 +79,24 @@ public class HexReader {
 
     public void setActualPosition(int actualPosition) {
         this.actualPosition = actualPosition;
+    }
+
+    public String getHexCode() {
+        return hexCode;
+    }
+
+    /**
+     * ^            Start of line.
+     * [0-9A-F]     Character class: Any character in 0 to 9, or in A to F.
+     * +            Quantifier: One or more of the above.
+     * $            End of line.
+     * @param str
+     * @return
+     */
+    public boolean isValidHexaCode(String str)
+    {
+        boolean isHex = str.matches("[0-9A-Fa-f]+");
+        return isHex;
     }
 
 }

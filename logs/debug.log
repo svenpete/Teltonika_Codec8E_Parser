@@ -28,8 +28,8 @@ java.io.FileNotFoundException: C:\Users\svenp\IdeaProjects\Teltonika_Codec8E_Par
 Error Message: 
 java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   20.08.2020 17:18:03 - responded [00000001]"
 	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:112)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:112)
 	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
 	at DataParser.LogReader.<init>(ReadLogs.java:24)
 	at setDecodedData(Decoder.java:52)
@@ -43,8 +43,8 @@ java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   2
 Error Message: 
 java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   20.08.2020 17:18:03 - responded [00000001]"
 	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:112)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:112)
 	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
 	at DataParser.LogReader.<init>(ReadLogs.java:24)
 	at setDecodedData(Decoder.java:52)
@@ -58,8 +58,8 @@ java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   2
 Error Message: 
 java.text.ParseException: Unparseable date: "20.08.2020 17:18:03"
 	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:110)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:110)
 	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
 	at DataParser.LogReader.<init>(ReadLogs.java:24)
 	at setDecodedData(Decoder.java:52)
@@ -73,8 +73,8 @@ java.text.ParseException: Unparseable date: "20.08.2020 17:18:03"
 Error Message: 
 java.text.ParseException: Unparseable date: "20.08.2020 17:18:03"
 	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:110)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:110)
 	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
 	at DataParser.LogReader.<init>(ReadLogs.java:24)
 	at setDecodedData(Decoder.java:52)
@@ -83,8 +83,8 @@ java.text.ParseException: Unparseable date: "20.08.2020 17:18:03"
 Error Message: 
 java.text.ParseException: Unparseable date: "20.08.2020 17:18:03"
 	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:110)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:110)
 	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
 	at DataParser.LogReader.<init>(ReadLogs.java:24)
 	at setDecodedData(Decoder.java:52)
@@ -93,23 +93,8 @@ java.text.ParseException: Unparseable date: "20.08.2020 17:18:03"
 Error Message: 
 java.text.ParseException: Unparseable date: "20.08.2020 17:18:03"
 	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:110)
-	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
-	at DataParser.LogReader.<init>(ReadLogs.java:24)
-	at setDecodedData(Decoder.java:52)
-	at DataParser.LogCache.<init>(Decoder.java:32)
-	at JDBC.JDBC.main(JDBC.java:123)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
-	at com.intellij.rt.execution.application.AppMainV2.main(AppMainV2.java:131)
-Error Message: 
-java.text.ParseException: Unparseable date: "2020.08.20 17:18:03"
-	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:110)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:110)
 	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
 	at DataParser.LogReader.<init>(ReadLogs.java:24)
 	at setDecodedData(Decoder.java:52)
@@ -123,8 +108,23 @@ java.text.ParseException: Unparseable date: "2020.08.20 17:18:03"
 Error Message: 
 java.text.ParseException: Unparseable date: "2020.08.20 17:18:03"
 	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:110)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:110)
+	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
+	at DataParser.LogReader.<init>(ReadLogs.java:24)
+	at setDecodedData(Decoder.java:52)
+	at DataParser.LogCache.<init>(Decoder.java:32)
+	at JDBC.JDBC.main(JDBC.java:123)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at com.intellij.rt.execution.application.AppMainV2.main(AppMainV2.java:131)
+Error Message: 
+java.text.ParseException: Unparseable date: "2020.08.20 17:18:03"
+	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:110)
 	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
 	at DataParser.LogReader.<init>(ReadLogs.java:24)
 	at setDecodedData(Decoder.java:52)
@@ -133,8 +133,8 @@ java.text.ParseException: Unparseable date: "2020.08.20 17:18:03"
 Error Message: 
 java.text.ParseException: Unparseable date: "2020.08.20 17:18:03"
 	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:110)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:110)
 	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
 	at DataParser.LogReader.<init>(ReadLogs.java:24)
 	at setDecodedData(Decoder.java:52)
@@ -143,8 +143,8 @@ java.text.ParseException: Unparseable date: "2020.08.20 17:18:03"
 Error Message: 
 java.text.ParseException: Unparseable date: "2020-08-20 17:18:03"
 	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:110)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:110)
 	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
 	at DataParser.LogReader.<init>(ReadLogs.java:24)
 	at setDecodedData(Decoder.java:52)
@@ -158,8 +158,8 @@ java.text.ParseException: Unparseable date: "2020-08-20 17:18:03"
 Error Message: 
 java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   20.08.2020 17:18:03 - responded [00000001]"
 	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:112)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:112)
 	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
 	at DataParser.LogReader.<init>(ReadLogs.java:24)
 	at setDecodedData(Decoder.java:52)
@@ -173,8 +173,8 @@ java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   2
 Error Message: 
 java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   20.08.2020 17:18:03 - responded [00000001]"
 	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:112)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:112)
 	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
 	at DataParser.LogReader.<init>(ReadLogs.java:24)
 	at setDecodedData(Decoder.java:52)
@@ -183,8 +183,8 @@ java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   2
 Error Message: 
 java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   20.08.2020 17:18:03 - responded [00000001]"
 	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:112)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:112)
 	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
 	at DataParser.LogReader.<init>(ReadLogs.java:24)
 	at setDecodedData(Decoder.java:52)
@@ -193,8 +193,8 @@ java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   2
 Error Message: 
 java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   20.08.2020 17:18:03 - responded [00000001]"
 	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:112)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:112)
 	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
 	at DataParser.LogReader.<init>(ReadLogs.java:24)
 	at setDecodedData(Decoder.java:52)
@@ -203,53 +203,8 @@ java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   2
 Error Message: 
 java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   20.08.2020 17:18:03 - responded [00000001]"
 	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:112)
-	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
-	at DataParser.LogReader.<init>(ReadLogs.java:24)
-	at setDecodedData(Decoder.java:52)
-	at DataParser.LogCache.<init>(Decoder.java:32)
-	at JDBC.JDBC.main(JDBC.java:123)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
-	at com.intellij.rt.execution.application.AppMainV2.main(AppMainV2.java:131)
-Error Message: 
-java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   20.08.2020 17:18:03 - responded [00000001]"
-	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:112)
-	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
-	at DataParser.LogReader.<init>(ReadLogs.java:24)
-	at setDecodedData(Decoder.java:52)
-	at DataParser.LogCache.<init>(Decoder.java:32)
-	at JDBC.JDBC.main(JDBC.java:123)
-Error Message: 
-java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   20.08.2020 17:18:03 - responded [00000001]"
-	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:112)
-	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
-	at DataParser.LogReader.<init>(ReadLogs.java:24)
-	at setDecodedData(Decoder.java:52)
-	at DataParser.LogCache.<init>(Decoder.java:32)
-	at JDBC.JDBC.main(JDBC.java:123)
-Error Message: 
-java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   20.08.2020 17:18:03 - responded [00000001]"
-	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:112)
-	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
-	at DataParser.LogReader.<init>(ReadLogs.java:24)
-	at setDecodedData(Decoder.java:52)
-	at DataParser.LogCache.<init>(Decoder.java:32)
-	at JDBC.JDBC.main(JDBC.java:123)
-Error Message: 
-java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   20.08.2020 17:18:03 - responded [00000001]"
-	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:112)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:112)
 	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
 	at DataParser.LogReader.<init>(ReadLogs.java:24)
 	at setDecodedData(Decoder.java:52)
@@ -263,8 +218,8 @@ java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   2
 Error Message: 
 java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   20.08.2020 17:18:03 - responded [00000001]"
 	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:112)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:112)
 	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
 	at DataParser.LogReader.<init>(ReadLogs.java:24)
 	at setDecodedData(Decoder.java:52)
@@ -273,8 +228,53 @@ java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   2
 Error Message: 
 java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   20.08.2020 17:18:03 - responded [00000001]"
 	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:112)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:112)
+	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
+	at DataParser.LogReader.<init>(ReadLogs.java:24)
+	at setDecodedData(Decoder.java:52)
+	at DataParser.LogCache.<init>(Decoder.java:32)
+	at JDBC.JDBC.main(JDBC.java:123)
+Error Message: 
+java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   20.08.2020 17:18:03 - responded [00000001]"
+	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:112)
+	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
+	at DataParser.LogReader.<init>(ReadLogs.java:24)
+	at setDecodedData(Decoder.java:52)
+	at DataParser.LogCache.<init>(Decoder.java:32)
+	at JDBC.JDBC.main(JDBC.java:123)
+Error Message: 
+java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   20.08.2020 17:18:03 - responded [00000001]"
+	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:112)
+	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
+	at DataParser.LogReader.<init>(ReadLogs.java:24)
+	at setDecodedData(Decoder.java:52)
+	at DataParser.LogCache.<init>(Decoder.java:32)
+	at JDBC.JDBC.main(JDBC.java:123)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at com.intellij.rt.execution.application.AppMainV2.main(AppMainV2.java:131)
+Error Message: 
+java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   20.08.2020 17:18:03 - responded [00000001]"
+	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:112)
+	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
+	at DataParser.LogReader.<init>(ReadLogs.java:24)
+	at setDecodedData(Decoder.java:52)
+	at DataParser.LogCache.<init>(Decoder.java:32)
+	at JDBC.JDBC.main(JDBC.java:123)
+Error Message: 
+java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   20.08.2020 17:18:03 - responded [00000001]"
+	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:112)
 	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
 	at DataParser.LogReader.<init>(ReadLogs.java:24)
 	at setDecodedData(Decoder.java:52)
@@ -288,8 +288,8 @@ java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03,560 INFO   2
 Error Message: 
 java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:0"
 	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:112)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:112)
 	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
 	at DataParser.LogReader.<init>(ReadLogs.java:24)
 	at setDecodedData(Decoder.java:52)
@@ -303,8 +303,8 @@ java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:0"
 Error Message: 
 java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03"
 	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:112)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:112)
 	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
 	at DataParser.LogReader.<init>(ReadLogs.java:24)
 	at setDecodedData(Decoder.java:52)
@@ -318,8 +318,8 @@ java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03"
 Error Message: 
 java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03"
 	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:112)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:112)
 	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
 	at DataParser.LogReader.<init>(ReadLogs.java:24)
 	at setDecodedData(Decoder.java:52)
@@ -333,8 +333,8 @@ java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03"
 Error Message: 
 java.text.ParseException: Unparseable date: "﻿2020-08-20 17:18:03"
 	at java.base/java.text.DateFormat.parse(DateFormat.java:396)
-	at DataParser.LogReader.getTimeStamp(ReadLogs.java:102)
-	at DataParser.LogReader.getDateBetween(ReadLogs.java:112)
+	at convertToTimeStamp(ReadLogs.java:102)
+	at validateTimeStamp(ReadLogs.java:112)
 	at DataParser.LogReader.setHexCode(ReadLogs.java:135)
 	at DataParser.LogReader.<init>(ReadLogs.java:24)
 	at setDecodedData(Decoder.java:52)
@@ -537,3 +537,212 @@ Server: Establish DB-Connection
 2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
 2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
 2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: Server: Establish DB-Connection
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: Server: Establish DB-Connection
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: Server: Establish DB-Connection
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: Server: Establish DB-Connection
+2020-09-27 INFO: Server: Establish DB-Connection
+2020-09-27 INFO: Server: Establish DB-Connection
+2020-09-27 INFO: Server: Establish DB-Connection
+2020-09-27 INFO: Server: Establish DB-Connection
+2020-09-27 INFO: Server: Establish DB-Connection
+2020-09-27 INFO: Server: Establish DB-Connection
+2020-09-27 INFO: Server: Establish DB-Connection
+2020-09-27 INFO: Server: Establish DB-Connection
+2020-09-27 INFO: Server: Establish DB-Connection
+2020-09-27 INFO: Server: Establish DB-Connection
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: Server: Establish DB-Connection
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: UPDATED 1 DEVICE SUCCESSFUL
+2020-09-27 INFO: Test
+2020-09-27 INFO: Test
+2020-09-27 INFO: HI

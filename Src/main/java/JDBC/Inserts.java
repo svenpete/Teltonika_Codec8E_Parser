@@ -23,7 +23,7 @@ public class Inserts {
 
 
     /**
-     * This method inserts decoded location data from fmb device into the database and returns the generated id for
+     * This method inserts decoded location Resources from fmb device into the database and returns the generated id for
      * the inserted position
      * @param avlData values need to be in the right order otherwise values in the database are mixed up.
      * @throws SQLException
@@ -63,7 +63,7 @@ public class Inserts {
     }
 
     /**
-     * This method insert beacon data and the latest inserted positionid to link them in the right table.
+     * This method insert beacon Resources and the latest inserted positionid to link them in the right table.
      * @param connection
      * @param beacon
      * @param location_id
@@ -85,33 +85,31 @@ public class Inserts {
     }
 
     /**
-     * This method initializes the insert of location and beacon data for all decoded information.
+     * This method initializes the insert of location and beacon Resources for all decoded information.
      * @param
      * @throws SQLException
      * @throws IOException
      * @throws ClassNotFoundException
      */
 
-    public static void insertTcpData(Connection conn, List<TcpDataPacket> tcpDataPacket) throws SQLException, IOException, ClassNotFoundException {
+    public static void insertTcpData(Connection conn, TcpDataPacket tcpDataPacket) throws SQLException, IOException, ClassNotFoundException {
 
-        // iterate over all decoded hex data in avl collection
-        for (int i = 0; i < tcpDataPacket.size(); i++) {
+        int avlCount = tcpDataPacket.getAvlDataCollection().getData().size();
+            // iterate over all received avl Resources in avl collection
 
-            // iterate over all received avl data in avl collection
-            for (int j = 0; j < tcpDataPacket.get(i).getAvlDataCollection().getData().size(); j++) {
-
+            for (int i = 0; i < avlCount; i++) {
 
                 // get values for database insert
-                AvlData AvlData = tcpDataPacket.get(i).getAvlDataCollection().getData().get(j);
+                AvlData AvlData = tcpDataPacket.getAvlDataCollection().getData().get(i);
 
                 // store generated id from inserted location for beacons
                 int insertedLocationID = Inserts.insertLocation(conn,AvlData);
 
                 // get io-element it has the most variables in it
                 int beaconCount = AvlData.getIoElement().getBeacons().size();
-                for (int k = 0; k < beaconCount; k++) {
+                for (int j = 0; j < beaconCount; j++) {
 
-                    Beacon beaconToInsert = AvlData.getIoElement().getBeacons().get(k);
+                    Beacon beaconToInsert = AvlData.getIoElement().getBeacons().get(j);
 
                     Integer rowsAffected = insertBeaconPosition(conn,beaconToInsert, insertedLocationID);
                     System.out.println(rowsAffected); // logger einbinden
@@ -130,7 +128,7 @@ public class Inserts {
 
                 }
             }
-        }
+
 
     }
 

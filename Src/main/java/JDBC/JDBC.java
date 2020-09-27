@@ -9,8 +9,12 @@ package JDBC;
 
 
 import DataParser.DataDecoder;
+import DataParser.Exceptions.CodecProtocolException;
+import DataParser.Exceptions.CyclicRedundancyCheck;
+import DataParser.Exceptions.PreAmbleException;
 import DataParser.LogReader;
 import DataParser.HexReader;
+import DataParser.Model.AVL.AvlData;
 import DataParser.Model.TcpDataPacket;
 import org.apache.log4j.Logger;
 
@@ -83,7 +87,7 @@ public class JDBC {
     public static void loadDatabaseConfiguration() throws IOException {
 
         Properties props = new Properties();
-        FileInputStream fileInputStream = new FileInputStream("src/main/Resources/database_config.properties");
+        FileInputStream fileInputStream = new FileInputStream("src/main/Resources/DatabaseConfig.properties");
         props.load(fileInputStream);
         fileInputStream.close();
 
@@ -123,17 +127,24 @@ public class JDBC {
             LogReader logReader = new LogReader();
             List<String> hex = logReader.getHexCodes();
 
-            HexReader hexReader = new HexReader(null);
-            DataDecoder decoder = new DataDecoder(hexReader);
+            for (int i = 0; i < hex.size(); i++) {
 
-            List<TcpDataPacket> decodedData = decoder.decodeHex(hex);
+                HexReader hexReader = new HexReader(hex.get(i));
+                DataDecoder decoder = new DataDecoder(hexReader);
 
-            Inserts.insertTcpData(conn,decodedData);
+                TcpDataPacket tcpDataPacket = decoder.decodeTcpData();
+                int count = tcpDataPacket.getAvlDataCollection().getData().size();
 
+                for (int j = 0; j < count ; j++) {
+                    AvlData toCheck = tcpDataPacket.getAvlDataCollection().getData().get(j);
+                    int beaconCount = toCheck.getIoElement().getBeacons().size();
+                    if ( beaconCount >= 1 ) {
+                        Inserts.insertTcpData(conn,tcpDataPacket);
+                    }
 
+                }
 
-
-            System.out.println("test");
+            }
 
 
         } catch (IOException e) {
@@ -162,27 +173,15 @@ public class JDBC {
             System.out.println("Error Message: " + e.getMessage());
             e.printStackTrace();
             log.debug(e.getMessage());
-
-        }   /*catch (PreAmbleLengthException e){
-
-            System.out.println("Error message: " + e.getMessage());
+        } catch (PreAmbleException e) {
+            log.debug(e);
             e.printStackTrace();
-            log.debug("Invalid preAmble: " + e.getMessage());
-
-        } catch (CodecProtocolException e){
-
-            log.fatal("Wrong protocol: " + e.getMessage());
-
-        } catch (ReceivedDataException e){
-
-            System.out.println("Invalid data checksum: " + e.getMessage());
-            log.fatal("Invalid checksum: " + e.getMessage());
-
+        } catch (CyclicRedundancyCheck e) {
+            log.debug(e);
+        } catch (CodecProtocolException e) {
+            log.debug(e);
         }
-        catch (CyclicRedundancyCheck e){
-            System.out.println(e);
-        }
-        */
+
     }
 
     public static void createSchema(Connection connection, String schemaName) throws SQLException {

@@ -16,6 +16,7 @@ public class LogReader
     // gets the working directory
     private static final String currentSystemDirectory = System.getProperty("user.dir");
     private static final String projectPath = currentSystemDirectory + "/logs/beacon.log";
+    private static final String timeStampFormat = "yyyy-mm-dd hh:mm:ss";
     private List<String> hexCodes;
 
     public LogReader() throws FileNotFoundException, ParseException {
@@ -24,11 +25,11 @@ public class LogReader
 
     /**
      * This method checks the status of a received byte string. If the type of an entry is received the method returns true.
-     * Purpose is to examine the important byte strings from log data.
+     * Purpose is to examine the important byte strings from log Resources.
      * @param checkType to determine if the hexcode is send by fmb device or server.
      * @return true or false based on message type
      */
-    private static boolean checkStatus(String checkType)
+    public static boolean checkStatus(String checkType)
     {
         if (checkType.contains("received"))
         {
@@ -43,7 +44,7 @@ public class LogReader
      * @param stringToSearch a single log entry with timestamp, log info and hexcode.
      * @return the received hexcode from fmb devices.
      */
-    private static String getHexStrings(String stringToSearch){
+    public static String filterHexData(String stringToSearch){
 
         int firstBracket = stringToSearch.indexOf('[');
         String contentOfBrackets = stringToSearch.substring(firstBracket + 1, stringToSearch.indexOf(']', firstBracket));
@@ -55,7 +56,7 @@ public class LogReader
      * @return a list with given strings from log file
      * @throws FileNotFoundException
      */
-    private List<String> getLogData() throws FileNotFoundException {
+    public List<String> getLogData() throws FileNotFoundException {
         String line = "";
 
         ArrayList<String> logList = new ArrayList<>();
@@ -70,6 +71,7 @@ public class LogReader
         return logList;
     }
 
+
     /** This method checks if a given timestamp is between to others or not.
      * @param lowerBound describes the timestamp to start
      * @param upperBound describes the timestamp to stop searching for
@@ -77,52 +79,48 @@ public class LogReader
      * @return true if given input lays between otherwise false.
      * @throws ParseException
      */
-    private boolean getDateBetween(Timestamp lowerBound, Timestamp upperBound, String timeStampInBetween) throws ParseException {
-
-        Timestamp toCheck = getTimeStamp(timeStampInBetween);
-
-        if (toCheck.getTime() < upperBound.getTime() && toCheck.getTime() > lowerBound.getTime()) {
+    public boolean validateTimeStamp(Timestamp lowerBound, Timestamp upperBound, Timestamp timeStampInBetween){
+        if (timeStampInBetween.getTime() < upperBound.getTime() && timeStampInBetween.getTime() > lowerBound.getTime()) {
             return true;
         }
-
         return false;
     }
+
+
 
     /** This method returns the timestamp of a specific log entry.
      *  The timestamp of a log entry must be the first entry in a given line otherwise this method wont work.
      * @param toConvert = the log entry to be get the date from.
      * @return the given timestamp for this specific log entry.
      */
-    private Timestamp getTimeStamp(String toConvert) throws ParseException
-    {
+    public Timestamp convertToTimeStamp(String toConvert) throws ParseException {
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat(timeStampFormat);
         Date parsedDate = dateFormat.parse(toConvert);
 
-        Timestamp timeStamp = new Timestamp(parsedDate.getTime());
-       return timeStamp;
+       return new Timestamp(parsedDate.getTime());
     }
 
-    // for testing purposese
-    private boolean getDateBetween(String timeStampFrom, String timeStampTo, String timeStampInBetween) throws ParseException {
-        Timestamp lowerBound = getTimeStamp(timeStampFrom);
-        Timestamp upperBound = getTimeStamp(timeStampTo);
-        Timestamp toCheck = getTimeStamp(timeStampInBetween);
+
+
+    public boolean validateTimeStamp(String timeStampFrom, String timeStampTo, Timestamp timeStampInBetween) throws ParseException {
+        Timestamp lowerBound = convertToTimeStamp(timeStampFrom);
+        Timestamp upperBound = convertToTimeStamp(timeStampTo);
+        Timestamp toCheck = timeStampInBetween;
 
         if (toCheck.getTime() < upperBound.getTime() && toCheck.getTime() > lowerBound.getTime()) {
             return true;
         }
-
         return false;
     }
 
     /**
-     * This method returns a list with received hexcode data from the log file.
+     * This method returns a list with received hexcode Resources from the log file.
      * @end this parameter determines the timestamp value to look for .
      * @return
      */
     public List<String> setHexCode() throws FileNotFoundException, ParseException {
-            // stored all log data
+            // stored all log Resources
             List<String> logData = getLogData();
             hexCodes = new ArrayList<>();
 
@@ -131,11 +129,11 @@ public class LogReader
             for (int i = 0; i < logData.size(); i++)
             {
 
-                boolean valid = getDateBetween("2020-08-20 17:18:03", "2020-08-20 17:55:45",getLogDate(logData.get(i)));
+                boolean valid = validateTimeStamp("2020-08-20 17:18:03", "2020-08-20 17:55:45", getLogTimeStamp(logData.get(i)));
 
-                if (valid && checkStatus(logData.get(i)) && checkHexLength(getHexStrings(logData.get(i))))
+                if (valid && checkStatus(logData.get(i)) && checkHexLength(filterHexData(logData.get(i))))
                 {
-                    hexCodes.add(getHexStrings(logData.get(i)));
+                    hexCodes.add(filterHexData(logData.get(i)));
                 }
             }
             return hexCodes;
@@ -153,17 +151,18 @@ public class LogReader
         return valid;
     }
 
-    public String getLogDate(String log){
-        String date = log.substring(0,19);
-        return date;
+    public Timestamp getLogTimeStamp(String log) throws ParseException{
+        String logEntryDate = log.substring(0,19);
+        Timestamp timeStamp = convertToTimeStamp(logEntryDate);
+        return timeStamp;
     }
 
-    /*
+/*
     // method for deployment
     // timeStampFrom = 2020-08-13 15:57:27
     // timeStampTo = 2020-08-13 16:00:00
     public List<String> setHexCode() throws FileNotFoundException, ParseException {
-        // stored all log data
+        // stored all log Resources
         List<String> logData = getLogData();
         hexCodes = new ArrayList<>();
         // 10 min time difference
@@ -172,20 +171,23 @@ public class LogReader
 
         for (int i = 0; i < logData.size(); i++)
         {
-            boolean valid = getDateBetween(lowerBound, upperBound,logData.get(i));
+            boolean valid = validateTimeStamp(lowerBound, upperBound,logData.get(i));
 
             if (valid && checkStatus(logData.get(i)))
             {
-                hexCodes.add(getHexStrings(logData.get(i)));
+                hexCodes.add(filterHexData(logData.get(i)));
             }
         }
         return hexCodes;
     }
 
-     */
+*/
 
     public List<String> getHexCodes (){
         return this.hexCodes;
     }
 
+    public static String getProjectPath() {
+        return projectPath;
+    }
 }

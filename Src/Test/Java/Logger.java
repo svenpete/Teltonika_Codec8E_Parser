@@ -9,15 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MyTest {
+public class Logger {
 
-    private static Logger logger = null;
+    private static org.apache.log4j.Logger logger = null;
 
     @BeforeClass
     public static void setLogger()
     {
         System.setProperty("logPath",System.getProperty("user.dir"));
-        logger = LogManager.getLogger(MyTest.class.getName());
+        logger = LogManager.getLogger(Logger.class.getName());
     }
 
     @Test

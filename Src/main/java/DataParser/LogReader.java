@@ -2,6 +2,7 @@ package DataParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,10 +18,8 @@ public class LogReader
     private static final String currentSystemDirectory = System.getProperty("user.dir");
     private static final String projectPath = currentSystemDirectory + "/logs/beacon.log";
     private static final String timeStampFormat = "yyyy-mm-dd hh:mm:ss";
-    private List<String> hexCodes;
 
     public LogReader() throws FileNotFoundException, ParseException {
-    setHexCode();
     }
 
     /**
@@ -102,43 +101,6 @@ public class LogReader
     }
 
 
-
-    public boolean validateTimeStamp(String timeStampFrom, String timeStampTo, Timestamp timeStampInBetween) throws ParseException {
-        Timestamp lowerBound = convertToTimeStamp(timeStampFrom);
-        Timestamp upperBound = convertToTimeStamp(timeStampTo);
-        Timestamp toCheck = timeStampInBetween;
-
-        if (toCheck.getTime() < upperBound.getTime() && toCheck.getTime() > lowerBound.getTime()) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * This method returns a list with received hexcode Resources from the log file.
-     * @end this parameter determines the timestamp value to look for .
-     * @return
-     */
-    public List<String> setHexCode() throws FileNotFoundException, ParseException {
-            // stored all log Resources
-            List<String> logData = getLogData();
-            hexCodes = new ArrayList<>();
-
-
-
-            for (int i = 0; i < logData.size(); i++)
-            {
-
-                boolean valid = validateTimeStamp("2020-08-20 17:18:03", "2020-08-20 17:55:45", getLogTimeStamp(logData.get(i)));
-
-                if (valid && checkStatus(logData.get(i)) && checkHexLength(filterHexData(logData.get(i))))
-                {
-                    hexCodes.add(filterHexData(logData.get(i)));
-                }
-            }
-            return hexCodes;
-    }
-
     /**
      * This method checks if a hex strings length is correct.
      * Purpose to determine the hex code for whitelisting.
@@ -157,34 +119,30 @@ public class LogReader
         return timeStamp;
     }
 
-/*
-    // method for deployment
-    // timeStampFrom = 2020-08-13 15:57:27
-    // timeStampTo = 2020-08-13 16:00:00
-    public List<String> setHexCode() throws FileNotFoundException, ParseException {
+
+    /**
+     * This method returns a list with received hexcode Resources from the log file.
+     * @end this parameter determines the timestamp value to look for .
+     * @return
+     */
+    public List<String> getHexCode(Timestamp lowerBound, Timestamp upperBound) throws FileNotFoundException, ParseException {
         // stored all log Resources
         List<String> logData = getLogData();
-        hexCodes = new ArrayList<>();
-        // 10 min time difference
-        Timestamp lowerBound = new Timestamp(System.currentTimeMillis() -  600000);
-        Timestamp upperBound = new Timestamp(System.currentTimeMillis());
+
+        List<String> hexCodes = new ArrayList<>();
 
         for (int i = 0; i < logData.size(); i++)
         {
-            boolean valid = validateTimeStamp(lowerBound, upperBound,logData.get(i));
+            String logEntry = logData.get(i);
+            Timestamp logStamp = getLogTimeStamp(logEntry);
+            boolean valid = validateTimeStamp(lowerBound, upperBound,logStamp);
 
-            if (valid && checkStatus(logData.get(i)))
+            if (valid && checkStatus(logEntry) && checkHexLength(filterHexData(logEntry)))
             {
                 hexCodes.add(filterHexData(logData.get(i)));
             }
         }
         return hexCodes;
-    }
-
-*/
-
-    public List<String> getHexCodes (){
-        return this.hexCodes;
     }
 
     public static String getProjectPath() {

@@ -3,9 +3,6 @@ package DataParser;
 
 import DataParser.Model.FieldEncoding;
 
-import java.math.BigInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class HexReader {
     private int actualPosition;

@@ -9,7 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
-public class TestProperties {
+public class Resources   {
 
     private String path = "Src/Test/Resources/";
     private String fileToSearch = "DatabaseConfig.properties";
@@ -67,7 +67,7 @@ public class TestProperties {
     @Test
     public void testPropertieValues(){
 
-        Properties properties = new Properties();
+        java.util.Properties properties = new java.util.Properties();
 
         try {
             properties.load(new FileInputStream(path + fileToSearch));
@@ -77,14 +77,14 @@ public class TestProperties {
                 String value = properties.getProperty(key);
 
                 if ( value == null || value == "")
-                    Assert.fail("Properties are sent correctly.");
+                    Assert.fail("Resources are sent correctly.");
             }
 
         } catch (FileNotFoundException e ){
             e.printStackTrace();
-            Assert.fail("Properties are sent correctly.");
+            Assert.fail("Resources are sent correctly.");
         } catch (IOException e) {
-            Assert.fail("Properties are sent correctly.");
+            Assert.fail("Resources are sent correctly.");
             e.printStackTrace();
         }
     }

@@ -123,9 +123,15 @@ public class JDBC {
 
     public static void main(String[] args) {
         try {
+
             Connection conn = getConnection();
             LogReader logReader = new LogReader();
-            List<String> hex = logReader.getHexCodes();
+
+            // setting limit for hexCode input
+            Timestamp upperBound = new Timestamp(System.currentTimeMillis());
+            Timestamp lowerBound = new Timestamp(System.currentTimeMillis() - 300000);
+
+            List<String> hex = logReader.getHexCode(lowerBound,upperBound);
 
             for (int i = 0; i < hex.size(); i++) {
 
@@ -225,6 +231,7 @@ public class JDBC {
                 .addAttr("postcode", Type.VARCHAR)
                 .addAttr("city", Type.VARCHAR);
         stmt.addBatch(project.create());
+
 
         Table deviceStatus = new Table("DEVICE_STATUS")
                 .addPrimaryKey("device_status_id", Type.INTEGER_AUTO_INCREMENT)

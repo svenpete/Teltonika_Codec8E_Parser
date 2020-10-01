@@ -6,11 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="TCP_IP_LISTENER" />
+        <module name="Decoder" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="TCP_IP_LISTENER" target="1.13" />
+      <module name="Decoder" target="1.13" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -7,19 +7,22 @@
  */
 package DataParser.Model;
 
-import DataParser.Model.AVL.AvlDataCollection;
+import DataParser.Model.AVL.AvlPacket;
 
+/**
+ * This class represents the received data-packet for tcp/ip connection for FMB-Devices.
+ */
 public class TcpDataPacket {
     private int preAmble;
     private int length;
     private int crc;
-    private AvlDataCollection avlDataCollection;
+    private AvlPacket avlPacket;
 
-    public TcpDataPacket(int preAmble, int length, int crc, AvlDataCollection avlDataCollection) {
+    public TcpDataPacket(int preAmble, int length, int crc, AvlPacket avlPacket) {
         this.preAmble = preAmble;
         this.length = length;
         this.crc = crc;
-        this.avlDataCollection = avlDataCollection;
+        this.avlPacket = avlPacket;
     }
 
     public int getPreAmble() {
@@ -34,7 +37,7 @@ public class TcpDataPacket {
         return crc;
     }
 
-    public AvlDataCollection getAvlDataCollection() {
-        return avlDataCollection;
+    public AvlPacket getAvlPacket() {
+        return avlPacket;
     }
 }

@@ -2,11 +2,15 @@
  * <p>
  *     Version 3
  * </p>
- * Änderungsdatum 27.09.2020
+ * Author: Sven Petersen
+ * Change date: 27.09.2020
  */
 
 package DataParser.Model.GPS;
 
+/**
+ * This class represents received gps data by FMB-Devices.
+ */
 public class GpsData {
 
     private Double longitude;
@@ -20,7 +24,6 @@ public class GpsData {
 
 
     public GpsData(Double longitude, Double latitude, int alti, int angle, int satellite, int speed ){
-
         setLongitude(longitude);
         setLatitude(latitude);
         this.altitude = alti;
@@ -29,6 +32,9 @@ public class GpsData {
         this.speed = speed;
     }
 
+    /**
+     * @param longitude
+     */
     private void setLongitude(Double longitude){
         this.longitude = longitude * 0.0000001;
     }
@@ -37,10 +43,14 @@ public class GpsData {
         this.latitude = latitude * 0.0000001;
     }
 
+    /**
+     * This method checks if a given longitude value is valid.
+     * @param longitude to validate.
+     * @return true if value is between -180 && 180
+     */
     public static boolean isLongiValid(Double longitude){
         return -180 <= longitude && longitude <= 180;
     }
-
 
     public static boolean isLatiValid(Double latitude){
         return  -90 <= latitude && latitude <= 90;

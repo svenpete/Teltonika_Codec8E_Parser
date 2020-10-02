@@ -1,13 +1,11 @@
 /** Crc
  * <p>
- *     Version 1
+ *     Version 2
  * </p>
- * Change of date: 23.09.2020
+ * Author: Sven Petersen
+ * Change of date: 25.09.2020
  */
-
-
 package DataParser;
-
 import java.math.BigInteger;
 
 
@@ -18,7 +16,6 @@ public class Crc {
 
 
     public Crc(String polynom){
-
         this.polynom = polynom;
     }
 
@@ -30,34 +27,39 @@ public class Crc {
 
 
     /**
-     * This method calculates a checksum based on CRC-16/IBM. With this you can check if hex code are sent without Resources lose.
-     * DataParser.CRC-16
+     * This method calculates a checksum based on CRC-16/IBM.
      * CRC-Polynomial x16+x15+x2+1 (0x8005), initial value 0x0000, low bit first, high bit after, result is XOR0
      * 0xA001 is the result of 0x8005 bitwise reversal
      *
      * @param buffer the hexcode from codecic until avl Resources checksum.
      * @return
      */
-    public static int calculateCrc(byte[] buffer) {
+    private static int calculateCrc(byte[] buffer) {
 
-        int wCRCin = 0x0000;
-        int wCPoly = 0xa001;
+        int crcValue = 0x0000;
+        int crcPolynom = 0xa001;
 
-        for (byte b : buffer) {
-            wCRCin ^= ((int) b & 0x00ff);
+        //calc crc for every byte
+        for (byte byteBuffer : buffer) {
+
+            //define 0xff for an int literal for desired value
+            crcValue ^= ((int) byteBuffer & 0x00ff);
 
             for (int j = 0; j < 8; j++) {
 
-                if ( (wCRCin & 0x0001) != 0 ) {
-                    wCRCin >>= 1;
-                    wCRCin ^= wCPoly;
+
+                if ( (crcValue & 0x0001) != 0 ) {
+                    //right shift
+                    crcValue >>= 1;
+
+                    //bitwise xor
+                    crcValue ^= crcPolynom;
 
                 } else {
-                    wCRCin >>= 1;
+                    crcValue >>= 1;
                 }
             }
         }
-        return wCRCin ^= 0x0000;
+        return crcValue ^= 0x0000;
     }
-
 }

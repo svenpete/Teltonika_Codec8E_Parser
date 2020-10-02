@@ -3,27 +3,28 @@
  * <p>
  * Version 1
  * </p>
- * Autor: Sven Petersen
- * Änderungsdatum 28.09.2020
+ * Author: Sven Petersen
+ * Change date: 28.09.2020
  */
-
-
 package DataParser.Codec;
-
+import DataParser.BitConverter;
 import DataParser.Exceptions.CodecProtocolException;
 import DataParser.Model.AVL.AvlData;
-import DataParser.Model.AVL.AvlDataCollection;
+import DataParser.Model.AVL.AvlPacket;
 import DataParser.Model.AVL.AvlDataPriority;
 import DataParser.Model.GPS.GpsData;
 import DataParser.Model.IO.Beacon;
 import DataParser.Model.IO.IOElement;
 import DataParser.Model.IO.IoProperty;
 import DataParser.HexReader;
-
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * This class handels the encryption of received data-protocol 'Codec8 Extended'.
+ */
 public class Codec8E {
     private HexReader hexReader;
 
@@ -33,42 +34,15 @@ public class Codec8E {
 
     }
 
-    static String findTwoscomplement(StringBuffer str) {
-        int n = str.length();
 
-        // Traverse the string to get first '1' from
-        // the last of string
-        int i;
-        for (i = n - 1; i >= 0; i--)
-            if ( str.charAt(i) == '1' )
-                break;
-
-        // If there exists no '1' concat 1 at the
-        // starting of string
-        if ( i == -1 )
-            return "1" + str;
-
-        // Continue traversal after the position of
-        // first '1'
-        for (int k = i - 1; k >= 0; k--) {
-            //Just flip the values
-            if ( str.charAt(k) == '1' )
-                str.replace(k, k + 1, "0");
-            else
-                str.replace(k, k + 1, "1");
-        }
-
-        // return the modified string
-        return str.toString();
-    }
 
     /**
-     * This method decodes the hex String and returns the an instance of avldatacollection. An avldatacollection can have
-     * multiple store multiply avldata.
-     * @return AvlDataCollection with decoded Data.
+     * This method decodes the hex data and returns an instance of AvlPacket. An avlPacket can have
+     * multiple avlData.
+     * @return AvlPacket with decoded Data.
      * @throws CodecProtocolException if wrong protocol is used.
      */
-    public AvlDataCollection decodeAvlDataCollection() throws CodecProtocolException {
+    public AvlPacket decodeAvlPacket() throws CodecProtocolException {
 
         int codecId = hexReader.readInt2();
         int dataCount = hexReader.readInt2();
@@ -79,7 +53,7 @@ public class Codec8E {
             data.add(avlData);
         }
 
-        return new AvlDataCollection(codecId, dataCount, data);
+        return new AvlPacket(codecId, dataCount, data);
     }
 
     /**
@@ -103,7 +77,7 @@ public class Codec8E {
 
         // IO Element Properties decoding
         List<IoProperty> ioProperties = decodeIoProperties();
-        List<Beacon> beacons = decodeBeacon();
+        List<Beacon> beacons = decodeNxProperties();
 
         IOElement ioElement = new IOElement(eventId, propertiesCount, ioProperties, beacons);
 
@@ -140,7 +114,7 @@ public class Codec8E {
     }
 
     /**
-     * This method decodes all ioproperties which the hex string contains except beacon information.
+     * This method decodes input/output properties which the hex string contains except beacon information.
      * @return List<IoProperty> contained by the hex strong
      */
     private List<IoProperty> decodeIoProperties() {
@@ -190,19 +164,22 @@ public class Codec8E {
 
 
     /**
-     * This method decodes the hex-string and look for beacons to insert.
-     * @return List<Beacon> a
+     * This method decodes the nx-properties containing beacon data.
+     * NX-properties do have variable lengths therefore these properties contain a length element.
+     * @return List<Beacon>
      */
-    private List<Beacon> decodeBeacon() {
+    private List<Beacon> decodeNxProperties() {
 
         List<Beacon> beacons = new ArrayList<>();
 
+
         int ioCountX = hexReader.readInt4();
+
         for (int i = 0; i < ioCountX; i++) {
             int propertyId = hexReader.readInt4();
             int elementLength = hexReader.readInt4();
 
-            // propertyId  385 are beacons sent to the Server so just continue if id is equal to 385.
+            // propertyId  385 are beacons sent to the server so just continue if id is equal to 385.
             if ( propertyId == 385 ) {
                 //hex don't have a value which tells how many beacons are stored therefore we need beaconSize and Length
                 int beaconSize = 22;
@@ -213,24 +190,33 @@ public class Codec8E {
                 String dataPart = hexReader.readString(2);
 
                 for (int j = 0; j < receivedBeacons; j++) {
+                    Beacon beacon = decodeBeacon();
 
-                    int bleFlag = hexReader.readInt2();
-                    boolean signalAvaible = decodeSignalAvaible(bleFlag);
-                    String type = decodeBeaconType(bleFlag);
-
-                    String uuid = hexReader.readString32();
-                    String major = hexReader.readString4();
-                    String minor = hexReader.readString4();
-                    int rssi = hexReader.readInt2();
-                    Beacon beacon = new Beacon(type, signalAvaible, uuid, major, minor, decodeRssi(rssi));
                     beacons.add(beacon);
                 }
 
-            }
+            } else {
+                //reposition reader to continue without bugs.
+                hexReader.readString(elementLength);
 
+            }
         }
 
         return beacons;
+    }
+
+    private Beacon decodeBeacon(){
+
+        int bleFlag = hexReader.readInt2();
+        boolean signalAvailable = decodeSignalAvaible(bleFlag);
+        String type = decodeBeaconType(bleFlag);
+
+        String uuid = hexReader.readString32();
+        String major = hexReader.readString4();
+        String minor = hexReader.readString4();
+        int rssi = hexReader.readInt2();
+
+        return new Beacon(type, signalAvailable, uuid, major, minor, decodeRssi(rssi));
     }
 
     /**
@@ -241,7 +227,7 @@ public class Codec8E {
      */
     private boolean decodeSignalAvaible(int bleFlag) {
         String beaconFlagBinary = Integer.toBinaryString(bleFlag);
-        return beaconFlagBinary.indexOf(0) == 1;
+        return beaconFlagBinary.indexOf(0) == 1 ? true : false;
     }
 
     /**
@@ -267,7 +253,7 @@ public class Codec8E {
         String binary = Integer.toBinaryString(decode);
 
         StringBuffer stringBuffer = new StringBuffer(binary);
-        int rssi = -1 * Integer.parseInt(findTwoscomplement(stringBuffer), 2); // temp solution
+        int rssi = -1 * Integer.parseInt(BitConverter.findTwoscomplement(stringBuffer), 2); // temp solution
         return rssi;
     }
 
@@ -285,5 +271,7 @@ public class Codec8E {
         Timestamp timestamp = new Timestamp(correctedMilliSeconds);
         return timestamp;
     }
+
+
 
 }

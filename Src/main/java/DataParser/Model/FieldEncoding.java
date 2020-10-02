@@ -2,11 +2,11 @@
  * <p>
  *     Version 1
  * </p>
- * Autor: Sven Petersen
- * Änderungsdatum 12.08.2020
+ * Author: Sven Petersen
+ * Change date 12.08.2020
  */
-
 package DataParser.Model;
+
 
 public enum FieldEncoding {
     byte1(1),

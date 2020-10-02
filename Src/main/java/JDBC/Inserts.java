@@ -94,13 +94,13 @@ public class Inserts {
 
     public static void insertTcpData(Connection conn, TcpDataPacket tcpDataPacket) throws SQLException, IOException, ClassNotFoundException {
 
-        int avlCount = tcpDataPacket.getAvlDataCollection().getData().size();
+        int avlCount = tcpDataPacket.getAvlPacket().getData().size();
             // iterate over all received avl Resources in avl collection
 
             for (int i = 0; i < avlCount; i++) {
 
                 // get values for database insert
-                AvlData AvlData = tcpDataPacket.getAvlDataCollection().getData().get(i);
+                AvlData AvlData = tcpDataPacket.getAvlPacket().getData().get(i);
 
                 // store generated id from inserted location for beacons
                 int insertedLocationID = Inserts.insertLocation(conn,AvlData);

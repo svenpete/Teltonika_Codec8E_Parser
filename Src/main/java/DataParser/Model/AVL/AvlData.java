@@ -2,15 +2,17 @@
  * <p>
  *     Version 3
  * </p>
- * Autor: Sven Petersen
- * Änderungsdatum 27.09.2020
+ * Author: Sven Petersen
+ * Change date: 27.09.2020
  */
 package DataParser.Model.AVL;
-
 import DataParser.Model.GPS.GpsData;
 import DataParser.Model.IO.IOElement;
 import java.sql.Timestamp;
 
+/**
+ * This class handels in
+ */
 public class AvlData {
 
     private String priority;

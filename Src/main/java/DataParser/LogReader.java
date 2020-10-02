@@ -1,8 +1,13 @@
+/** LogReader
+ * <p>
+ *     Version 5
+ * </p>
+ * Author: Sven Petersen
+ * Change date: 27.09.2020
+ */
 package DataParser;
-
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,31 +24,30 @@ public class LogReader
     private static final String projectPath = currentSystemDirectory + "/logs/beacon.log";
     private static final String timeStampFormat = "yyyy-mm-dd hh:mm:ss";
 
-    public LogReader() throws FileNotFoundException, ParseException {
+    public LogReader(){
     }
 
     /**
-     * This method checks the status of a received byte string. If the type of an entry is received the method returns true.
-     * Purpose is to examine the important byte strings from log Resources.
-     * @param checkType to determine if the hexcode is send by fmb device or server.
+     * This method checks the status of a received hex data. If the type of an entry is received the method returns true.
+     * Purpose is to examine the received hex data from log file.
+     * @param checkType to determine if the hex data is send by fmb device or server.
      * @return true or false based on message type
      */
-    public static boolean checkStatus(String checkType)
+    public boolean checkStatus(String checkType)
     {
         if (checkType.contains("received"))
         {
             return true;
         }
         return false;
-
     }
 
     /**
-     * This method extracts the hex code from a specific log entry out of the log file.
+     * This method extracts the hex data from a specific log entry.
      * @param stringToSearch a single log entry with timestamp, log info and hexcode.
-     * @return the received hexcode from fmb devices.
+     * @return the received hex data from fmb devices.
      */
-    public static String filterHexData(String stringToSearch){
+    public String getHexData(String stringToSearch){
 
         int firstBracket = stringToSearch.indexOf('[');
         String contentOfBrackets = stringToSearch.substring(firstBracket + 1, stringToSearch.indexOf(']', firstBracket));
@@ -72,14 +76,14 @@ public class LogReader
 
 
     /** This method checks if a given timestamp is between to others or not.
-     * @param lowerBound describes the timestamp to start
-     * @param upperBound describes the timestamp to stop searching for
-     * @param timeStampInBetween describes the timestamp whether it is valid or not
-     * @return true if given input lays between otherwise false.
+     * @param lowerBound describes the lowerBound
+     * @param upperBound describes the upperBound
+     * @param toCheck should be between lower- and upperBound
+     * @return true if toValidate is between.
      * @throws ParseException
      */
-    public boolean validateTimeStamp(Timestamp lowerBound, Timestamp upperBound, Timestamp timeStampInBetween){
-        if (timeStampInBetween.getTime() < upperBound.getTime() && timeStampInBetween.getTime() > lowerBound.getTime()) {
+    public boolean checkTimeStamp(Timestamp lowerBound, Timestamp upperBound, Timestamp toCheck){
+        if (toCheck.getTime() < upperBound.getTime() && toCheck.getTime() > lowerBound.getTime()) {
             return true;
         }
         return false;
@@ -87,32 +91,53 @@ public class LogReader
 
 
 
-    /** This method returns the timestamp of a specific log entry.
-     *  The timestamp of a log entry must be the first entry in a given line otherwise this method wont work.
-     * @param toConvert = the log entry to be get the date from.
-     * @return the given timestamp for this specific log entry.
+    /** This method converts a string to a timestamp.
+     * @param toConvert string to be converted into timestamp.
+     * @return Timestamp for given string.
      */
     public Timestamp convertToTimeStamp(String toConvert) throws ParseException {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat(timeStampFormat);
         Date parsedDate = dateFormat.parse(toConvert);
 
-       return new Timestamp(parsedDate.getTime());
+        return new Timestamp(parsedDate.getTime());
     }
 
 
     /**
-     * This method checks if a hex strings length is correct.
-     * Purpose to determine the hex code for whitelisting.
-     * @param hex to check
-     * @return true if valid otherwise false.
+     * This method checks if hex-data has a correct length.
+     * Minimum length for hex data is 106 for protocol 'Codec 8 Extended'.
+     * @param hexData string to check.
+     * @return boolean based
      */
-    public boolean checkHexLength(String hex){
+    public boolean checkHexDataLength(String hexData){
 
-       boolean valid = (hex.length() > 48) ? true : false;
+        boolean valid = (hexData.length() >= 106) ? true : false;
         return valid;
     }
 
+
+
+    /**
+     * This method checks if decoded hex-data are formatted in hexadecimal.
+     * [0-9A-Fa-f]     Character class: Any character in 0 to 9, or in A to F.
+     * +               Quantifier: One or more of the above.
+     * @param hexData to check format.
+     * @return true if correctly formatted.
+     */
+    public boolean checkHexFormat(String hexData)
+    {
+        boolean isHex = hexData.matches("[0-9A-Fa-f]+");
+        return isHex;
+    }
+
+
+    /**
+     * This method returns the timestamp for a specific log string.
+     * @param log
+     * @return Timestamp for log string.
+     * @throws ParseException
+     */
     public Timestamp getLogTimeStamp(String log) throws ParseException{
         String logEntryDate = log.substring(0,19);
         Timestamp timeStamp = convertToTimeStamp(logEntryDate);
@@ -121,9 +146,12 @@ public class LogReader
 
 
     /**
-     * This method returns a list with received hexcode Resources from the log file.
-     * @end this parameter determines the timestamp value to look for .
-     * @return
+     * This method returns a list with received hex-data between two timestamps.
+     * @param lowerBound Timestamp
+     * @param upperBound Timestamp
+     * @return List<String> containing hex-data
+     * @throws FileNotFoundException
+     * @throws ParseException
      */
     public List<String> getHexCode(Timestamp lowerBound, Timestamp upperBound) throws FileNotFoundException, ParseException {
         // stored all log Resources
@@ -133,13 +161,19 @@ public class LogReader
 
         for (int i = 0; i < logData.size(); i++)
         {
+            //get timestamp from log entry
             String logEntry = logData.get(i);
             Timestamp logStamp = getLogTimeStamp(logEntry);
-            boolean valid = validateTimeStamp(lowerBound, upperBound,logStamp);
 
-            if (valid && checkStatus(logEntry) && checkHexLength(filterHexData(logEntry)))
+            boolean valid = checkTimeStamp(lowerBound, upperBound,logStamp);
+
+            if (valid && checkStatus(logEntry))
             {
-                hexCodes.add(filterHexData(logData.get(i)));
+                String hexValue = getHexData(logEntry);
+
+                if (  checkHexFormat(hexValue) && checkHexDataLength(hexValue))
+                hexCodes.add(hexValue);
+
             }
         }
         return hexCodes;

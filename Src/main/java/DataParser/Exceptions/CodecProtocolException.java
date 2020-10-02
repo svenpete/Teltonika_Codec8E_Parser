@@ -1,10 +1,10 @@
 /** CodecProtocolException
  * <p>
- *     Version 1
+ *     Version 2
  * </p>
- * Change of date: 28.05.2020
+ * Author: Sven Petersen
+ * Change date: 27.09.2020
  */
-
 package DataParser.Exceptions;
 
 public class CodecProtocolException extends Exception {

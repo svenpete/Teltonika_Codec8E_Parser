@@ -2,22 +2,22 @@
  * <p>
  *     Version 1
  * </p>
- * Autor: Sven Petersen
- * Änderungsdatum 12.08.2020
+ * Author: Sven Petersen
+ * Change date: 27.09.2020
  */
 package DataParser.Model.IO;
 
+/**
+ *
+ */
 public class Beacon {
 
     private String uuid;
     private String major;
     private String minor;
     private int rssi;
-
-
     private String beaconType;
     private boolean signalStrengthAvaible;
-
 
 
     public Beacon(String beaconType, Boolean signalStrengthAvaible, String uuid, String major, String minor, int rssi) {
@@ -78,3 +78,4 @@ public class Beacon {
         this.signalStrengthAvaible = signalStrengthAvaible;
     }
 }
+

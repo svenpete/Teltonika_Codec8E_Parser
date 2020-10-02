@@ -139,10 +139,10 @@ public class JDBC {
                 DataDecoder decoder = new DataDecoder(hexReader);
 
                 TcpDataPacket tcpDataPacket = decoder.decodeTcpData();
-                int count = tcpDataPacket.getAvlDataCollection().getData().size();
+                int count = tcpDataPacket.getAvlPacket().getData().size();
 
                 for (int j = 0; j < count ; j++) {
-                    AvlData toCheck = tcpDataPacket.getAvlDataCollection().getData().get(j);
+                    AvlData toCheck = tcpDataPacket.getAvlPacket().getData().get(j);
                     int beaconCount = toCheck.getIoElement().getBeacons().size();
                     if ( beaconCount >= 1 ) {
                         Inserts.insertTcpData(conn,tcpDataPacket);
@@ -180,13 +180,13 @@ public class JDBC {
             e.printStackTrace();
             log.debug(e.getMessage());
         } catch (PreAmbleException e) {
-            log.debug(e);
             e.printStackTrace();
-        } catch (CyclicRedundancyCheck e) {
-            log.debug(e);
+        } catch (CyclicRedundancyCheck cyclicRedundancyCheck) {
+            cyclicRedundancyCheck.printStackTrace();
         } catch (CodecProtocolException e) {
-            log.debug(e);
+            e.printStackTrace();
         }
+
 
     }
 

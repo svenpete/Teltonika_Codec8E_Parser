@@ -39,7 +39,7 @@ public class Logger {
 
     public static int getLineSize(){
 
-        File file = new File("Src/Test/Resources/debug.log");
+        File file = new File("Src/Test/DataParser.Resources/debug.log");
 
         if (!file.canRead() || !file.isFile())
             System.exit(0);
@@ -48,7 +48,7 @@ public class Logger {
 
         try {
             int count = 0;
-            in = new BufferedReader(new FileReader("Src/Test/Resources/debug.log"));
+            in = new BufferedReader(new FileReader("Src/Test/DataParser.Resources/debug.log"));
 
             String zeile = null;
             List<String> debugLog = new ArrayList<>();

@@ -2,24 +2,21 @@
  * <p>
  *     Version 2
  * </p>
- * Autor: Sven Petersen
- * Änderungsdatum 27.09.2020
+ * Author: Sven Petersen
+ * Change date: 27.09.2020
  */
-
 package DataParser;
-
 import DataParser.Exceptions.PreAmbleException;
 import DataParser.Model.AVL.AvlData;
 import DataParser.Codec.Codec8E;
-import DataParser.Model.AVL.AvlDataCollection;
+import DataParser.Model.AVL.AvlPacket;
 import DataParser.Exceptions.CodecProtocolException;
 import DataParser.Exceptions.CyclicRedundancyCheck;
 import DataParser.Model.IO.IOElement;
 import DataParser.Model.TcpDataPacket;
-
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 
 public class DataDecoder {
 
@@ -30,47 +27,89 @@ public class DataDecoder {
         this.hexReader = hexReader;
     }
 
-    public List<TcpDataPacket> decodeHex(List<String> hex) throws CyclicRedundancyCheck, PreAmbleException, CodecProtocolException {
 
-        List<TcpDataPacket> decodedData = new ArrayList<>();
-        for (int i = 0; i < hex.size(); i++) {
-            HexReader hexReader = new HexReader(hex.get(i));
-            DataDecoder dataDecoder = new DataDecoder(hexReader);
-            TcpDataPacket tcpDataPacket =  dataDecoder.decodeTcpData();
-            decodedData.add(tcpDataPacket);
-            deleteDataWithoutBeacon(decodedData.get(i));
-        }
-        deletePacketWithoutData(decodedData);
+    /**
+     * This method decodes tcp-data and checks if certain tcp-values are set correctly.
+     *
+     * @return an instance of TcpDataPacket.
+     */
+    public TcpDataPacket decodeTcpData() throws CyclicRedundancyCheck, PreAmbleException, CodecProtocolException {
 
 
-        return decodedData;
+            if ( hexReader.getHexCode() == null || hexReader.getHexCode() == "" )
+               return null;
+
+
+            int preAmble = hexReader.readInt8();
+            int length = hexReader.readInt8() * 2;
+            int codecId = hexReader.readInt2();
+
+            //reposition reader for crc-calc
+            hexReader.setPosition(16);
+
+            String crcBytes = hexReader.readString(length);
+            Integer crc = hexReader.readInt8();
+
+            //reposition reader for packet avl-packet decoding
+            hexReader.setPosition(16);
+
+            // is the prefix of each hex data sent over tcp/ip
+            if ( preAmble != 0 ) {
+
+                throw new PreAmbleException(preAmble);
+
+            }
+
+            Crc test = new Crc(crcBytes);
+
+            //check if packet was manipulated
+            if ( crc != test.calculateCrc() ) throw new CyclicRedundancyCheck(crc, test.calculateCrc());
+
+
+            AvlPacket avlPacket;
+
+            //checking for received data-protocol encoding
+            if ( codecId == 142 ) {
+                avlPacket = new Codec8E(hexReader).decodeAvlPacket();
+
+            } else {
+                throw new CodecProtocolException(codecId);
+            }
+
+            return new TcpDataPacket(preAmble, length, crc, avlPacket);
+
+
     }
 
-
-
-
+    /**
+     * This method returns a list with non-empty avl-data.
+     * @param tcpDataPacket to be
+     * @return List<TcpDataPacket> without em
+     */
     public static List<TcpDataPacket> deletePacketWithoutData(List<TcpDataPacket> tcpDataPacket){
 
         Iterator<TcpDataPacket> iterator = tcpDataPacket.iterator();
 
         while (iterator.hasNext()){
             TcpDataPacket tcpDataPacket1 = iterator.next();
-            if ( tcpDataPacket1.getAvlDataCollection().getData().size() == 0 )    iterator.remove();
+            if ( tcpDataPacket1.getAvlPacket().getData().size() == 0 )    iterator.remove();
         }
         return tcpDataPacket;
 
 
     }
 
-
-
-
+    /**
+     * This method deletes a avl-packet without beacon information.
+     * @param tcpDataPacket
+     * @return
+     */
     public static TcpDataPacket deleteDataWithoutBeacon(TcpDataPacket tcpDataPacket) {
 
-        AvlDataCollection avlDataCollection = tcpDataPacket.getAvlDataCollection();
-        int count = avlDataCollection.getData().size();
+        AvlPacket avlPacket = tcpDataPacket.getAvlPacket();
+        int count = avlPacket.getData().size();
 
-        Iterator<AvlData> iterator = avlDataCollection.getData().iterator();
+        Iterator<AvlData> iterator = avlPacket.getData().iterator();
 
         while (iterator.hasNext()){
             AvlData avlData = iterator.next();
@@ -85,73 +124,6 @@ public class DataDecoder {
 
     }
 
-    public boolean checkHexLength(){
-        if ( hexReader.getHexCode() == null )
-            return false;
-
-        int length = hexReader.getHexCode().length();
-        boolean valid = length > 62 ? true : false;
-        return valid;
-    }
-
-    /**
-     * This method decodes the received tcp Resources and is the entry point for hex decoding .
-     * @return
-     */
-    public TcpDataPacket decodeTcpData() throws PreAmbleException, CyclicRedundancyCheck, CodecProtocolException {
-
-        //try {
-            if ( checkHexLength() && hexReader.isValidHexaCode(hexReader.getHexCode())) {
 
 
-                int preAmble = hexReader.readInt8();
-                int length = hexReader.readInt8() * 2;
-                int codecId = hexReader.readInt2();
-
-                hexReader.setActualPosition(16);
-
-
-                String data = hexReader.readString(length);
-                Integer crc = hexReader.readInt8();
-
-                hexReader.setActualPosition(16);
-
-                // is the prefix of each hex code sent over tcp ip
-                if ( preAmble != 0 ) {
-
-                    throw new PreAmbleException(preAmble);
-
-                }
-
-                Crc test = new Crc(data);
-                //check if Resources was manipulated
-                if ( crc != test.calculateCrc() ) throw new CyclicRedundancyCheck(crc, test.calculateCrc());
-
-
-                AvlDataCollection avlDataCollection;
-
-                //checking for right teltonika protocol encoding
-                if ( codecId == 142 ) {
-                    avlDataCollection = new Codec8E(hexReader).decodeAvlDataCollection();
-
-                } else {
-                    throw new CodecProtocolException(codecId);
-                }
-
-
-                return new TcpDataPacket(preAmble, length, crc, avlDataCollection);
-            } else {
-                return null;
-            }
-
-       /* } catch (PreAmbleException e) {
-            e.printStackTrace();
-        } catch (CodecProtocolException e) {
-            e.printStackTrace();
-        } catch (CyclicRedundancyCheck cyclicRedundancyCheck) {
-            cyclicRedundancyCheck.printStackTrace();
-        }
-        */
-    //   return null;
-    }
 }

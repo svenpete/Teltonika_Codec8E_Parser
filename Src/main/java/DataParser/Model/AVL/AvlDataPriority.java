@@ -1,19 +1,20 @@
-/** AvlData
+/** AvlDataPriority
  * <p>
  *     Version 1
  * </p>
- * Autor: Sven Petersen
- * Änderungsdatum 27.09.2020
+ * Author: Sven Petersen
+ * Change date: 27.09.2020
  */
-
 package DataParser.Model.AVL;
 
+/**
+ * This class represents different priorities which avlData can have depending on their configuration in FMB Devices.
+ */
 public enum AvlDataPriority {
     LOW(0),
     HIGH(1),
     PANIC(2),
     SECURITY(3);
-
 
     private int priority;
 
@@ -24,6 +25,4 @@ public enum AvlDataPriority {
     public int getPriority() {
         return priority;
     }
-
-
 }

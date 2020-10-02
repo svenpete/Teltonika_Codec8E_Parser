@@ -1,18 +1,20 @@
-/** IOElement
+/** IOProperty
  * <p>
  *     Version 1
  * </p>
- * Autor: Sven Petersen
- * Änderungsdatum 27.09.2020
+ * Author: Sven Petersen
+ * Change date: 27.09.2020
  */
 
 package DataParser.Model.IO;
 
+/**
+ * This class represents input/output property for each element.
+ */
 public class IoProperty {
+
     private int id;
     private long value;
-
-
 
     public IoProperty(int id, long value){
         this.id = id;

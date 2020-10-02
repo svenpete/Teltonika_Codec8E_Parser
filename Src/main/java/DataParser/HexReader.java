@@ -1,21 +1,23 @@
+/** DataParser
+ * <p>
+ *     Version 2
+ * </p>
+ * Author: Sven Petersen
+ * Change date: 27.09.2020
+ */
 package DataParser;
-
-
 import DataParser.Model.FieldEncoding;
 
 
 public class HexReader {
-    private int actualPosition;
+    private int position;
     private String hexCode;
 
     public HexReader(String hexCode){
         this.hexCode = hexCode;
-        this.actualPosition = 0;
+        this.position = 0;
     }
 
-    public int readInt1(){
-        return getIntegerValue(FieldEncoding.byte1.getElement());
-    }
 
     public int readInt2(){
         return getIntegerValue(FieldEncoding.byte2.getElement());
@@ -28,7 +30,6 @@ public class HexReader {
     public int readInt8(){
         return getIntegerValue(FieldEncoding.byte8.getElement());
     }
-
 
     public String readString4(){
         return getStringValue(FieldEncoding.byte4.getElement());
@@ -52,17 +53,24 @@ public class HexReader {
         return Integer.parseInt(getElement(steps),16);
     }
 
-    //decode
+    /**
+     * This method returns a string based on the reader position and given input parameter.
+     * @param steps
+     * @return string
+     */
     private String getElement(int steps){
 
-        int internalPosition = actualPosition + steps;
-        String elementHexCode = hexCode.substring(actualPosition, internalPosition );
-        actualPosition = internalPosition;
+        int internalPosition = position + steps;
+        String elementHexCode = hexCode.substring(position, internalPosition );
+        position = internalPosition;
         return elementHexCode;
     }
 
-
-
+    /**
+     * This method returns a long value based on reader position and given input steps.
+     * @param steps
+     * @return long value
+     */
     private Long getLongValue(int steps) {
 
 
@@ -74,26 +82,14 @@ public class HexReader {
         return getElement(steps);
     }
 
-    public void setActualPosition(int actualPosition) {
-        this.actualPosition = actualPosition;
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     public String getHexCode() {
         return hexCode;
     }
 
-    /**
-     * ^            Start of line.
-     * [0-9A-F]     Character class: Any character in 0 to 9, or in A to F.
-     * +            Quantifier: One or more of the above.
-     * $            End of line.
-     * @param str
-     * @return
-     */
-    public boolean isValidHexaCode(String str)
-    {
-        boolean isHex = str.matches("[0-9A-Fa-f]+");
-        return isHex;
-    }
+
 
 }

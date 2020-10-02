@@ -1,15 +1,17 @@
 /** IOElement
  * <p>
- *     Version 1
+ *     Version 4
  * </p>
- * Autor: Sven Petersen
- * Änderungsdatum 27.09.2020
+ * Author: Sven Petersen
+ * Change date: 27.09.2020
  */
-
 package DataParser.Model.IO;
-
 import java.util.List;
 
+/**
+ * This class represents received input and output elements received by FMB-Devices.
+ * Received input/output elements depends on configuration for FMB-Devices.
+ */
 public class IOElement {
 
     private int eventID;

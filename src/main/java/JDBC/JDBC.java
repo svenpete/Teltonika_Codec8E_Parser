@@ -17,8 +17,6 @@ import DataParser.HexReader;
 import DataParser.Model.AVL.AvlData;
 import DataParser.Model.TcpDataPacket;
 import org.apache.log4j.Logger;
-
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
@@ -40,7 +38,7 @@ public class JDBC {
 
     // gets the working directory
     private static final String currentSystemDirectory = System.getProperty("user.dir");
-    private static final String projectPath = currentSystemDirectory + "/src/main/Resources/DatabaseConfig.properties";
+    private static  String projectPath;
 
     /**
      * checks if config was loaded and
@@ -53,6 +51,7 @@ public class JDBC {
     // to use logger dynamic we need to initialise the path before a logger instance is generated therefore we use static block
     static {
         System.setProperty("logPath",System.getProperty("user.dir"));
+        projectPath = currentSystemDirectory.replace("\\","/") + "/src/main/Resources/DatabaseConfig.properties";
 
     }
 

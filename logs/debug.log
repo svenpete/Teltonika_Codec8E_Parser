@@ -776,3 +776,40 @@ Server: Establish DB-Connection
 2020-10-02 INFO: Server: Establish DB-Connection
 2020-10-02 INFO: Server: Establish DB-Connection
 2020-10-02 INFO: Server: Establish DB-Connection
+2020-10-02 INFO: Server: Establish DB-Connection
+2020-10-02 DEBUG: Invalid Input: 
+java.io.FileNotFoundException: C:\Users\svenp\IdeaProjects\Teltonika_Codec8E_Parser_Backup\logs\beacon.log (Das System kann die angegebene Datei nicht finden)
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(FileInputStream.java:212)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:154)
+	at java.base/java.util.Scanner.<init>(Scanner.java:639)
+	at DataParser.LogReader.getLogData(LogReader.java:67)
+	at DataParser.LogReader.getHexList(LogReader.java:158)
+	at JDBC.JDBC.main(JDBC.java:140)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at com.intellij.rt.execution.application.AppMainV2.main(AppMainV2.java:131)
+2020-10-02 INFO: Server: Establish DB-Connection
+2020-10-02 DEBUG: Invalid Input: 
+java.io.FileNotFoundException: C:\Users\svenp\IdeaProjects\Teltonika_Codec8E_Parser_Backup\logs\beacon.log (Das System kann die angegebene Datei nicht finden)
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(FileInputStream.java:212)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:154)
+	at java.base/java.util.Scanner.<init>(Scanner.java:639)
+	at DataParser.LogReader.getLogData(LogReader.java:67)
+	at DataParser.LogReader.getHexList(LogReader.java:158)
+	at JDBC.JDBC.main(JDBC.java:140)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at com.intellij.rt.execution.application.AppMainV2.main(AppMainV2.java:131)
+2020-10-02 INFO: Server: Establish DB-Connection
+2020-10-02 INFO: Server: Establish DB-Connection
+2020-10-02 INFO: Server: Establish DB-Connection
+2020-10-02 INFO: Server: Establish DB-Connection
+2020-10-02 INFO: Server: Establish DB-Connection
+2020-10-02 INFO: Server: Establish DB-Connection
+2020-10-02 INFO: Server: Establish DB-Connection

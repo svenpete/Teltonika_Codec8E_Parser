@@ -20,7 +20,7 @@ public class LogReader
 {
 
 
-    private static final String projectPath = "/home/sep/decoder/Teltonika_Codec8E_Parser-Funktioniert/src/logs/beacon.log";
+    private static final String projectPath = "/home/sep/decoder/Teltonika_Codec8E_Parser-Funktioniert/logs/beacon.log";
     private static final String timeStampFormat = "yyyy-mm-dd hh:mm:ss";
 
     public LogReader(){

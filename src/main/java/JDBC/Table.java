@@ -2,7 +2,8 @@
  * <p>
  *     Version 1
  * </p>
- * Änderungsdatum 11.05.2020
+ * Author: Sven Petersen
+ * Change date: 11.07.2020
  */
 
 package JDBC;
@@ -33,9 +34,9 @@ public class Table {
         return this;
     }
 
-    public Table addForeignKey(String name, Type type, Table tableReference, Attribute attributeReference,
+    public Table addForeignKey(String columnName, Type columnType, Table tableReference, Attribute attributeReference,
                                boolean isPrimaryKey, Constraint onDelte, Constraint onUpdate) {
-        attributes.add(new ForeignKey(name, type, tableReference, attributeReference, isPrimaryKey, onDelte, onUpdate));
+        attributes.add(new ForeignKey(columnName, columnType, tableReference, attributeReference, isPrimaryKey, onDelte, onUpdate));
         return this;
     }
 

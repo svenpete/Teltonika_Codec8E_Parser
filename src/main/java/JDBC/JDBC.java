@@ -2,12 +2,13 @@
  * <p>
  *     Version 1
  * </p>
- * Änderungsdatum 11.05.2020
+ * Author: Sven Petersen
+ * Change date: 11.09.2020
  */
 
 package JDBC;
 
-
+import java.io.InputStream;
 import DataParser.DataDecoder;
 import DataParser.Exceptions.CodecProtocolException;
 import DataParser.Exceptions.CyclicRedundancyCheck;
@@ -16,8 +17,8 @@ import DataParser.LogReader;
 import DataParser.HexReader;
 import DataParser.Model.AVL.AvlData;
 import DataParser.Model.TcpDataPacket;
+import com.mysql.cj.log.Log;
 import org.apache.log4j.Logger;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
 import java.text.ParseException;
@@ -26,7 +27,6 @@ import java.util.List;
 import java.util.Properties;
 
 public class JDBC {
-    //creates debug information at database
 
     private static String db_port = "";
     private static String db_user = "";
@@ -38,8 +38,6 @@ public class JDBC {
 
     // gets the working directory
 
-    private static final String projectPath = "/home/sep/decoder/Teltonika_Codec8E_Parser-Funktioniert/src/main/Resources/DatabaseConfig.properties";
-
     /**
      * checks if config was loaded and
      * creates uri for database connection
@@ -50,17 +48,16 @@ public class JDBC {
 
     // to use logger dynamic we need to initialise the path before a logger instance is generated therefore we use static block
     static {
-
         System.setProperty("logPath",System.getProperty("user.dir"));
-
-
-
     }
 
     static Logger log = Logger.getLogger(JDBC.class.getName());
 
 
-
+    /**
+     * This method creates
+     * @throws IOException
+     */
     public static void createUri() throws IOException {
         //checks if strings have already been set
         if (db_database.isEmpty() || db_user.isEmpty()
@@ -86,19 +83,16 @@ public class JDBC {
     }
 
     /**
-     * Loads database configuration from a property file into declared Strings
-     *
+     * This method read a properties file and store its properties into given variables.     *
      * @throws IOException
      */
     public static void loadDatabaseConfiguration() throws IOException {
 
-
         Properties props = new Properties();
-       // projectPath =System.getProperty("workDir.property") + "/src/main/Resources/DatabaseConfig.properties";
+        InputStream inputStream = JDBC.class.getClassLoader()
+                .getResourceAsStream("DatabaseConfig.properties");
+        props.load(inputStream);
 
-        FileInputStream fileInputStream = new FileInputStream(projectPath);
-        props.load(fileInputStream);
-        fileInputStream.close();
 
         db_port = props.getProperty("db.port");
         db_user = (String) props.get("db.user");
@@ -106,13 +100,13 @@ public class JDBC {
         db_database = props.getProperty("db.database");
         db_serverTimezone = props.getProperty("db.serverTimezone");
         db_host = props.getProperty("db.host");
+        inputStream.close();
     }
 
-    /**
+    /** Method for database connection.
      * @return Connection object for database operations
      * @throws SQLException
      * @throws IOException
-     * @throws ClassNotFoundException
      */
     public static Connection getConnection() throws SQLException, IOException {
         if (uri.isEmpty())
@@ -132,9 +126,6 @@ public class JDBC {
 
     public static void main(String[] args) {
         try {
-
-
-            Connection conn = getConnection();
             LogReader logReader = new LogReader();
 
             // setting limit for hexCode input
@@ -145,23 +136,42 @@ public class JDBC {
 
             for (int i = 0; i < hex.size(); i++) {
 
+                try{
+
                 HexReader hexReader = new HexReader(hex.get(i));
                 DataDecoder decoder = new DataDecoder(hexReader);
 
                 TcpDataPacket tcpDataPacket = decoder.decodeTcpData();
                 int count = tcpDataPacket.getAvlPacket().getData().size();
 
-                for (int j = 0; j < count ; j++) {
+                for (int j = 0; j < count; j++) {
                     AvlData toCheck = tcpDataPacket.getAvlPacket().getData().get(j);
                     int beaconCount = toCheck.getIoElement().getBeacons().size();
                     if ( beaconCount >= 1 ) {
-                        Inserts.insertTcpData(conn,tcpDataPacket);
+                        Inserts.insertTcpData(getConnection(), tcpDataPacket);
                     }
+                }
+
+                }   catch (PreAmbleException e) {
+                    e.printStackTrace();
+                    log.info(e);
+                } catch (CyclicRedundancyCheck e) {
+                    e.printStackTrace();
+                    log.info(e);
+                } catch (CodecProtocolException e) {
+                    e.printStackTrace();
+                    log.info(e);
+                } catch (SQLException e) {
+                    System.out.println("Error Message: " + e.getMessage());
+
+                    System.out.println("SQL State: " + e.getSQLState());
+                    e.printStackTrace();
+                    log.debug("Error Message: " + e.getMessage());
+                    log.info("SQL State: " + e.getSQLState());
 
                 }
 
             }
-
 
         } catch (IOException e) {
 
@@ -175,25 +185,6 @@ public class JDBC {
             System.out.println("Error Message: Unable to decode. Missing or false package prefix. ");
             log.debug("Error Message: ", e);
 
-        } catch (SQLException e) {
-            System.out.println("Error Message: " + e.getMessage());
-
-            System.out.println("SQL State: " + e.getSQLState());
-            e.printStackTrace();
-            log.debug("Error Message: " + e.getMessage());
-            log.info("SQL State: " + e.getSQLState());
-
-        } catch (ClassNotFoundException e) {
-
-            System.out.println("Error Message: " + e.getMessage());
-            e.printStackTrace();
-            log.debug(e.getMessage());
-        } catch (PreAmbleException e) {
-            e.printStackTrace();
-        } catch (CyclicRedundancyCheck cyclicRedundancyCheck) {
-            cyclicRedundancyCheck.printStackTrace();
-        } catch (CodecProtocolException e) {
-            e.printStackTrace();
         }
 
 
@@ -218,7 +209,8 @@ public class JDBC {
                 .addAttr("delete_user", Type.BOOLEAN)
                 .addAttr("edit_user", Type.BOOLEAN)
                 .addAttr("delete_booking", Type.BOOLEAN)
-                .addAttr("edit_booking", Type.BOOLEAN);
+                .addAttr("edit_booking", Type.BOOLEAN)
+                .addAttr("picking",Type.BOOLEAN);
         stmt.addBatch(rights.create());
 
 
@@ -258,17 +250,6 @@ public class JDBC {
                 .addAttr("timestamp", Type.TIMESTAMP);
         stmt.addBatch(location.create());
 
-        /*
-        Table beacon = new Table("Beacon")
-                .addPrimaryKey("uuid",Type.VARCHAR)
-                .addAttr("minor", Type.VARCHAR)
-                .addForeignKey("major", Type.VARCHAR, Category, Category.attributes.get(0),
-                        true, Constraint.DELETE_RESTRICT,Constraint.UPDATE_CASCADE)
-                .addAttr("rssi", Type.INTEGER)
-                .addForeignKey("location_id",Type.INTEGER, Location, Location.attributes.get(0),
-                        true, Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE);
-        stmt.addBatch(beacon.create("minor"));
-         */
 
         Table beacon = new Table("BEACON")
                 .addPrimaryKey("major", Type.TINY_VARCHAR)
@@ -276,21 +257,24 @@ public class JDBC {
                 .addAttr("uuid", Type.VARCHAR);
         stmt.addBatch(beacon.create("minor"));
 
-        Table beacon_position = new Table("BEACON_POSITION")
-                .addForeignKey("major",Type.TINY_VARCHAR,beacon,beacon.attributes.get(0),
-                        true,Constraint.DELETE_RESTRICT,Constraint.UPDATE_CASCADE);
+        Table beaconPosition = new Table("BEACON_POSITION")
+                .addForeignKey("major", Type.TINY_VARCHAR, beacon, beacon.attributes.get(0),
+                        true, Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE);
 
         Table Category = new Table("Category")
                 .addPrimaryKey("major", Type.VARCHAR)
                 .addAttr("category", Type.VARCHAR);
         stmt.addBatch(Category.create());
 
+
+
         //adding enum
         Table device = new Table("DEVICE")
                 .addPrimaryKey("inventory_number", Type.INTEGER_AUTO_INCREMENT)
-                .addAttr("designation", Type.VARCHAR)
                 .addAttr("serial_number", Type.VARCHAR)
-                .addAttr("gurantee", Type.DATE)
+                .addAttr("gurantee", Type.VARCHAR)
+                .addAttr("note", Type.DATE)
+                .addForeignKey("device_status",Type.INTEGER,deviceStatus,deviceStatus.attributes.get(0),true,Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE);)
                 .addAttr("note", Type.TEXT)
                 .addAttr("device_status", Type.INTEGER)
                 .addForeignKey("beacon_major", Type.TINY_VARCHAR, beacon, beacon.attributes.get(0),
@@ -399,9 +383,8 @@ public class JDBC {
         return columnNames;
     }
 
-    /** This method returns the primary key for a given table.
-     *
-     * @author: Sven Petersen
+    /**
+     * This method returns the primary key for a given table.
      * @param connection
      * @param tableName
      * @param schemaName
@@ -418,41 +401,4 @@ public class JDBC {
         return null;
     }
 
-    public static List<Object> createInsertData(Object... objects) {
-        List<Object> data = new ArrayList<>();
-
-        for (Object o : objects) {
-            data.add(o);
-        }
-
-        return data;
-    }
-
-    public static String getDb_port() {
-        return db_port;
-    }
-
-    public static String getDb_user() {
-        return db_user;
-    }
-
-    public static String getDb_password() {
-        return db_password;
-    }
-
-    public static String getDb_database() {
-        return db_database;
-    }
-
-    public static String getDb_serverTimezone() {
-        return db_serverTimezone;
-    }
-
-    public static String getDb_host() {
-        return db_host;
-    }
-
-    public static String getUri() {
-        return uri;
-    }
 }

@@ -2,7 +2,8 @@
  * <p>
  *     Version 1
  * </p>
- * Änderungsdatum 11.05.2020
+ * Author: Sven Petersen
+ * Change date: 11.07.2020
  */
 
 package JDBC;

@@ -2,28 +2,29 @@ SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS RIGHTS;
 CREATE TABLE RIGHTS (
-                      role varchar(100) NOT NULL,
-                      booking_device boolean NOT NULL,
-                      edit_device boolean NOT NULL,
-                      add_device boolean NOT NULL,
-                      view_device boolean  NOT NULL,
-                      delete_device boolean  NOT NULL,
-                      add_user boolean  NOT NULL,
-                      delete_user boolean NOT NULL,
-                      edit_user boolean  NOT NULL,
-                      delete_booking boolean DEFAULT NULL,
-                      edit_booking boolean DEFAULT NULL,
+                      role VARCHAR(100) NOT NULL,
+                      booking_device BOOLEAN NOT NULL,
+                      edit_device BOOLEAN NOT NULL,
+                      add_device BOOLEAN NOT NULL,
+                      view_device BOOLEAN  NOT NULL,
+                      delete_device BOOLEAN  NOT NULL,
+                      add_user BOOLEAN  NOT NULL,
+                      delete_user BOOLEAN NOT NULL,
+                      edit_user BOOLEAN  NOT NULL,
+                      delete_booking BOOLEAN NOT NULL,
+                      edit_booking BOOLEAN NOT NULL,
+                      picking BOOLEAN NOT NULL,
                       PRIMARY KEY (role)
 );
 
 DROP TABLE IF EXISTS WORKER;
 CREATE TABLE WORKER (
-                      worker_id int NOT NULL AUTO_INCREMENT,
-                      password varchar(255) DEFAULT NULL,
-                      e_mail varchar(255) DEFAULT NULL,
-                      name varchar(255) DEFAULT NULL,
-                      surname varchar(255) DEFAULT NULL,
-                      role varchar(100) DEFAULT NULL,
+                      worker_id INT NOT NULL AUTO_INCREMENT,
+                      password VARCHAR(255),
+                      e_mail VARCHAR(255),
+                      name VARCHAR(255),
+                      surname VARCHAR(255),
+                      role VARCHAR(100),
                       PRIMARY KEY (worker_id),
                       FOREIGN KEY(role) REFERENCES RIGHTS(role)
 );
@@ -32,48 +33,48 @@ CREATE TABLE WORKER (
 
 DROP TABLE IF EXISTS PROJECT;
 CREATE TABLE PROJECT (
-                       project_id int NOT NULL AUTO_INCREMENT,
-                       name varchar(255) DEFAULT NULL,
-                       street varchar(255) DEFAULT NULL,
-                       postcode varchar(255) DEFAULT NULL,
-                       city varchar(255) DEFAULT NULL,
+                       project_id INT NOT NULL AUTO_INCREMENT,
+                       name VARCHAR(255),
+                       street VARCHAR(255),
+                       postcode VARCHAR(255),
+                       city VARCHAR(255),
                        PRIMARY KEY (project_id)
 );
 
 DROP TABLE IF EXISTS DEVICE_STATUS;
 CREATE TABLE DEVICE_STATUS(
-                            device_status_id int not null auto_increment,
+                            device_status_id INT NOT NULL AUTO_INCREMENT,
                             description VARCHAR(255),
                             PRIMARY KEY(device_status_id)
 );
 
-SET FOREIGN_KEY_CHECKS = 0;
+
 DROP TABLE IF EXISTS LOCATION;
 CREATE TABLE LOCATION (
-                        location_id int not null auto_increment,
-                        speed int,
-                        angle int,
-                        longitude float,
-                        latitude float,
-                        altitude float,
-                        timesstamp timestamp,
+                        location_id INT NOT NULL AUTO_INCREMENT,
+                        speed INT,
+                        angle INT,
+                        longitude FLOAT,
+                        latitude FLOAT,
+                        altitude FLOAT,
+                        timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                         PRIMARY KEY(location_id)
 );
 
 DROP TABLE IF EXISTS BEACON;
 CREATE TABLE BEACON (
-                      uuid VARCHAR(32),
-                      major VARCHAR(4),
-                      minor VARCHAR(4),
+                      uuid VARCHAR(32) NOT NULL DEFAULT 'DA95206921ED84C1ED97EA92306C5A7F',
+                      major VARCHAR(4) NOT NULL DEFAULT 'FFFF',
+                      minor VARCHAR(4) NOT NULL DEFAULT 'FFFF',
                       PRIMARY KEY(major, minor)
 );
 
 DROP TABLE IF EXISTS BEACON_POSITION;
 CREATE TABLE BEACON_POSITION(
-                              major VARCHAR(4) not null,
-                              minor VARCHAR(4) not null,
-                              location_id int not null,
-                              rssi int,
+                              major VARCHAR(4) NOT NULL,
+                              minor VARCHAR(4) NOT NULL,
+                              location_id INT NOT NULL,
+                              rssi INT,
                               FOREIGN KEY (major, minor) REFERENCES BEACON(major, minor),
                               FOREIGN KEY (location_id) REFERENCES LOCATION(location_id)
 );
@@ -87,14 +88,15 @@ CREATE TABLE DEVICE (
                       gurantee DATE DEFAULT NULL,
                       note TEXT,
                       device_status INT,
-                      beacon_minor VARCHAR(4),
-                      beacon_major VARCHAR(4),
+                      beacon_minor VARCHAR(4) DEFAULT 'FFFF',
+                      beacon_major VARCHAR(4) DEFAULT 'FFFF',
                       model VARCHAR(255),
                       manufacturer VARCHAR(255),
                       latest_uvv INT ,
                       latest_tuev INT,
                       latest_repair INT,
                       latest_position INT,
+                      date_of_change TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                       PRIMARY KEY (inventory_number),
                       FOREIGN KEY (device_status) REFERENCES DEVICE_STATUS(device_status_id),
                       FOREIGN KEY(beacon_major, beacon_minor) REFERENCES BEACON(major, minor),
@@ -106,13 +108,13 @@ CREATE TABLE DEVICE (
 
 DROP TABLE IF EXISTS BORROWS;
 CREATE TABLE BORROWS (
-                       loan_day date NOT NULL DEFAULT '0000-00-00',
-                       loan_end date DEFAULT NULL,
-                       loan_period time DEFAULT NULL,
-                       worker_id int DEFAULT NULL,
-                       inventory_number int DEFAULT NULL,
-                       project_id int DEFAULT NULL,
-                       FOREIGN KEY(worker_id) REFERENCES WORKER(worker_id),
+                       loan_day DATE NOT NULL DEFAULT NOW(),
+                       loan_end DATE DEFAULT NULL,
+                       loan_period TIME DEFAULT NULL,
+                       worker_id INT DEFAULT NULL,
+                       inventory_number INT DEFAULT NULL,
+                       project_id INT DEFAULT NULL,
+                       FOREIGN KEY(worker_id) REFERENCES WORKER(worker_id) ON DELETE SET NULL,
                        FOREIGN KEY(inventory_number) REFERENCES DEVICE(inventory_number),
                        FOREIGN KEY(project_id) REFERENCES PROJECT(project_id)
 );
@@ -127,30 +129,30 @@ CREATE TABLE CATEGORY(
 
 DROP TABLE IF EXISTS UVV;
 CREATE TABLE UVV(
-                  uvv_id int not null auto_increment,
-                  inventory_number int not null,
-                  timestamp timestamp,
-                  status boolean,
+                  uvv_id INT NOT NULL AUTO_INCREMENT,
+                  inventory_number INT NOT NULL,
+                  timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                  status BOOLEAN,
                   PRIMARY KEY(uvv_id),
                   FOREIGN KEY(inventory_number) REFERENCES DEVICE(inventory_number)
 );
 
 DROP TABLE IF EXISTS TUEV;
 CREATE TABLE TUEV(
-                   tuev_id int not null auto_increment,
-                   inventory_number int not null,
-                   timestamp timestamp,
-                   status boolean,
+                   tuev_id INT NOT NULL AUTO_INCREMENT,
+                   inventory_number INT NOT NULL,
+                   timestamp TIMESTAMP,
+                   status BOOLEAN,
                    PRIMARY KEY(tuev_id),
                    FOREIGN KEY(inventory_number) REFERENCES DEVICE(inventory_number)
 );
 
 DROP TABLE IF EXISTS REPAIR;
 CREATE TABLE REPAIR(
-                     repair_id int not null auto_increment,
-                     inventory_number int not null,
-                     timestamp timestamp,
-                     status boolean,
+                     repair_id INT NOT NULL AUTO_INCREMENT,
+                     inventory_number INT NOT NULL,
+                     timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                     status BOOLEAN,
                      note VARCHAR(255),
                      PRIMARY KEY(repair_id),
                      FOREIGN KEY(inventory_number) REFERENCES DEVICE(inventory_number)
@@ -172,5 +174,12 @@ CREATE TABLE DEVICE_HISTORY(
     latest_tuev INT,
     latest_repair INT,
     latest_position INT,
-    PRIMARY KEY(device_history_id)
+    date_of_change TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (inventory_number),
+    FOREIGN KEY (device_status) REFERENCES DEVICE_STATUS(device_status_id),
+    FOREIGN KEY(beacon_major, beacon_minor) REFERENCES BEACON(major, minor),
+    FOREIGN KEY(latest_uvv) REFERENCES UVV(uvv_id),
+    FOREIGN KEY(latest_tuev) REFERENCES TUEV(tuev_id),
+    FOREIGN KEY(latest_repair) REFERENCES REPAIR(repair_id),
+    FOREIGN KEY(latest_position) REFERENCES LOCATION(location_id)
 );

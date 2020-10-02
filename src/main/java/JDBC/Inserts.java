@@ -3,32 +3,29 @@
  *     Version 3
  * </p>
  * Author: Sven Petersen
- * Change date: 27.09.2020
+ * Change date: 11.09.2020
  */
-
 package JDBC;
-
-
 import DataParser.Model.AVL.AvlData;
 import DataParser.Model.GPS.GpsData;
 import DataParser.Model.IO.Beacon;
 import DataParser.Model.TcpDataPacket;
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class Inserts {
 
 
-
     /**
-     * This method inserts decoded location Resources from fmb device into the database and returns the generated id for
-     * the inserted position
-     * @param avlData values need to be in the right order otherwise values in the database are mixed up.
+     * This method inserts decoded gps data into the database and returns the generated id for
+     * the inserted position:
+     * @param conn
+     * @param avlData contains timestamp and gps data.
+     * @return generated id for inserted location. If insert fails null will be returned.
      * @throws SQLException
-     * @throws IOException
-     * @throws ClassNotFoundException
      */
     public static Integer insertLocation(Connection conn, AvlData avlData) throws SQLException{
 
@@ -45,10 +42,10 @@ public class Inserts {
         pstmt.setObject(5 , gpsData.getAltitude() );
         pstmt.setObject(6 , gpsTimeStamp);
 
-        // to check if  value was added successfully
+
         int rowAffected = pstmt.executeUpdate();
 
-        // try to pull the inserted id from auto column when insert was successfully
+        // try to get the inserted id from auto column if insert was successful
         if (rowAffected == 1 ){
             ResultSet insertedID = pstmt.getGeneratedKeys();
 
@@ -62,11 +59,12 @@ public class Inserts {
         return null;
     }
 
+
     /**
-     * This method insert beacon Resources and the latest inserted positionid to link them in the right table.
+     * This method insert decoded beacon data to the database and connects them with a location.
      * @param connection
-     * @param beacon
-     * @param location_id
+     * @param beacon to be inserted
+     * @param location_id to link a beacon with a given location.
      * @throws SQLException
      */
     public static Integer insertBeaconPosition(Connection connection, Beacon beacon, Integer location_id) throws SQLException {
@@ -85,44 +83,45 @@ public class Inserts {
     }
 
     /**
-     * This method initializes the insert of location and beacon Resources for all decoded information.
+     * This method initializes the insert of decoded location and beacon data
      * @param
      * @throws SQLException
      * @throws IOException
      * @throws ClassNotFoundException
      */
 
-    public static void insertTcpData(Connection conn, TcpDataPacket tcpDataPacket) throws SQLException, IOException, ClassNotFoundException {
+    public static void insertTcpData(Connection conn, TcpDataPacket tcpDataPacket) throws SQLException{
 
         int avlCount = tcpDataPacket.getAvlPacket().getData().size();
-            // iterate over all received avl Resources in avl collection
+
 
             for (int i = 0; i < avlCount; i++) {
 
-                // get values for database insert
+
                 AvlData AvlData = tcpDataPacket.getAvlPacket().getData().get(i);
 
                 // store generated id from inserted location for beacons
                 int insertedLocationID = Inserts.insertLocation(conn,AvlData);
 
-                // get io-element it has the most variables in it
+
                 int beaconCount = AvlData.getIoElement().getBeacons().size();
                 for (int j = 0; j < beaconCount; j++) {
 
                     Beacon beaconToInsert = AvlData.getIoElement().getBeacons().get(j);
 
                     Integer rowsAffected = insertBeaconPosition(conn,beaconToInsert, insertedLocationID);
+
                     System.out.println(rowsAffected); // logger einbinden
 
-                    // just update a device position if this device
+
                     if (rowsAffected == 1 ){
-                        int deviceAffected = updateDeviceLatestPosition(conn,insertedLocationID,
-                                beaconToInsert.getMajor(),beaconToInsert.getMinor());
+                        int deviceAffected = updateDeviceLatestPosition(conn,insertedLocationID, beaconToInsert);
+
                         if (deviceAffected == 1){
                             JDBC.log.info("UPDATED " + deviceAffected + " DEVICE SUCCESSFUL");
                         } else {
-                            JDBC.log.warn("UPDATED FAILED FOR BEACON WITH MAJOR: " + beaconToInsert.getMajor() + "AND MINOR: "
-                                + beaconToInsert.getMinor());
+                            JDBC.log.warn("UPDATED FAILED FOR BEACON WITH MAJOR: " + beaconToInsert.getMajor()
+                                    + "AND MINOR: " + beaconToInsert.getMinor());
                         }
                     }
 
@@ -133,18 +132,38 @@ public class Inserts {
     }
 
 
-    // gonna use after beacon information is stored inside the beacon_position table for histroy reasons.
-    public static int updateDeviceLatestPosition(Connection conn, int position, String major, String minor) throws SQLException {
+    /**
+     * This method updates the latest position a device were registered by a FMB devices.
+     * @param conn
+     * @param position to update
+     * @param beacon device to search for
+     * @return 1 if suc
+     * @throws SQLException
+     */
+    public static int updateDeviceLatestPosition(Connection conn, int position,
+                                                 Beacon beacon) throws SQLException {
+
         String sql = "UPDATE DEVICE SET latest_position = ?  WHERE beacon_major = ? AND beacon_minor = ?";
 
         PreparedStatement pstmt = conn.prepareStatement(sql);
 
         pstmt.setInt(1, position);
-        pstmt.setString(2,major);
-        pstmt.setString(3, minor);
+        pstmt.setString(2,beacon.getMajor());
+        pstmt.setString(3, beacon.getMinor());
 
         int tupleAffected = pstmt.executeUpdate();
         return tupleAffected;
+    }
+
+
+    public static List<Object> createInsertData(Object... objects) {
+        List<Object> data = new ArrayList<>();
+
+        for (Object o : objects) {
+            data.add(o);
+        }
+
+        return data;
     }
 
 

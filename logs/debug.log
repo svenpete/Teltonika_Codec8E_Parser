@@ -834,3 +834,13 @@ java.io.FileNotFoundException: \home\sep\decoder\Teltonika_Codec8E_Parser-Funkti
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
 	at com.intellij.rt.execution.application.AppMainV2.main(AppMainV2.java:131)
+2020-10-02 14:15:51 DEBUG: Invalid Input: 
+java.io.FileNotFoundException: \home\sep\decoder\Teltonika_Codec8E_Parser-Funktioniert\src\main\Resources (Das System kann den angegebenen Pfad nicht finden)
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(FileInputStream.java:212)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:154)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:109)
+	at JDBC.JDBC.loadDatabaseConfiguration(JDBC.java:100)
+	at JDBC.JDBC.createUri(JDBC.java:70)
+	at JDBC.JDBC.getConnection(JDBC.java:120)
+	at JDBC.JDBC.main(JDBC.java:138)

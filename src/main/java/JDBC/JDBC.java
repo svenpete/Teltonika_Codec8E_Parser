@@ -38,7 +38,7 @@ public class JDBC {
     private static String uri = "";
 
     // gets the working directory
-    private static final String currentSystemDirectory = Utility.getWorkingDir();
+
     private static String projectPath;
 
     /**
@@ -51,8 +51,10 @@ public class JDBC {
 
     // to use logger dynamic we need to initialise the path before a logger instance is generated therefore we use static block
     static {
+
         System.setProperty("logPath",System.getProperty("user.dir"));
-        projectPath = currentSystemDirectory.replace("\\","/") + "/src/main/Resources/DatabaseConfig.properties";
+
+
 
     }
 
@@ -93,6 +95,8 @@ public class JDBC {
 
 
         Properties props = new Properties();
+        projectPath =System.getProperty("workDir.property") + "/src/main/Resources/DatabaseConfig.properties";
+
         FileInputStream fileInputStream = new FileInputStream(projectPath);
         props.load(fileInputStream);
         fileInputStream.close();
@@ -130,6 +134,7 @@ public class JDBC {
     public static void main(String[] args) {
         try {
 
+           System.setProperty("workDir.property", args[0]);
             Connection conn = getConnection();
             LogReader logReader = new LogReader();
 

@@ -38,6 +38,10 @@ public class JDBC {
     private static String db_host = "";
     private static String uri = "";
 
+    // gets the working directory
+    private static final String currentSystemDirectory = System.getProperty("user.dir");
+    private static final String projectPath = currentSystemDirectory + "/src/main/Resources/DatabaseConfig.properties";
+
     /**
      * checks if config was loaded and
      * creates uri for database connection
@@ -49,6 +53,7 @@ public class JDBC {
     // to use logger dynamic we need to initialise the path before a logger instance is generated therefore we use static block
     static {
         System.setProperty("logPath",System.getProperty("user.dir"));
+
     }
 
     static Logger log = Logger.getLogger(JDBC.class.getName());
@@ -86,8 +91,9 @@ public class JDBC {
      */
     public static void loadDatabaseConfiguration() throws IOException {
 
+
         Properties props = new Properties();
-        FileInputStream fileInputStream = new FileInputStream("C:/Users/svenp/IdeaProjects/Teltonika_Codec8E_Parser_Backup/src/main/Resources/DatabaseConfig.properties");
+        FileInputStream fileInputStream = new FileInputStream(projectPath);
         props.load(fileInputStream);
         fileInputStream.close();
 

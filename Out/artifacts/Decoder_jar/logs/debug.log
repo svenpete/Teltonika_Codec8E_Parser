@@ -19,3 +19,4 @@ java.io.FileNotFoundException: C:\Users\svenp\IdeaProjects\Teltonika_Codec8E_Par
 	at DataParser.LogReader.getHexList(LogReader.java:158)
 	at JDBC.JDBC.main(JDBC.java:134)
 2020-10-02 INFO: Server: Establish DB-Connection
+2020-10-02 INFO: Server: Establish DB-Connection

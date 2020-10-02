@@ -19,9 +19,8 @@ import java.util.Scanner;
 public class LogReader
 {
 
-    // gets the working directory
-    private static final String currentSystemDirectory = System.getProperty("user.dir");
-    private static final String projectPath = currentSystemDirectory + "/logs/beacon.log";
+
+    private static final String projectPath = "/home/sep/decoder/Teltonika_Codec8E_Parser-Funktioniert/src/logs/beacon.log";
     private static final String timeStampFormat = "yyyy-mm-dd hh:mm:ss";
 
     public LogReader(){

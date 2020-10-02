@@ -16,7 +16,6 @@ import DataParser.LogReader;
 import DataParser.HexReader;
 import DataParser.Model.AVL.AvlData;
 import DataParser.Model.TcpDataPacket;
-import DataParser.Utility;
 import org.apache.log4j.Logger;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -39,7 +38,7 @@ public class JDBC {
 
     // gets the working directory
 
-    private static String projectPath;
+    private static final String projectPath = "/home/sep/decoder/Teltonika_Codec8E_Parser-Funktioniert/src/main/Resources/DatabaseConfig.properties";
 
     /**
      * checks if config was loaded and
@@ -97,7 +96,7 @@ public class JDBC {
         Properties props = new Properties();
        // projectPath =System.getProperty("workDir.property") + "/src/main/Resources/DatabaseConfig.properties";
 
-        FileInputStream fileInputStream = new FileInputStream("/home/sep/decoder/Teltonika_Codec8E_Parser-Funktioniert/src/main/Resources/DatabaseConfig.properties");
+        FileInputStream fileInputStream = new FileInputStream(projectPath);
         props.load(fileInputStream);
         fileInputStream.close();
 

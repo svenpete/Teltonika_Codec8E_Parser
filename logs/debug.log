@@ -844,3 +844,13 @@ java.io.FileNotFoundException: \home\sep\decoder\Teltonika_Codec8E_Parser-Funkti
 	at JDBC.JDBC.createUri(JDBC.java:70)
 	at JDBC.JDBC.getConnection(JDBC.java:120)
 	at JDBC.JDBC.main(JDBC.java:138)
+2020-10-02 14:45:07 DEBUG: Invalid Input: 
+java.io.FileNotFoundException: \home\sep\decoder\Teltonika_Codec8E_Parser-Funktioniert\src\main\Resources\DatabaseConfig.properties (Das System kann den angegebenen Pfad nicht finden)
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(FileInputStream.java:212)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:154)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:109)
+	at JDBC.JDBC.loadDatabaseConfiguration(JDBC.java:100)
+	at JDBC.JDBC.createUri(JDBC.java:70)
+	at JDBC.JDBC.getConnection(JDBC.java:120)
+	at JDBC.JDBC.main(JDBC.java:138)

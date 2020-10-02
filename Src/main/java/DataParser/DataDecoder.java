@@ -83,16 +83,17 @@ public class DataDecoder {
 
     /**
      * This method returns a list with non-empty avl-data.
-     * @param tcpDataPacket to be
-     * @return List<TcpDataPacket> without em
+     * @param tcpDataPacket to be f
+     * @return List<TcpDataPacket> without empty avl-data entries.
      */
     public static List<TcpDataPacket> deletePacketWithoutData(List<TcpDataPacket> tcpDataPacket){
 
         Iterator<TcpDataPacket> iterator = tcpDataPacket.iterator();
 
         while (iterator.hasNext()){
-            TcpDataPacket tcpDataPacket1 = iterator.next();
-            if ( tcpDataPacket1.getAvlPacket().getData().size() == 0 )    iterator.remove();
+            TcpDataPacket toCheck = iterator.next();
+            deleteDataWithoutBeacon(toCheck);
+            if ( toCheck.getAvlPacket().getData().size() == 0 )    iterator.remove();
         }
         return tcpDataPacket;
 
@@ -104,10 +105,9 @@ public class DataDecoder {
      * @param tcpDataPacket
      * @return
      */
-    public static TcpDataPacket deleteDataWithoutBeacon(TcpDataPacket tcpDataPacket) {
+    private static void deleteDataWithoutBeacon(TcpDataPacket tcpDataPacket) {
 
         AvlPacket avlPacket = tcpDataPacket.getAvlPacket();
-        int count = avlPacket.getData().size();
 
         Iterator<AvlData> iterator = avlPacket.getData().iterator();
 
@@ -117,10 +117,11 @@ public class DataDecoder {
             IOElement ioElement = avlData.getIoElement();
             int beaconSize =  ioElement.getBeacons().size();
 
+            //delete avlData via iterator
             if ( beaconSize == 0 ) iterator.remove();
         }
 
-        return tcpDataPacket;
+       // return tcpDataPacket;
 
     }
 

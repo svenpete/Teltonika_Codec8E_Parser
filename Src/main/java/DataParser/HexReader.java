@@ -10,8 +10,9 @@ import DataParser.Model.FieldEncoding;
 
 
 public class HexReader {
+    private final String hexCode;
     private int position;
-    private String hexCode;
+
 
     public HexReader(String hexCode){
         this.hexCode = hexCode;

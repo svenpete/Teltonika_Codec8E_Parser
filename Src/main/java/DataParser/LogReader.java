@@ -153,7 +153,7 @@ public class LogReader
      * @throws FileNotFoundException
      * @throws ParseException
      */
-    public List<String> getHexCode(Timestamp lowerBound, Timestamp upperBound) throws FileNotFoundException, ParseException {
+    public List<String> getHexList(Timestamp lowerBound, Timestamp upperBound) throws FileNotFoundException, ParseException {
         // stored all log Resources
         List<String> logData = getLogData();
 

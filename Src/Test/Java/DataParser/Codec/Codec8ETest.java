@@ -33,7 +33,7 @@ public class Codec8ETest {
         try {
             lowerBound = logReader.convertToTimeStamp("2020-08-20 17:18:03");
             Timestamp upperBound = logReader.convertToTimeStamp("2020-08-20 17:55:03");
-           // List<String> hexCode = logReader.getHexCode(lowerBound, upperBound);
+           // List<String> hexCode = logReader.getHexList(lowerBound, upperBound);
         } catch (ParseException e) {
             e.printStackTrace();
         }

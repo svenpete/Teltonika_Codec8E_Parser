@@ -15,6 +15,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.io.FileNotFoundException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class DataDecoderTest {
 
@@ -94,6 +100,45 @@ public class DataDecoderTest {
     }
 
 
+    @Test
+    public void testDeletePacket(){
+        LogReader logReader = new LogReader();
+        Timestamp lowerBound = null;
+        List<TcpDataPacket> decodedData = new ArrayList<>();
+
+        try {
+            lowerBound = logReader.convertToTimeStamp("2020-08-20 17:18:03");
+            Timestamp upperBound = logReader.convertToTimeStamp("2020-08-20 17:55:03");
+            List<String> hexCode = logReader.getHexList(lowerBound, upperBound);
+
+            for (int i = 0; i < hexCode.size(); i++) {
+                HexReader reader = new HexReader(hexCode.get(i));
+                DataDecoder decoder = new DataDecoder(reader);
+                decodedData.add(decoder.decodeTcpData());
+            }
+            List<TcpDataPacket> filterd = DataDecoder.deletePacketWithoutData(decodedData);
+
+            for (TcpDataPacket data :
+                    filterd) {
+
+                if ( data.getAvlPacket().getData().size() == 0 )
+                    Assert.fail("Not all packets are deleted.");
+            }
+
+            System.out.println("HA");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e){
+            e.printStackTrace();
+        } catch (PreAmbleException e) {
+            e.printStackTrace();
+        } catch (CyclicRedundancyCheck cyclicRedundancyCheck) {
+            cyclicRedundancyCheck.printStackTrace();
+        } catch (CodecProtocolException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 
 

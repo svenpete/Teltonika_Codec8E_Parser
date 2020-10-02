@@ -139,7 +139,7 @@ public class LogReaderTest {
         try {
             Timestamp lowerBound = logReader.convertToTimeStamp("2020-08-20 17:18:03");
             Timestamp upperBound = logReader.convertToTimeStamp("2020-08-20 17:55:03");
-            List<String> hexCode = logReader.getHexCode(lowerBound, upperBound);
+            List<String> hexCode = logReader.getHexList(lowerBound, upperBound);
 
             for (int i = 0; i < hexCode.size(); i++) {
                 String hex = hexCode.get(i);

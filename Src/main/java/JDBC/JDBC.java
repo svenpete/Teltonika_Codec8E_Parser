@@ -131,7 +131,7 @@ public class JDBC {
             Timestamp upperBound = new Timestamp(System.currentTimeMillis());
             Timestamp lowerBound = new Timestamp(System.currentTimeMillis() - 300000);
 
-            List<String> hex = logReader.getHexCode(lowerBound,upperBound);
+            List<String> hex = logReader.getHexList(lowerBound,upperBound);
 
             for (int i = 0; i < hex.size(); i++) {
 
@@ -158,7 +158,6 @@ public class JDBC {
             System.out.println("Error Message: " + e.getMessage());
             e.printStackTrace();
 
-            // use sacktrace to determine where the struggle is
             log.debug("Invalid Input: ", e);
 
         } catch (ParseException e){

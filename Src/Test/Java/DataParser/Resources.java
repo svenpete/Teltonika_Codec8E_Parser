@@ -1,21 +1,25 @@
 package DataParser;
-
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Properties;
+
 
 public class Resources   {
 
-    private String path = "Src/Test/DataParser.Resources/";
-    private String fileToSearch = "DatabaseConfig.properties";
+    private String path;
+    private String fileToSearch;
 
+
+    @Before
+    public void setUp() throws Exception {
+        path = "Src/Test/Resources/";
+        fileToSearch = "DatabaseConfig.properties";
+
+    }
 
 
     @Test

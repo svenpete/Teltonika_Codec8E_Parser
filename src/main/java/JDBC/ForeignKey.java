@@ -2,21 +2,22 @@
  * <p>
  *     Version 1
  * </p>
- * Änderungsdatum 11.05.2020
+ * Author: Sven Petersen
+ * Change date: 11.05.2020
  */
 
 package JDBC;
 
-public class ForeignKey extends Attribut {
+public class ForeignKey extends Attribute {
 
     Table tableReference;
-    Attribut attributeReference;
+    Attribute attributeReference;
     boolean isPrimaryKey;
     Constraint onDelete;
     Constraint onUpdate;
 
 
-    public ForeignKey(String name, Type type, Table tableReference, Attribut attributeReference, boolean isPrimaryKey,
+    public ForeignKey(String name, Type type, Table tableReference, Attribute attributeReference, boolean isPrimaryKey,
                       Constraint onDelete, Constraint onUpdate) {
         super(name, type);
         this.tableReference = tableReference;
@@ -27,8 +28,8 @@ public class ForeignKey extends Attribut {
     }
 
 
-    /**
-     * @return calling methode "create" of super class Attribute
+    /** This method creates a foreign key.
+     * @return a string with a foreign_key and constraints.
      */
     public String create() {
         return super.create() + ", "
@@ -41,7 +42,7 @@ public class ForeignKey extends Attribut {
 
 
     /**
-     * creating sql statement for primary key
+     * This method creates a primary key.
      * @return sqlStatementPrimaryKey
      */
     @Override

@@ -16,6 +16,7 @@ import DataParser.LogReader;
 import DataParser.HexReader;
 import DataParser.Model.AVL.AvlData;
 import DataParser.Model.TcpDataPacket;
+import DataParser.Utility;
 import org.apache.log4j.Logger;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -37,8 +38,8 @@ public class JDBC {
     private static String uri = "";
 
     // gets the working directory
-    private static final String currentSystemDirectory = System.getProperty("user.dir");
-    private static  String projectPath;
+    private static final String currentSystemDirectory = Utility.getWorkingDir();
+    private static String projectPath;
 
     /**
      * checks if config was loaded and

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class Table {
     String sqlStatement;
     String name = null;
-    ArrayList<Attribut> attributes = new ArrayList<>();
+    ArrayList<Attribute> attributes = new ArrayList<>();
 
     public Table(String name) {
         this.name = name;
@@ -20,7 +20,7 @@ public class Table {
 
     // fügt Attribute der Arrayliste hiznu
     public Table addAttr(String name, Type type) {
-        attributes.add(new Attribut(name, type));
+        attributes.add(new Attribute(name, type));
         return this;
     }
 
@@ -33,7 +33,7 @@ public class Table {
         return this;
     }
 
-    public Table addForeignKey(String name, Type type, Table tableReference, Attribut attributeReference,
+    public Table addForeignKey(String name, Type type, Table tableReference, Attribute attributeReference,
                                boolean isPrimaryKey, Constraint onDelte, Constraint onUpdate) {
         attributes.add(new ForeignKey(name, type, tableReference, attributeReference, isPrimaryKey, onDelte, onUpdate));
         return this;

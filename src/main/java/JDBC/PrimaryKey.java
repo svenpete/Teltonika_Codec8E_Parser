@@ -7,7 +7,7 @@
 
 package JDBC;
 
-public class PrimaryKey extends Attribut {
+public class PrimaryKey extends Attribute {
     public PrimaryKey(String name, Type type) {
         super(name, type);
     }

@@ -2,8 +2,8 @@
  * <p>
  *     Version 3
  * </p>
- * Autor: Sven Petersen
- * Modification Date: 27.09.2020
+ * Author: Sven Petersen
+ * Change date: 27.09.2020
  */
 
 package JDBC;
@@ -30,7 +30,7 @@ public class Inserts {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public static Integer insertLocation(Connection conn, AvlData avlData) throws SQLException, IOException, ClassNotFoundException {
+    public static Integer insertLocation(Connection conn, AvlData avlData) throws SQLException{
 
         String sql = "INSERT INTO LOCATION (speed, angle, longitude, latitude, altitude, timesstamp) VALUES (?,?,?,?,?,?);";
         PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -148,7 +148,7 @@ public class Inserts {
     }
 
 
-    /** This method can be used for all tables to store informations.
+    /** This method can be used for all tables to store data into the database.
      * @param data
      * @param connection
      * @param tableName

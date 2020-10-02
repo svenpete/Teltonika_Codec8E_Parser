@@ -97,7 +97,7 @@ public class JDBC {
         Properties props = new Properties();
        // projectPath =System.getProperty("workDir.property") + "/src/main/Resources/DatabaseConfig.properties";
 
-        FileInputStream fileInputStream = new FileInputStream("/home/sep/decoder/Teltonika_Codec8E_Parser-Funktioniert/src/main/Resources");
+        FileInputStream fileInputStream = new FileInputStream("/home/sep/decoder/Teltonika_Codec8E_Parser-Funktioniert/src/main/Resources/DatabaseConfig.properties");
         props.load(fileInputStream);
         fileInputStream.close();
 

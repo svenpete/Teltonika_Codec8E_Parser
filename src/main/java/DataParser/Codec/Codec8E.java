@@ -8,14 +8,13 @@
  */
 package DataParser.Codec;
 import DataParser.BitConverter;
-import DataParser.Exceptions.CodecProtocolException;
-import DataParser.Model.AVL.AvlData;
-import DataParser.Model.AVL.AvlPacket;
-import DataParser.Model.AVL.AvlDataPriority;
-import DataParser.Model.GPS.GpsData;
-import DataParser.Model.IO.Beacon;
-import DataParser.Model.IO.IOElement;
-import DataParser.Model.IO.IoProperty;
+import DataParser.Model.AvlData;
+import DataParser.Model.AvlPacket;
+import DataParser.Model.AvlDataPriority;
+import DataParser.Model.GpsData;
+import DataParser.Model.Beacon;
+import DataParser.Model.IOElement;
+import DataParser.Model.IoProperty;
 import DataParser.HexReader;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -40,9 +39,8 @@ public class Codec8E {
      * This method decodes the hex data and returns an instance of AvlPacket. An avlPacket can have
      * multiple avlData.
      * @return AvlPacket with decoded Data.
-     * @throws CodecProtocolException if wrong protocol is used.
      */
-    public AvlPacket decodeAvlPacket() throws CodecProtocolException {
+    public AvlPacket decodeAvlPacket(){
 
         int codecId = hexReader.readInt2();
         int dataCount = hexReader.readInt2();
@@ -61,7 +59,7 @@ public class Codec8E {
      * @return avldata with decoded information.
      */
     private AvlData decodeAvlData() {
-        Timestamp timestamp = calculateTimeStamp(hexReader.readLong16());
+        Timestamp timestamp = decodeTimestamp(hexReader.readLong16());
 
         String priority = decodePriority(hexReader.readInt2());
 
@@ -208,7 +206,7 @@ public class Codec8E {
     private Beacon decodeBeacon(){
 
         int bleFlag = hexReader.readInt2();
-        boolean signalAvailable = decodeSignalAvaible(bleFlag);
+        boolean signalAvailable = decodeSignalAvailable(bleFlag);
         String type = decodeBeaconType(bleFlag);
 
         String uuid = hexReader.readString32();
@@ -225,7 +223,7 @@ public class Codec8E {
      * 1 = signal strength available
      * 0 = signal strength not available
      */
-    private boolean decodeSignalAvaible(int bleFlag) {
+    private boolean decodeSignalAvailable(int bleFlag) {
         String beaconFlagBinary = Integer.toBinaryString(bleFlag);
         return beaconFlagBinary.indexOf(0) == 1 ? true : false;
     }
@@ -263,7 +261,7 @@ public class Codec8E {
      * @param milliSeconds from which the timestamp will be generated.
      * @return the timestamp calculated from the milliseconds
      */
-    private Timestamp calculateTimeStamp(Long milliSeconds) {
+    private Timestamp decodeTimestamp(Long milliSeconds) {
         // adding 2 hours because of timezone difference
         int timeToCorrect = 7200000;
         long correctedMilliSeconds = milliSeconds - timeToCorrect;

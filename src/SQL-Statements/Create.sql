@@ -132,7 +132,7 @@ CREATE TABLE UVV(
                   uvv_id INT NOT NULL AUTO_INCREMENT,
                   inventory_number INT NOT NULL,
                   timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                  status BOOLEAN,
+                  state BOOLEAN,
                   PRIMARY KEY(uvv_id),
                   FOREIGN KEY(inventory_number) REFERENCES DEVICE(inventory_number)
 );
@@ -142,7 +142,7 @@ CREATE TABLE TUEV(
                    tuev_id INT NOT NULL AUTO_INCREMENT,
                    inventory_number INT NOT NULL,
                    timestamp TIMESTAMP,
-                   status BOOLEAN,
+                   state BOOLEAN,
                    PRIMARY KEY(tuev_id),
                    FOREIGN KEY(inventory_number) REFERENCES DEVICE(inventory_number)
 );
@@ -152,7 +152,7 @@ CREATE TABLE REPAIR(
                      repair_id INT NOT NULL AUTO_INCREMENT,
                      inventory_number INT NOT NULL,
                      timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                     status BOOLEAN,
+                     state BOOLEAN,
                      note VARCHAR(255),
                      PRIMARY KEY(repair_id),
                      FOREIGN KEY(inventory_number) REFERENCES DEVICE(inventory_number)

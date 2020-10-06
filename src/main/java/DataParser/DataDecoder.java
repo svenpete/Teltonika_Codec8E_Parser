@@ -7,12 +7,12 @@
  */
 package DataParser;
 import DataParser.Exceptions.PreAmbleException;
-import DataParser.Model.AVL.AvlData;
+import DataParser.Model.AvlData;
 import DataParser.Codec.Codec8E;
-import DataParser.Model.AVL.AvlPacket;
+import DataParser.Model.AvlPacket;
 import DataParser.Exceptions.CodecProtocolException;
 import DataParser.Exceptions.CyclicRedundancyCheck;
-import DataParser.Model.IO.IOElement;
+import DataParser.Model.IOElement;
 import DataParser.Model.TcpDataPacket;
 import java.util.Iterator;
 import java.util.List;
@@ -36,7 +36,7 @@ public class DataDecoder {
     public TcpDataPacket decodeTcpData() throws CyclicRedundancyCheck, PreAmbleException, CodecProtocolException {
 
 
-            if ( hexReader.getHexCode() == null || hexReader.getHexCode() == "" )
+            if ( hexReader.getHEXCODE() == null || hexReader.getHEXCODE() == "" )
                return null;
 
 

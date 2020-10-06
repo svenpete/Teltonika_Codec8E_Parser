@@ -6,24 +6,28 @@
  * Change date: 27.09.2020
  */
 package DataParser;
+import JDBC.JDBC;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class LogReader
 {
 
+    private static final String TIMESTAMP_FORMAT = "yyyy-mm-dd hh:mm:ss";
+    private static String projectPath;
 
-    private static final String projectPath = "C:/Users/svenp/IdeaProjects/Teltonika_Codec8E_Parser_Backup/logs/beacon.log";
-    private static final String timeStampFormat = "yyyy-mm-dd hh:mm:ss";
+    static {
+        projectPath = System.getProperty("beaconPath");
+    }
 
     public LogReader(){
+
     }
 
     /**
@@ -43,13 +47,13 @@ public class LogReader
 
     /**
      * This method extracts the hex data from a specific log entry.
-     * @param stringToSearch a single log entry with timestamp, log info and hexcode.
+     * @param entry a single log entry with timestamp, log info and hexcode.
      * @return the received hex data from fmb devices.
      */
-    public String getHexData(String stringToSearch){
+    public String getHexData(String entry){
 
-        int firstBracket = stringToSearch.indexOf('[');
-        String contentOfBrackets = stringToSearch.substring(firstBracket + 1, stringToSearch.indexOf(']', firstBracket));
+        int firstBracket = entry.indexOf('[');
+        String contentOfBrackets = entry.substring(firstBracket + 1, entry.indexOf(']', firstBracket));
         return contentOfBrackets;
 
     }
@@ -96,7 +100,7 @@ public class LogReader
      */
     public Timestamp convertToTimeStamp(String toConvert) throws ParseException {
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat(timeStampFormat);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(TIMESTAMP_FORMAT);
         Date parsedDate = dateFormat.parse(toConvert);
 
         return new Timestamp(parsedDate.getTime());

@@ -10,12 +10,12 @@ import DataParser.Model.FieldEncoding;
 
 
 public class HexReader {
-    private final String hexCode;
+    private final String HEXCODE;
     private int position;
 
 
-    public HexReader(String hexCode){
-        this.hexCode = hexCode;
+    public HexReader(String HEXCODE){
+        this.HEXCODE = HEXCODE;
         this.position = 0;
     }
 
@@ -62,7 +62,7 @@ public class HexReader {
     private String getElement(int steps){
 
         int internalPosition = position + steps;
-        String elementHexCode = hexCode.substring(position, internalPosition );
+        String elementHexCode = HEXCODE.substring(position, internalPosition );
         position = internalPosition;
         return elementHexCode;
     }
@@ -87,8 +87,8 @@ public class HexReader {
         this.position = position;
     }
 
-    public String getHexCode() {
-        return hexCode;
+    public String getHEXCODE() {
+        return HEXCODE;
     }
 
 

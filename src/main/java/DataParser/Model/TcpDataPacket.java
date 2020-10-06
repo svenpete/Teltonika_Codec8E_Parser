@@ -7,8 +7,6 @@
  */
 package DataParser.Model;
 
-import DataParser.Model.AVL.AvlPacket;
-
 /**
  * This class represents the received data-packet for tcp/ip connection for FMB-Devices.
  */

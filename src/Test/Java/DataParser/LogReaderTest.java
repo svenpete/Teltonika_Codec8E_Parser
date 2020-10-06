@@ -1,22 +1,44 @@
 package DataParser;
 
+import JDBC.JDBC;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Properties;
 
 
 public class LogReaderTest {
     private LogReader logReader;
     private List<String> logData;
+
+    @BeforeClass
+    public static void setSysVariables(){
+        try {
+            Properties props = new Properties();
+
+            InputStream inputStream = JDBC.class.getClassLoader()
+                    .getResourceAsStream("PathConfig.properties");
+            props.load(inputStream);
+
+            String beaconPath = (String) props.get("beaconPath");
+            System.setProperty("beaconPath", beaconPath);
+            inputStream.close();
+        }  catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Before
     public void setUp() throws Exception {

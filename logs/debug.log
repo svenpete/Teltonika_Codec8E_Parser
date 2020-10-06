@@ -900,3 +900,26 @@ java.io.FileNotFoundException: \home\sep\decoder\Teltonika_Codec8E_Parser-Funkti
 	at JDBC.JDBC.createUri(JDBC.java:69)
 	at JDBC.JDBC.getConnection(JDBC.java:119)
 	at JDBC.JDBC.main(JDBC.java:137)
+2020-10-02 20:20:42 DEBUG: Invalid Input: 
+java.io.FileNotFoundException: \home\sep\decoder\Teltonika_Codec8E_Parser-Funktioniert\src\main\Resources\DatabaseConfig.properties (Das System kann den angegebenen Pfad nicht finden)
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(FileInputStream.java:212)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:154)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:109)
+	at JDBC.JDBC.loadDatabaseConfiguration(JDBC.java:99)
+	at JDBC.JDBC.createUri(JDBC.java:69)
+	at JDBC.JDBC.getConnection(JDBC.java:119)
+	at JDBC.JDBC.main(JDBC.java:137)
+2020-10-02 23:45:04 INFO: Server: Establish DB-Connection
+2020-10-02 23:46:38 INFO: Server: Establish DB-Connection
+2020-10-03 00:26:26 INFO: Server: Establish DB-Connection
+2020-10-06 05:26:00 DEBUG: Invalid Input: 
+java.io.FileNotFoundException: \home\sep\decoder\Teltonika_Codec8E_Parser-Funktioniert\src\main\Resources\DatabaseConfig.properties (Das System kann den angegebenen Pfad nicht finden)
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(FileInputStream.java:212)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:154)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:109)
+	at JDBC.JDBC.loadDatabaseConfiguration(JDBC.java:99)
+	at JDBC.JDBC.createUri(JDBC.java:69)
+	at JDBC.JDBC.getConnection(JDBC.java:119)
+	at JDBC.JDBC.main(JDBC.java:137)

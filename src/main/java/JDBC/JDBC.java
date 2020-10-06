@@ -7,7 +7,6 @@
  */
 
 package JDBC;
-
 import java.io.InputStream;
 import DataParser.DataDecoder;
 import DataParser.Exceptions.CodecProtocolException;
@@ -15,9 +14,8 @@ import DataParser.Exceptions.CyclicRedundancyCheck;
 import DataParser.Exceptions.PreAmbleException;
 import DataParser.LogReader;
 import DataParser.HexReader;
-import DataParser.Model.AVL.AvlData;
+import DataParser.Model.AvlData;
 import DataParser.Model.TcpDataPacket;
-import com.mysql.cj.log.Log;
 import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.sql.*;
@@ -36,20 +34,28 @@ public class JDBC {
     private static String db_host = "";
     private static String uri = "";
 
-    // gets the working directory
 
-    /**
-     * checks if config was loaded and
-     * creates uri for database connection
-     * and stores information in log
-     *
-     * @throws IOException
-     */
+    // set up system variables
+    static {
+        Properties props = new Properties();
+        try {
+            InputStream inputStream = JDBC.class.getClassLoader()
+                    .getResourceAsStream("PathConfig.properties");
+            props.load(inputStream);
+            String beaconPath = (String) props.get("beaconPath");
+            System.setProperty("beaconPath",beaconPath);
+
+            String logPath = (String) props.get("logPath");
+            System.setProperty("logPath",logPath);
+
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     // to use logger dynamic we need to initialise the path before a logger instance is generated therefore we use static block
-    static {
-        System.setProperty("logPath",System.getProperty("user.dir"));
-    }
 
     static Logger log = Logger.getLogger(JDBC.class.getName());
 
@@ -162,12 +168,13 @@ public class JDBC {
                     e.printStackTrace();
                     log.info(e);
                 } catch (SQLException e) {
+
                     System.out.println("Error Message: " + e.getMessage());
+                    log.debug("Error Message: " + e.getMessage());
 
                     System.out.println("SQL State: " + e.getSQLState());
-                    e.printStackTrace();
-                    log.debug("Error Message: " + e.getMessage());
                     log.info("SQL State: " + e.getSQLState());
+                    e.printStackTrace();
 
                 }
 
@@ -221,7 +228,7 @@ public class JDBC {
                 .addAttr("name", Type.VARCHAR)
                 .addAttr("surname", Type.VARCHAR)
                 .addForeignKey("role", Type.VARCHAR, rights, rights.attributes.get(0),
-                        true, Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE);
+                         Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE);
         stmt.addBatch(worker.create());
 
 
@@ -239,7 +246,8 @@ public class JDBC {
                 .addAttr("description", Type.VARCHAR);
         stmt.addBatch(deviceStatus.create());
 
-        // Integer gucken ob nicht doch float
+
+
         Table location = new Table("LOCATION")
                 .addPrimaryKey("location_id", Type.INTEGER_AUTO_INCREMENT)
                 .addAttr("speed", Type.INTEGER)
@@ -247,72 +255,89 @@ public class JDBC {
                 .addAttr("longitude", Type.FLOAT)
                 .addAttr("latitude", Type.FLOAT)
                 .addAttr("altitude", Type.FLOAT)
-                .addAttr("timestamp", Type.TIMESTAMP);
+                .addAttr("timestamp", Type.TIMESTAMP.Default("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"));
         stmt.addBatch(location.create());
 
 
         Table beacon = new Table("BEACON")
                 .addPrimaryKey("major", Type.TINY_VARCHAR)
                 .addAttr("minor", Type.TINY_VARCHAR)
-                .addAttr("uuid", Type.VARCHAR);
+                .addAttr("uuid", Type.VARCHAR.Default("DA95206921ED84C1ED97EA92306C5A7F"));
         stmt.addBatch(beacon.create("minor"));
+
 
         Table beaconPosition = new Table("BEACON_POSITION")
                 .addForeignKey("major", Type.TINY_VARCHAR, beacon, beacon.attributes.get(0),
-                        true, Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE);
+                         Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE)
+                .addForeignKey("minor", Type.TINY_VARCHAR, beacon, beacon.attributes.get(2),
+                        Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE)
+                .addForeignKey("location_id", Type.INTEGER, location, location.attributes.get(0),
+                        Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE)
+                .addAttr("rssi",Type.INTEGER);
+        stmt.addBatch(beaconPosition.create());
 
-        Table Category = new Table("Category")
-                .addPrimaryKey("major", Type.VARCHAR)
-                .addAttr("category", Type.VARCHAR);
-        stmt.addBatch(Category.create());
 
 
 
-        //adding enum
         Table device = new Table("DEVICE")
                 .addPrimaryKey("inventory_number", Type.INTEGER_AUTO_INCREMENT)
                 .addAttr("serial_number", Type.VARCHAR)
                 .addAttr("gurantee", Type.VARCHAR)
                 .addAttr("note", Type.DATE)
-                .addForeignKey("device_status",Type.INTEGER,deviceStatus,deviceStatus.attributes.get(0),true,Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE);)
-                .addAttr("note", Type.TEXT)
-                .addAttr("device_status", Type.INTEGER)
-                .addForeignKey("beacon_major", Type.TINY_VARCHAR, beacon, beacon.attributes.get(0),
-                        true,Constraint.DELETE_RESTRICT,Constraint.UPDATE_CASCADE)
-                .addForeignKey("beacon_minor", Type.TINY_VARCHAR, beacon, beacon.attributes.get(1),
-                        true, Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE);
+                .addForeignKey("device_status", Type.INTEGER, deviceStatus, deviceStatus.attributes.get(0),
+                        Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE)
+                .addForeignKey("beacon_major", Type.TINY_VARCHAR,beacon,beacon.attributes.get(0),
+                        Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE )
+                .addForeignKey("beacon_minor", Type.TINY_VARCHAR,beacon,beacon.attributes.get(1),
+                        Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE );
         stmt.addBatch(device.create());
+
 
         Table borrows = new Table("BORROWS")
                 .addPrimaryKey("loan_day", Type.DATE)
                 .addAttr("loan_end", Type.DATE)
                 .addAttr("loan_period", Type.DATE)
                 .addForeignKey("worker_id", Type.INTEGER, rights, rights.attributes.get(0),
-                        true, Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE)
+                         Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE)
                 .addForeignKey("inventory_number", Type.INTEGER, device, device.attributes.get(0),
-                        true, Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE)
+                         Constraint.ON_DELETE_SET_NULL, Constraint.UPDATE_CASCADE)
                 .addForeignKey("project_id", Type.INTEGER, project, project.attributes.get(0),
-                        true, Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE);
+                         Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE);
         stmt.addBatch(borrows.create());
 
+        Table category = new Table("CATEGORY")
+                .addForeignKey("major", Type.TINY_VARCHAR, beacon, beacon.attributes.get(0),
+                        Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE )
+                .addAttr("category", Type.VARCHAR);
+        stmt.addBatch(category.create());
 
-        Table Uvv = new Table("Uvv")
-                .addPrimaryKey("time", Type.TIME)
-                .addPrimaryKey("date", Type.DATE)
-                .addAttr("status", Type.BOOLEAN);
-        stmt.addBatch(Uvv.create());
 
-        Table Tuev = new Table("Tuev")
-                .addPrimaryKey("time", Type.TIME)
-                .addPrimaryKey("date", Type.DATE)
-                .addAttr("status", Type.BOOLEAN);
-        stmt.addBatch(Tuev.create());
+        Table uvv = new Table("UVV")
+                .addPrimaryKey("uvv_id", Type.INTEGER_AUTO_INCREMENT)
+                .addForeignKey("inventory_number", Type.INTEGER, device, device.attributes.get(0),
+                        Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE )
+                .addAttr("timestamp", Type.TIMESTAMP)
+                .addAttr("state", Type.BOOLEAN);
+        stmt.addBatch(uvv.create());
 
-        Table Repair = new Table("Repair")
-                .addPrimaryKey("time", Type.TIME)
-                .addPrimaryKey("date", Type.DATE)
-                .addAttr("comment", Type.VARCHAR);
-        stmt.addBatch(Repair.create());
+
+        Table tuev = new Table("TUEV")
+                .addPrimaryKey("tuev_id", Type.INTEGER_AUTO_INCREMENT)
+                .addForeignKey("inventory_number", Type.INTEGER,device, device.attributes.get(0),
+                        Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE )
+                .addAttr("timestamp", Type.TIMESTAMP)
+                .addAttr("state", Type.BOOLEAN);
+        stmt.addBatch(tuev.create());
+
+
+        Table repair = new Table("REPAIR")
+                .addPrimaryKey("repair_id", Type.INTEGER_AUTO_INCREMENT)
+                .addForeignKey("inventory_number", Type.INTEGER.Default("CURRENT_TIMESTAMP ON UPDATE " +
+                        "CURRENT_TIMESTAMP,"), device, device.attributes.get(0), Constraint.DELETE_RESTRICT, Constraint.UPDATE_CASCADE )
+                .addAttr("timestamp", Type.TIMESTAMP)
+                .addAttr("state", Type.BOOLEAN)
+                .addAttr("note",Type.VARCHAR);
+        stmt.addBatch(repair.create());
 
 
 

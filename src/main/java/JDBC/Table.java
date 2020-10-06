@@ -35,8 +35,8 @@ public class Table {
     }
 
     public Table addForeignKey(String columnName, Type columnType, Table tableReference, Attribute attributeReference,
-                               boolean isPrimaryKey, Constraint onDelte, Constraint onUpdate) {
-        attributes.add(new ForeignKey(columnName, columnType, tableReference, attributeReference, isPrimaryKey, onDelte, onUpdate));
+                                Constraint onDelte, Constraint onUpdate) {
+        attributes.add(new ForeignKey(columnName, columnType, tableReference, attributeReference,  onDelte, onUpdate));
         return this;
     }
 

@@ -17,12 +17,12 @@ public class ForeignKey extends Attribute {
     Constraint onUpdate;
 
 
-    public ForeignKey(String name, Type type, Table tableReference, Attribute attributeReference, boolean isPrimaryKey,
+    public ForeignKey(String name, Type type, Table tableReference, Attribute attributeReference,
                       Constraint onDelete, Constraint onUpdate) {
         super(name, type);
         this.tableReference = tableReference;
         this.attributeReference = attributeReference;
-        this.isPrimaryKey = isPrimaryKey;
+
         this.onDelete = onDelete;
         this.onUpdate = onUpdate;
     }

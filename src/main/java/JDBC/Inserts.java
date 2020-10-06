@@ -6,9 +6,9 @@
  * Change date: 11.09.2020
  */
 package JDBC;
-import DataParser.Model.AVL.AvlData;
-import DataParser.Model.GPS.GpsData;
-import DataParser.Model.IO.Beacon;
+import DataParser.Model.AvlData;
+import DataParser.Model.GpsData;
+import DataParser.Model.Beacon;
 import DataParser.Model.TcpDataPacket;
 import java.io.IOException;
 import java.sql.*;

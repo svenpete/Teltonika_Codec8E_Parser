@@ -7,31 +7,39 @@
 
 package JDBC;
 
-public enum Type {
-    BOOLEAN("BOOLEAN"),
-    INTEGER("INTEGER"),
-    DECIMAL("DECIMAL(10,2)"),
-    FLOAT("FLOAT"),
-    VARCHAR("VARCHAR(255)"),
-    TINY_VARCHAR("VARCHAR(4)"),
-    DATE("DATE"),
-    TIME("TIME"),
-    TEXT("TEXT"),
-    TIMESTAMP("TIMESTAMP"),
-    INTEGER_AUTO_INCREMENT("INTEGER AUTO_INCREMENT"),
-    ENUM_CATEGORY("ENUM ('Rüttelplatten','Stampfer','Motorflex','Rohrgreifer'," +
-            " 'Kettensägen', 'Motorhammer','Leiter','Exoten')");
+public enum Type{
+    BOOLEAN("BOOLEAN "),
+    INTEGER("INTEGER "),
+    DECIMAL("DECIMAL(10,2) "),
+    FLOAT("FLOAT "),
+    VARCHAR("VARCHAR(255) "),
+    TINY_VARCHAR("VARCHAR(4) "),
+    DATE("DATE "),
+    TIME("TIME "),
+    TEXT("TEXT "),
+    TIMESTAMP("TIMESTAMP "),
+    INTEGER_AUTO_INCREMENT("INTEGER AUTO_INCREMENT "),
+    DEFAULT( "NOT NULL DEFAULT ");
 
-
-    private String sqlTypeString;
+     String sqlTypeString;
 
     Type(String sqlTypeString) {
         this.sqlTypeString = sqlTypeString;
     }
 
+
     public String getSqlTypeString() {
         return sqlTypeString;
     }
 
+    public Type Default(String value ){
+        String str = this.sqlTypeString + Type.DEFAULT.sqlTypeString + value;
+        this.sqlTypeString = str;
+
+        return this;
+    }
+
 
 }
+
+

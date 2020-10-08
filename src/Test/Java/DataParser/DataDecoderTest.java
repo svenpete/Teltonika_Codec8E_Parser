@@ -102,7 +102,7 @@ public class DataDecoderTest {
 
     @Test
     public void testDeletePacket(){
-        LogReader logReader = new LogReader();
+        LogReader logReader = new LogReader(System.getProperty("beaconPath"));
         Timestamp lowerBound = null;
         List<TcpDataPacket> decodedData = new ArrayList<>();
 

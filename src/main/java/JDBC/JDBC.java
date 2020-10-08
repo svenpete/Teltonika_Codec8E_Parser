@@ -7,6 +7,8 @@
  */
 
 package JDBC;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import DataParser.DataDecoder;
 import DataParser.Exceptions.CodecProtocolException;
@@ -18,6 +20,9 @@ import DataParser.Model.AvlData;
 import DataParser.Model.TcpDataPacket;
 import org.apache.log4j.Logger;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.security.CodeSource;
 import java.sql.*;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -37,19 +42,23 @@ public class JDBC {
 
     // set up system variables
     static {
+
         Properties props = new Properties();
         try {
-            InputStream inputStream = JDBC.class.getClassLoader()
-                    .getResourceAsStream("PathConfig.properties");
-            props.load(inputStream);
+            CodeSource codeSource = JDBC.class.getProtectionDomain().getCodeSource();
+            File jarFile = new File(codeSource.getLocation().toURI().getPath());
+            String jarDir = jarFile.getParentFile().getParentFile().getParentFile().getPath();
+
+            InputStream input = new FileInputStream(jarDir +"/PathConfig.properties");
+            props.load(input);
             String beaconPath = (String) props.get("beaconPath");
             System.setProperty("beaconPath",beaconPath);
 
             String logPath = (String) props.get("logPath");
             System.setProperty("logPath",logPath);
 
-            inputStream.close();
-        } catch (IOException e) {
+            input.close();
+        } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
     }
@@ -132,7 +141,7 @@ public class JDBC {
 
     public static void main(String[] args) {
         try {
-            LogReader logReader = new LogReader();
+            LogReader logReader = new LogReader(System.getProperty("beaconPath"));
 
             // setting limit for hexCode input
             Timestamp upperBound = new Timestamp(System.currentTimeMillis());

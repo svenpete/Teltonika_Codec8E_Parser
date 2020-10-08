@@ -22,12 +22,10 @@ public class LogReader
     private static final String TIMESTAMP_FORMAT = "yyyy-mm-dd hh:mm:ss";
     private static String projectPath;
 
-    static {
-        projectPath = System.getProperty("beaconPath");
-    }
 
-    public LogReader(){
 
+    public LogReader(String path){
+    projectPath = path;
     }
 
     /**

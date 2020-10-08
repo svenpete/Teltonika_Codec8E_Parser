@@ -1,17 +1,12 @@
 package DataParser;
-
 import JDBC.JDBC;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.net.URISyntaxException;
+import java.security.CodeSource;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -23,27 +18,30 @@ public class LogReaderTest {
     private LogReader logReader;
     private List<String> logData;
 
-    @BeforeClass
-    public static void setSysVariables(){
-        try {
-            Properties props = new Properties();
 
-            InputStream inputStream = JDBC.class.getClassLoader()
-                    .getResourceAsStream("PathConfig.properties");
-            props.load(inputStream);
-
-            String beaconPath = (String) props.get("beaconPath");
-            System.setProperty("beaconPath", beaconPath);
-            inputStream.close();
-        }  catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Before
     public void setUp() throws Exception {
-        logReader = new DataParser.LogReader();
+        try {
+            Properties props = new Properties();
+
+            CodeSource codeSource = JDBC.class.getProtectionDomain().getCodeSource();
+            File jarFile = new File(codeSource.getLocation().toURI().getPath());
+            String jarDir = jarFile.getParentFile().getParentFile().getParentFile().getPath();
+
+            InputStream input = new FileInputStream(jarDir +"/PathConfig.properties");
+            props.load(input);
+
+
+            String beaconPath = (String) props.get("beaconPath");
+            System.setProperty("beaconPath", beaconPath);
+            input.close();
+        }  catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+        logReader = new LogReader(System.getProperty("beaconPath"));
         logData = logReader.getLogData();
+
     }
 
     @Test

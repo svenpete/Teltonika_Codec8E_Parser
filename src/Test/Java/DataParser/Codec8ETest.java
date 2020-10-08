@@ -20,15 +20,15 @@ public class Codec8ETest {
 
 
     @Before
-    public void setUp() throws Exception {
-        logReader = new DataParser.LogReader();
+    public void setUp(){
+        logReader = new DataParser.LogReader(System.getProperty("beaconPath"));
 
     }
 
 
     @Test
     public void decodeAvlDataCollection() {
-        logReader = new LogReader();
+        
 
         Timestamp lowerBound = null;
         try {

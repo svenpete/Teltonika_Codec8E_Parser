@@ -30,7 +30,8 @@ DELIMITER ;
 
 
 # This event will be executed once a day and checks the table borrows and set the device_status in table 'DEVICE' to
-# reserved.
+# reserved. To generate this event activate global event scheduler, for this u need SUPER PRIVILEGES ON THE SCHEMA.
+SET GLOBAL event_scheduler = ON;
 DELIMITER $$
 CREATE EVENT check_borrows
     ON SCHEDULE

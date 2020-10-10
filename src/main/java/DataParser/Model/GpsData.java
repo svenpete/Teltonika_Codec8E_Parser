@@ -32,9 +32,7 @@ public class GpsData {
         this.speed = speed;
     }
 
-    /**
-     * @param longitude
-     */
+
     private void setLongitude(Double longitude){
         this.longitude = longitude * 0.0000001;
     }
@@ -46,7 +44,7 @@ public class GpsData {
     /**
      * This method checks if a given longitude value is valid.
      * @param longitude to validate.
-     * @return true if value is between -180 && 180
+     * @return true if value is between -180 to 180
      */
     public static boolean isLongiValid(Double longitude){
         return -180 <= longitude && longitude <= 180;

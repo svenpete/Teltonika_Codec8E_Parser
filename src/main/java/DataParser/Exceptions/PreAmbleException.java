@@ -9,9 +9,13 @@ package DataParser.Exceptions;
 
 public class PreAmbleException extends Exception {
 
-    public PreAmbleException(int x){
+    /**
+     * Class constructor specifying preamble value.
+     * @param preAmble send preamble by FMB device.
+     */
+    public PreAmbleException(int preAmble){
         super("Unable to decode. Missing or false package prefix. Preamble value is " +
-                x + " it should be 00000000.");
+                preAmble + " it should be 00000000.");
     }
 
 

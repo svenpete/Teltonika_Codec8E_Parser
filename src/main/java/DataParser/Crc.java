@@ -9,7 +9,9 @@ package DataParser;
 import java.math.BigInteger;
 
 
-
+/**
+ * This class handles the calculation of a crc checksum.
+ */
 public class Crc {
 
     private String polynom;
@@ -27,12 +29,11 @@ public class Crc {
 
 
     /**
-     * This method calculates a checksum based on CRC-16/IBM.
+     * The calculateCrc method calculates a checksum based on CRC-16/IBM.
      * CRC-Polynomial x16+x15+x2+1 (0x8005), initial value 0x0000, low bit first, high bit after, result is XOR0
      * 0xA001 is the result of 0x8005 bitwise reversal
-     *
      * @param buffer the hexcode from codecic until avl Resources checksum.
-     * @return
+     * @return int based on crc caluclation.
      */
     private static int calculateCrc(byte[] buffer) {
 
@@ -46,7 +47,6 @@ public class Crc {
             crcValue ^= ((int) byteBuffer & 0x00ff);
 
             for (int j = 0; j < 8; j++) {
-
 
                 if ( (crcValue & 0x0001) != 0 ) {
                     //right shift

@@ -22,12 +22,17 @@ import java.util.List;
 
 
 /**
- * This class handels the encryption of received data-protocol 'Codec8 Extended'.
+ * This class handle's the decoding of the 'Codec8 Extended Protocol' from Teltonika.
  */
 public class Codec8E {
+
     private HexReader hexReader;
 
 
+    /**
+     * Class constructor specifying an object of HexReader for decoding process.
+     * @param hexReader contains the data for decoding process.
+     */
     public Codec8E(HexReader hexReader) {
         this.hexReader = hexReader;
 
@@ -36,8 +41,7 @@ public class Codec8E {
 
 
     /**
-     * This method decodes the hex data and returns an instance of AvlPacket. An avlPacket can have
-     * multiple avlData.
+     * The decodeAvlPacket method decodes the hex data and returns an instance of AvlPacket.
      * @return AvlPacket with decoded Data.
      */
     public AvlPacket decodeAvlPacket(){
@@ -55,8 +59,9 @@ public class Codec8E {
     }
 
     /**
-     * This method decodes the avldata and handels the decoding for gps, ioelement and beacons which belong to the avldata.
-     * @return avldata with decoded information.
+     * The decodeAvlData method decodes the avl-data and handels the decoding for gps, i/o-element and beacons which
+     * belong to the avl-data.
+     * @return avl-data
      */
     private AvlData decodeAvlData() {
         Timestamp timestamp = decodeTimestamp(hexReader.readLong16());
@@ -83,7 +88,11 @@ public class Codec8E {
 
     }
 
-
+    /**
+     * The decodePriority method decodes the received data priority.
+     * @param priority the data priority
+     * @return the decoded data priority
+     */
     private String decodePriority(int priority){
 
         for (AvlDataPriority prior :
@@ -97,8 +106,8 @@ public class Codec8E {
 
 
     /**
-     * This method decodes gpsdata.
-     * @return gpsdata with decoded informations about longi, lati, alti, speed, angle and satelelites.
+     * The decodeGpsElement method decodes gps-data and returns an GpsData object.
+     * @return object of GpsData with decoded data.
      */
     private GpsData decodeGpsElement() {
         double longitude = hexReader.readLong8();
@@ -112,13 +121,13 @@ public class Codec8E {
     }
 
     /**
-     * This method decodes input/output properties which the hex string contains except beacon information.
+     * The decodeIoProperties method decodes input/output properties which the hex string contains except beacon information.
      * @return List<IoProperty> contained by the hex strong
      */
     private List<IoProperty> decodeIoProperties() {
         List<IoProperty> result = new ArrayList<>();
-        // total number of I/O properties which length is 1 byte
 
+        // total number of I/O properties which length is 1 byte
         int ioCountInt8 = hexReader.readInt4();
         for (int i = 0; i < ioCountInt8; i++) {
             int propertyId = hexReader.readInt4();
@@ -162,7 +171,7 @@ public class Codec8E {
 
 
     /**
-     * This method decodes the nx-properties containing beacon data.
+     * The decodeNxProperties method decodes the nx-properties containing multiplebeacon data.
      * NX-properties do have variable lengths therefore these properties contain a length element.
      * @return List<Beacon>
      */
@@ -218,10 +227,12 @@ public class Codec8E {
     }
 
     /**
-     * This method parses the received beacon-flag to binary and checks afterwards the first character of the received
-     * binary string.
+     * The decodeSignalAvailable method parses the received beacon-flag to binary and checks afterwards the first
+     * character of the received binary string.
      * 1 = signal strength available
      * 0 = signal strength not available
+     * @param bleFlag data containing beacon metadata.
+     * @return  true or false based on the
      */
     private boolean decodeSignalAvailable(int bleFlag) {
         String beaconFlagBinary = Integer.toBinaryString(bleFlag);
@@ -229,8 +240,10 @@ public class Codec8E {
     }
 
     /**
-     * This method determines of which type the beacon is.
+     * The decodeBeaconType method determines the beacon protocol format.
      * If fifth index from binary string is 1 the beacon type will be iBeacon otherwise it is Eddystone.
+     * @param  bleFlag data containing beacon metadata
+     * @return String containing beacon format.
      */
     private String decodeBeaconType(int bleFlag) {
         String beaconTypeBinary = Integer.toBinaryString(bleFlag);
@@ -243,12 +256,14 @@ public class Codec8E {
     }
 
     /**
-     * This method sets the received signal strength indication (=rssi).
+     * The decodeRssi method sets the received signal strength indication (rssi).
      * The received value from the hex code needs to be parsed in binary 2 complement and then be parsed to decimal.
+     * @param  hexRssi to be converted.
+     * @return rssi value.
      */
-    private int decodeRssi(int decode) {
+    private int decodeRssi(int  hexRssi) {
 
-        String binary = Integer.toBinaryString(decode);
+        String binary = Integer.toBinaryString( hexRssi);
 
         StringBuffer stringBuffer = new StringBuffer(binary);
         int rssi = -1 * Integer.parseInt(BitConverter.findTwoscomplement(stringBuffer), 2); // temp solution
@@ -256,8 +271,7 @@ public class Codec8E {
     }
 
     /**
-     * This method calculates the timestamp based on the unix time
-     *
+     * The decodeTimestamp method calculates the timestamp based on unix time1.
      * @param milliSeconds from which the timestamp will be generated.
      * @return the timestamp calculated from the milliseconds
      */

@@ -22,7 +22,7 @@ public class Inserts {
     /**
      * This method inserts decoded gps data into the database and returns the generated id for
      * the inserted position:
-     * @param conn
+     * @param conn to database.
      * @param avlData contains timestamp and gps data.
      * @return generated id for inserted location. If insert fails null will be returned.
      * @throws SQLException
@@ -62,8 +62,8 @@ public class Inserts {
 
     /**
      * This method insert decoded beacon data to the database and connects them with a location.
-     * @param connection
-     * @param beacon to be inserted
+     * @param connection to database.
+     * @param beacon data to be stored.
      * @param location_id to link a beacon with a given location.
      * @throws SQLException
      */
@@ -83,13 +83,11 @@ public class Inserts {
     }
 
     /**
-     * This method initializes the insert of decoded location and beacon data
-     * @param
+     * This method initializes the insert of decoded location and beacon data to the database.
+     * @param conn database connection.
+     * @param tcpDataPacket decoded data from fmb device sent over tcp.
      * @throws SQLException
-     * @throws IOException
-     * @throws ClassNotFoundException
      */
-
     public static void insertTcpData(Connection conn, TcpDataPacket tcpDataPacket) throws SQLException{
 
         int avlCount = tcpDataPacket.getAvlPacket().getData().size();
@@ -134,7 +132,7 @@ public class Inserts {
 
     /**
      * This method updates the latest position a device were registered by a FMB devices.
-     * @param conn
+     * @param conn to database
      * @param position to update
      * @param beacon device to search for
      * @return 1 if suc
@@ -167,11 +165,12 @@ public class Inserts {
     }
 
 
-    /** This method can be used for all tables to store data into the database.
-     * @param data
-     * @param connection
-     * @param tableName
-     * @param schemaName
+    /**
+     * This method can be used for all tables to insert data into the database.
+     * @param data for database insert.
+     * @param connection to database
+     * @param tableName for data to be stored in.
+     * @param schemaName where table is located.
      * @throws SQLException
      */
     public static void insertData(List<Object> data, Connection connection, String tableName, String schemaName)

@@ -9,7 +9,7 @@ package DataParser.Model;
 import java.sql.Timestamp;
 
 /**
- * This class handels in
+ * This class represents the avl data send by FMB devices.
  */
 public class AvlData {
 

@@ -1,4 +1,4 @@
-# this trigger will insert old device information into the history table and update change_of_modification
+# This trigger will insert old device information into the history table and update change_of_modification
 DELIMITER $$
 
 CREATE TRIGGER insert_into_device_history
@@ -12,9 +12,11 @@ BEGIN
         OR OLD.latest_position <> NEW.latest_position
     THEN
         INSERT INTO
-            DEVICE_HISTORY(inventory_number,serial_number,gurantee,note,device_status,beacon_minor,beacon_major,model,manufacturer,latest_uvv,latest_tuev,latest_repair,latest_position)
+            DEVICE_HISTORY(inventory_number,serial_number,gurantee,note,device_status,beacon_minor,beacon_major,model,
+                           manufacturer,latest_uvv,latest_tuev,latest_repair,latest_position)
         VALUES
-        (OLD.inventory_number, OLD.serial_number, OLD.gurantee, OLD.note, OLD.device_status, OLD.beacon_minor, OLD.beacon_major, OLD.model, OLD.manufacturer,
+        (OLD.inventory_number, OLD.serial_number, OLD.gurantee, OLD.note, OLD.device_status, OLD.beacon_minor,
+         OLD.beacon_major, OLD.model, OLD.manufacturer,
          OLD.latest_uvv, OLD.latest_tuev, OLD.latest_repair, OLD.latest_position );
 
         SET NEW.date_of_change = CURRENT_TIMESTAMP;
@@ -27,7 +29,8 @@ DELIMITER ;
 
 
 
-
+# This event will be executed once a day and checks the table borrows and set the device_status in table 'DEVICE' to
+# reserved.
 DELIMITER $$
 CREATE EVENT check_borrows
     ON SCHEDULE

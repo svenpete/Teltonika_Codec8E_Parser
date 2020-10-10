@@ -4,11 +4,16 @@ INSERT INTO RIGHTS VALUES ('admin',true,true,true,true,true,true,true,true,true,
 
 SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE TABLE WORKER;
-INSERT INTO WORKER (password, e_mail, name, surname, role) VALUES('testing', 's.petersen@dallmann-bau.de', 'Petersen','Sven','admin');
-INSERT INTO WORKER (password, e_mail, name, surname, role) VALUES('hallo123', 'l.kottmann@dallmann-bau.de', 'Kottmann','Louis','admin');
-INSERT INTO WORKER (password, e_mail, name, surname, role) VALUES('moin', 'm.eickmann@dallmann-bau.de', 'Eickmann','Morten','admin');
-INSERT INTO WORKER (password, e_mail, name, surname, role) VALUES('password123', 'k.bosse@dallmann-bau.de', 'Bosse','Kevin','admin');
-INSERT INTO WORKER (password, e_mail, name, surname, role) VALUES('easy', 'd.dziersan@dallmann-bau.de', 'Dziersan','Dominik','admin');
+INSERT INTO WORKER (password, e_mail, name, surname, role) VALUES('testing', 's.petersen@dallmann-bau.de', 'Petersen',
+                                                                  'Sven','admin');
+INSERT INTO WORKER (password, e_mail, name, surname, role) VALUES('hallo123', 'l.kottmann@dallmann-bau.de', 'Kottmann',
+                                                                  'Louis','admin');
+INSERT INTO WORKER (password, e_mail, name, surname, role) VALUES('moin', 'm.eickmann@dallmann-bau.de', 'Eickmann',
+                                                                  'Morten','admin');
+INSERT INTO WORKER (password, e_mail, name, surname, role) VALUES('password123', 'k.bosse@dallmann-bau.de', 'Bosse',
+                                                                  'Kevin','admin');
+INSERT INTO WORKER (password, e_mail, name, surname, role) VALUES('easy', 'd.dziersan@dallmann-bau.de', 'Dziersan',
+                                                                  'Dominik','admin');
 
 SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE TABLE PROJECT;
@@ -21,11 +26,16 @@ INSERT INTO PROJECT (name, street, postcode, city) VALUES('Bundestraße','B187',
 
 SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE TABLE LOCATION;
-INSERT INTO LOCATION (speed, angle, longitude, latitude, altitude, timestamp) VALUES(0,0,8.037338333333333,52.27987,0,timestamp('2020-08-22 13:07:33'));
-INSERT INTO LOCATION (speed, angle, longitude, latitude, altitude, timestamp) VALUES(0,0,9.037338333333333,50.27987,0,timestamp('2020-08-22 14:07:33'));
-INSERT INTO LOCATION (speed, angle, longitude, latitude, altitude, timestamp) VALUES(0,0,15.037338333333333,50.27987,0,timestamp('2020-08-22 16:07:33'));
-INSERT INTO LOCATION (speed, angle, longitude, latitude, altitude, timestamp) VALUES(0,0,22.037338333333333,50.27987,0,timestamp('2020-07-22 14:07:33'));
-INSERT INTO LOCATION (speed, angle, longitude, latitude, altitude, timestamp) VALUES(0,0,22.037338333333333,53.27987,0,timestamp('2020-05-22 16:07:33'));
+INSERT INTO LOCATION (speed, angle, longitude, latitude, altitude, timestamp) VALUES(0,0,8.037338333333333,52.27987,0,
+timestamp('2020-08-22 13:07:33'));
+INSERT INTO LOCATION (speed, angle, longitude, latitude, altitude, timestamp) VALUES(0,0,9.037338333333333,50.27987,0,
+timestamp('2020-08-22 14:07:33'));
+INSERT INTO LOCATION (speed, angle, longitude, latitude, altitude, timestamp) VALUES(0,0,15.037338333333333,50.27987,0,
+timestamp('2020-08-22 16:07:33'));
+INSERT INTO LOCATION (speed, angle, longitude, latitude, altitude, timestamp) VALUES(0,0,22.037338333333333,50.27987,0,
+timestamp('2020-07-22 14:07:33'));
+INSERT INTO LOCATION (speed, angle, longitude, latitude, altitude, timestamp) VALUES(0,0,22.037338333333333,53.27987,0,
+timestamp('2020-05-22 16:07:33'));
 
 SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE TABLE CATEGORY;
@@ -76,20 +86,27 @@ INSERT INTO  DEVICE_STATUS (description)  VALUES ('Gestohlen');
 
 SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE TABLE DEVICE;
-INSERT INTO DEVICE (inventory_number, serial_number, gurantee, note, device_status, beacon_minor, beacon_major, model, manufacturer, latest_uvv, latest_tuev, latest_repair, latest_position)
-VALUES(758921, 0235112, '2020-05-09', 'Hi', 1, '0001', '0001', "juckt niemanden", "same shit again",1,1,1,1);
-INSERT INTO DEVICE (inventory_number, serial_number, gurantee, note, device_status, beacon_minor, beacon_major, model, manufacturer, latest_uvv, latest_tuev, latest_repair, latest_position)
-VALUES(654123, 0245212, '2020-07-10', 'Test', 2, '0001', '0002',"juckt niemanden", "same shit again",1,1,1,1);
-INSERT INTO DEVICE (inventory_number, serial_number, gurantee, note, device_status, beacon_minor, beacon_major, model, manufacturer, latest_uvv, latest_tuev, latest_repair, latest_position)
-VALUES(569847, 0456587, '2020-05-22', 'POeter', 3, '0001', '0003',"juckt niemanden", "same shit again",1,1,1,1);
-INSERT INTO DEVICE (inventory_number, serial_number, gurantee, note, device_status, beacon_minor, beacon_major, model, manufacturer, latest_uvv, latest_tuev, latest_repair, latest_position)
-VALUES(159742, 5742854, '2022-12-25', 'LOL', 4, '0001', '0004',"juckt niemanden", "same shit again",1,1,1,1);
-INSERT INTO DEVICE (inventory_number, serial_number, gurantee, note, device_status, beacon_minor, beacon_major, model, manufacturer, latest_uvv, latest_tuev, latest_repair, latest_position)
-VALUES(234567, 4861563, '2024-10-19', 'xD', 5, '0001', '0005',"juckt niemanden", "same shit again",1,1,1,1);
-INSERT INTO DEVICE (inventory_number, serial_number, gurantee, note, device_status, beacon_minor, beacon_major, model, manufacturer, latest_uvv, latest_tuev, latest_repair, latest_position)
-VALUES(745921, 1487422, '2020-05-09', 'Hier könnt ihr text stehen', 6, '0001', '0006',"juckt niemanden", "same shit again",1,1,1,1);
-INSERT INTO DEVICE (inventory_number, serial_number, gurantee, note, device_status, beacon_minor, beacon_major, model, manufacturer, latest_uvv, latest_tuev, latest_repair, latest_position)
-VALUES(547896, 9875621, '2020-05-09', 'Hi', 7, '0001', '0007',"juckt niemanden", "same shit again",1,1,1,1);
+INSERT INTO DEVICE (inventory_number, serial_number, gurantee, note, device_status, beacon_minor, beacon_major, model,
+manufacturer, latest_uvv, latest_tuev, latest_repair, latest_position)
+VALUES(758921, 0235112, '2020-05-09', 'Hi', 1, '0001', '0001', 'Schrauber', 'Bosch' ,1,1,1,1);
+INSERT INTO DEVICE (inventory_number, serial_number, gurantee, note, device_status, beacon_minor, beacon_major, model,
+manufacturer, latest_uvv, latest_tuev, latest_repair, latest_position)
+VALUES(654123, 0245212, '2020-07-10', 'Test', 2, '0001', '0002''Schrauber', 'Bosch' ,1,1,1,1);
+INSERT INTO DEVICE (inventory_number, serial_number, gurantee, note, device_status, beacon_minor, beacon_major, model,
+manufacturer, latest_uvv, latest_tuev, latest_repair, latest_position)
+VALUES(569847, 0456587, '2020-05-22', 'POeter', 3, '0001', '0003','Schrauber', 'Bosch' ,1,1,1,1);
+INSERT INTO DEVICE (inventory_number, serial_number, gurantee, note, device_status, beacon_minor, beacon_major, model,
+manufacturer, latest_uvv, latest_tuev, latest_repair, latest_position)
+VALUES(159742, 5742854, '2022-12-25', 'LOL', 4, '0001', '0004','Schrauber', 'Bosch' ,1,1,1,1);
+INSERT INTO DEVICE (inventory_number, serial_number, gurantee, note, device_status, beacon_minor, beacon_major, model,
+manufacturer, latest_uvv, latest_tuev, latest_repair, latest_position)
+VALUES(234567, 4861563, '2024-10-19', 'xD', 5, '0001', '0005','Schrauber', 'Bosch' ,1,1,1,1);
+INSERT INTO DEVICE (inventory_number, serial_number, gurantee, note, device_status, beacon_minor, beacon_major, model,
+manufacturer, latest_uvv, latest_tuev, latest_repair, latest_position)
+VALUES(745921, 1487422, '2020-05-09', 'Hier könnt ihr text stehen', 6, '0001', '0006','Schrauber', 'Bosch' ,1,1,1,1);
+INSERT INTO DEVICE (inventory_number, serial_number, gurantee, note, device_status, beacon_minor, beacon_major, model,
+manufacturer, latest_uvv, latest_tuev, latest_repair, latest_position)
+VALUES(547896, 9875621, '2020-05-09', 'Hi', 7, '0001', '0007','Schrauber', 'Bosch' ,1,1,1,1);
 
 SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE TABLE REPAIR;

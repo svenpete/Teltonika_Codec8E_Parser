@@ -8,7 +8,9 @@
 package DataParser;
 import DataParser.Model.FieldEncoding;
 
-
+/**
+ * This class handles the reading of hex code.
+ */
 public class HexReader {
     private final String HEXCODE;
     private int position;
@@ -55,7 +57,7 @@ public class HexReader {
     }
 
     /**
-     * This method returns a string based on the reader position and given input parameter.
+     * The getElement method returns a string based on the reader position and given input parameter.
      * @param steps
      * @return string
      */
@@ -68,7 +70,7 @@ public class HexReader {
     }
 
     /**
-     * This method returns a long value based on reader position and given input steps.
+     * The getLongValue method returns a long value based on reader position and given input steps.
      * @param steps
      * @return long value
      */
@@ -78,6 +80,11 @@ public class HexReader {
         return Long.parseLong(getElement(steps), 16);
     }
 
+    /**
+     * The getStringValue method returns a string based on reader position and given input steps.
+     * @param steps size of element
+     * @return Sting value
+     */
     private String getStringValue(int steps){
 
         return getElement(steps);

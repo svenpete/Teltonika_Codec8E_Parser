@@ -5,9 +5,7 @@
  * Author: Sven Petersen
  * Change date: 11.07.2020
  */
-
 package JDBC;
-
 import java.util.ArrayList;
 
 public class Table {
@@ -19,7 +17,7 @@ public class Table {
         this.name = name;
     }
 
-    // fügt Attribute der Arrayliste hiznu
+
     public Table addAttr(String name, Type type) {
         attributes.add(new Attribute(name, type));
         return this;
@@ -61,11 +59,8 @@ public class Table {
         return sqlStatement;
     }
 
-    /**
-     * This method creates a table with a composite primary key.
-     * @param CompositePrimaryKey
-     * @return
-     */
+
+
     public String create(String CompositePrimaryKey) {
         String sqlStatement = "CREATE TABLE IF NOT EXISTS " + name + "(";
         String sqlStatementPrimaryKey = "";

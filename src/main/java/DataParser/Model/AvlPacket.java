@@ -5,18 +5,18 @@
  * Author: Sven Petersen
  * Change date: 12.08.2020
  */
-
 package DataParser.Model;
 import java.util.List;
 
 /**
- * This class represents
+ * This class represents the avl packet containing multiple avl data objects.
  */
 public class AvlPacket {
 
     private int codecId;
     private int dataCount;
     private List<AvlData> data;
+
 
 
     public AvlPacket(int codecId, int dataCount, List<AvlData> data) {

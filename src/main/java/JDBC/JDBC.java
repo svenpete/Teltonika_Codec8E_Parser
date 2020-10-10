@@ -5,7 +5,6 @@
  * Author: Sven Petersen
  * Change date: 11.09.2020
  */
-
 package JDBC;
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,7 +20,6 @@ import DataParser.Model.TcpDataPacket;
 import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URLDecoder;
 import java.security.CodeSource;
 import java.sql.*;
 import java.text.ParseException;
@@ -38,8 +36,7 @@ public class JDBC {
     private static String db_serverTimezone = "";
     private static String db_host = "";
     private static String uri = "";
-
-
+    public static Logger log = Logger.getLogger(JDBC.class.getName());
     // set up system variables
     static {
 
@@ -64,13 +61,8 @@ public class JDBC {
     }
 
 
-    // to use logger dynamic we need to initialise the path before a logger instance is generated therefore we use static block
-
-    static Logger log = Logger.getLogger(JDBC.class.getName());
-
-
     /**
-     * This method creates
+     *
      * @throws IOException
      */
     public static void createUri() throws IOException {
@@ -363,7 +355,7 @@ public class JDBC {
 
     /**
      * This method gets the column count for a specific table.
-     * @param connection
+     * @param connection to database
      * @param tableName  to obtain columnnames
      * @param schemaName to obtain qualifiedName
      * @return a list with populated column names depends on tableName
@@ -418,11 +410,12 @@ public class JDBC {
     }
 
     /**
-     * This method returns the primary key for a given table.
-     * @param connection
-     * @param tableName
-     * @param schemaName
+     * The getPrimaryKey method returns the primary key for a given table.
+     * @param connection to database.
+     * @param tableName to get primary key from.
+     * @param schemaName where table is located.
      * @throws SQLException
+     * @return String with primary key attribute from given table.
      */
     public static String getPrimaryKey(Connection connection, String tableName, String schemaName)
     throws SQLException {

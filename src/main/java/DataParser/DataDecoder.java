@@ -17,7 +17,9 @@ import DataParser.Model.TcpDataPacket;
 import java.util.Iterator;
 import java.util.List;
 
-
+/**
+ * This class handles the data decoding for tcp data.
+ */
 public class DataDecoder {
 
     private HexReader hexReader;
@@ -28,10 +30,13 @@ public class DataDecoder {
     }
 
 
+
     /**
-     * This method decodes tcp-data and checks if certain tcp-values are set correctly.
-     *
-     * @return an instance of TcpDataPacket.
+     * The decodeTcpData method decodes tcp-data and checks if certain tcp-values are set correctly.
+     * @return TcpDataPacket from decoded hexReader.
+     * @throws CyclicRedundancyCheck if crc values don't match
+     * @throws PreAmbleException if preamble value don#t match
+     * @throws CodecProtocolException if wrong protocol is used.
      */
     public TcpDataPacket decodeTcpData() throws CyclicRedundancyCheck, PreAmbleException, CodecProtocolException {
 
@@ -82,9 +87,9 @@ public class DataDecoder {
     }
 
     /**
-     * This method returns a list with non-empty avl-data.
+     * The deletePacketWithoutData method returns a list with non-empty avl-data.
      * @param tcpDataPacket to be f
-     * @return List<TcpDataPacket> without empty avl-data entries.
+     * @return List of TcpDataPacket containing data.
      */
     public static List<TcpDataPacket> deletePacketWithoutData(List<TcpDataPacket> tcpDataPacket){
 
@@ -100,10 +105,11 @@ public class DataDecoder {
 
     }
 
+
+
     /**
-     * This method deletes a avl-packet without beacon information.
-     * @param tcpDataPacket
-     * @return
+     * The deleteDataWithoutBeacon method deletes a avl-packet without beacon information.
+     * @param tcpDataPacket will be checked if beacon data is detected object will deconstructed.
      */
     private static void deleteDataWithoutBeacon(TcpDataPacket tcpDataPacket) {
 
@@ -120,11 +126,6 @@ public class DataDecoder {
             //delete avlData via iterator
             if ( beaconSize == 0 ) iterator.remove();
         }
-
-       // return tcpDataPacket;
-
     }
-
-
 
 }

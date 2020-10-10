@@ -8,21 +8,21 @@
 package DataParser.Model;
 
 /**
- *
+ * This class represents beacon data sent by FMB devices.
  */
 public class Beacon {
 
     private String uuid;
     private String major;
     private String minor;
-    private int rssi;
     private String beaconType;
-    private boolean signalStrengthAvaible;
+    private int rssi;
+    private boolean signalStrengthAvailable;
 
 
-    public Beacon(String beaconType, Boolean signalStrengthAvaible, String uuid, String major, String minor, int rssi) {
+    public Beacon(String beaconType, Boolean signalStrengthAvailable, String uuid, String major, String minor, int rssi) {
         this.beaconType = beaconType;
-        this.signalStrengthAvaible = signalStrengthAvaible;
+        this.signalStrengthAvailable = signalStrengthAvailable;
         this.uuid = uuid;
         this.major = major;
         this.minor = minor;
@@ -70,12 +70,12 @@ public class Beacon {
         this.beaconType = beaconType;
     }
 
-    public boolean isSignalStrengthAvaible() {
-        return signalStrengthAvaible;
+    public boolean isSignalStrengthAvailable() {
+        return signalStrengthAvailable;
     }
 
-    public void setSignalStrengthAvaible(boolean signalStrengthAvaible) {
-        this.signalStrengthAvaible = signalStrengthAvaible;
+    public void setSignalStrengthAvailable(boolean signalStrengthAvailable) {
+        this.signalStrengthAvailable = signalStrengthAvailable;
     }
 }
 

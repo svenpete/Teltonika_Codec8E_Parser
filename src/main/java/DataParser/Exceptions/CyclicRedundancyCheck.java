@@ -9,8 +9,13 @@ package DataParser.Exceptions;
 
 public class CyclicRedundancyCheck extends Exception{
 
-    public CyclicRedundancyCheck(int checkPolynom, int calculatedPolynom){
-       super("Cyclic redundancy check failed. Your value was " + calculatedPolynom + " it should be " + checkPolynom);
+    /**
+     * Class constructor specifying received crc value and calculated crc value.
+     * @param checkPolynomial send by FMB device
+     * @param calculatedPolynomial calculated by Crc object.
+     */
+    public CyclicRedundancyCheck(int checkPolynomial, int calculatedPolynomial){
+       super("Cyclic redundancy check failed. Your value was " + calculatedPolynomial + " it should be " + checkPolynomial);
     }
 
 

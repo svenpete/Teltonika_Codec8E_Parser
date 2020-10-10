@@ -8,7 +8,8 @@
 package DataParser.Model;
 
 /**
- * This class represents different priorities which avlData can have depending on their configuration in FMB Devices.
+ * This enumeration represents different priorities which avlData can have depending on their configuration and data
+ * send by FMB Devices.
  */
 public enum AvlDataPriority {
     LOW(0),
